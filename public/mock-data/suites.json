@@ -1,0 +1,134 @@
+[
+  {
+    "_id": "SUITE-001",
+    "projectId": "PRJ-001",
+    "parentId": null,
+    "name": "Authentication",
+    "description": "Covers login, signup, and password reset functionality for the Rider App.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-01-21T09:30:00Z",
+    "updatedAt": "2025-10-15T11:00:00Z"
+  },
+  {
+    "_id": "SUITE-002",
+    "projectId": "PRJ-001",
+    "parentId": "SUITE-001",
+    "name": "Login",
+    "description": "Tests for user login via email, phone, and social authentication.",
+    "order": 2,
+    "isArchived": false,
+    "createdAt": "2025-01-21T09:45:00Z",
+    "updatedAt": "2025-10-15T11:05:00Z"
+  },
+  {
+    "_id": "SUITE-003",
+    "projectId": "PRJ-001",
+    "parentId": "SUITE-001",
+    "name": "Password Reset",
+    "description": "Covers password recovery via email and OTP verification.",
+    "order": 3,
+    "isArchived": false,
+    "createdAt": "2025-01-21T09:50:00Z",
+    "updatedAt": "2025-10-15T11:10:00Z"
+  },
+  {
+    "_id": "SUITE-004",
+    "projectId": "PRJ-001",
+    "parentId": null,
+    "name": "Booking Flow",
+    "description": "Full end-to-end flow for searching, confirming, and completing a ride booking.",
+    "order": 4,
+    "isArchived": false,
+    "createdAt": "2025-02-01T10:00:00Z",
+    "updatedAt": "2025-09-30T14:00:00Z"
+  },
+  {
+    "_id": "SUITE-005",
+    "projectId": "PRJ-002",
+    "parentId": null,
+    "name": "Trip Management",
+    "description": "Driver-side flows for accepting, navigating, and completing trips.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-02-15T10:15:00Z",
+    "updatedAt": "2025-10-10T12:00:00Z"
+  },
+  {
+    "_id": "SUITE-006",
+    "projectId": "PRJ-002",
+    "parentId": null,
+    "name": "Earnings & Payouts",
+    "description": "Validates calculation and display of driver earnings and transaction history.",
+    "order": 2,
+    "isArchived": false,
+    "createdAt": "2025-02-15T10:30:00Z",
+    "updatedAt": "2025-10-10T12:05:00Z"
+  },
+  {
+    "_id": "SUITE-009",
+    "projectId": "PRJ-003",
+    "parentId": null,
+    "name": "User Management",
+    "description": "Covers CRUD operations for users and roles in Cuorium Admin Panel.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-03-03T09:00:00Z",
+    "updatedAt": "2025-09-15T15:45:00Z"
+  },
+  {
+    "_id": "SUITE-010",
+    "projectId": "PRJ-003",
+    "parentId": null,
+    "name": "Booking Overview",
+    "description": "Ensures accurate listing, filtering, and sorting of active and past bookings.",
+    "order": 2,
+    "isArchived": false,
+    "createdAt": "2025-03-03T09:15:00Z",
+    "updatedAt": "2025-09-15T15:45:00Z"
+  },
+  {
+    "_id": "SUITE-012",
+    "projectId": "PRJ-004",
+    "parentId": null,
+    "name": "API Booking Lifecycle",
+    "description": "Validates core endpoints for creating, updating, and cancelling bookings via API.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-03-25T10:00:00Z",
+    "updatedAt": "2025-09-25T12:00:00Z"
+  },
+  {
+    "_id": "SUITE-013",
+    "projectId": "PRJ-004",
+    "parentId": "SUITE-012",
+    "name": "Booking Status Updates",
+    "description": "Tests booking transitions from CREATED → CONFIRMED → COMPLETED → CANCELLED.",
+    "order": 2,
+    "isArchived": false,
+    "createdAt": "2025-03-25T10:15:00Z",
+    "updatedAt": "2025-09-25T12:10:00Z"
+  },
+  {
+    "_id": "SUITE-015",
+    "projectId": "PRJ-005",
+    "parentId": null,
+    "name": "Dashboard Metrics",
+    "description": "Validates data integrity and visualization accuracy for KPI dashboards.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-05-05T13:00:00Z",
+    "updatedAt": "2025-09-29T10:15:00Z"
+  },
+  {
+    "_id": "SUITE-018",
+    "projectId": "PRJ-006",
+    "parentId": null,
+    "name": "Legacy Validation",
+    "description": "Regression suite to validate B2B booking data and migration scripts.",
+    "order": 1,
+    "isArchived": true,
+    "createdAt": "2024-08-05T09:00:00Z",
+    "updatedAt": "2025-03-01T10:00:00Z"
+  }
+]

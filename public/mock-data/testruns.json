@@ -1,0 +1,222 @@
+[
+  {
+    "_id": "RUN-001",
+    "projectId": "PRJ-001",
+    "suiteId": "SUITE-001",
+    "name": "Sprint 34 - Rider App Smoke Tests (Android)",
+    "description": "Smoke validation of login and booking flow before release v3.2.5-QA",
+    "status": "Completed",
+    "startDate": "2025-10-15T09:00:00Z",
+    "endDate": "2025-10-15T12:30:00Z",
+    "createdBy": "USR-001",
+    "assignedTo": "USR-002",
+    "configurations": ["CFG-001"],
+    "tests": ["TEST-001", "TEST-002", "TEST-003", "TEST-004"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-10-10T09:00:00Z",
+    "updatedAt": "2025-10-15T12:45:00Z"
+  },
+  {
+    "_id": "RUN-002",
+    "projectId": "PRJ-001",
+    "suiteId": "SUITE-004",
+    "name": "Regression Suite - Rider Booking Flow",
+    "description": "Comprehensive regression test for booking lifecycle before QA signoff.",
+    "status": "In Progress",
+    "startDate": "2025-10-25T09:00:00Z",
+    "endDate": null,
+    "createdBy": "USR-001",
+    "assignedTo": "USR-003",
+    "configurations": ["CFG-001", "CFG-002"],
+    "tests": ["TEST-005", "TEST-006", "TEST-007"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-10-20T09:00:00Z",
+    "updatedAt": "2025-10-25T10:00:00Z"
+  },
+  {
+    "_id": "RUN-003",
+    "projectId": "PRJ-002",
+    "suiteId": "SUITE-005",
+    "name": "Driver App - Trip Management QA Run",
+    "description": "Validates trip acceptance, navigation, and earnings calculation.",
+    "status": "Completed",
+    "startDate": "2025-10-12T08:30:00Z",
+    "endDate": "2025-10-12T10:00:00Z",
+    "createdBy": "USR-004",
+    "assignedTo": "USR-004",
+    "configurations": ["CFG-003"],
+    "tests": ["TEST-008", "TEST-009"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-10-10T08:00:00Z",
+    "updatedAt": "2025-10-12T10:15:00Z"
+  },
+  {
+    "_id": "RUN-004",
+    "projectId": "PRJ-003",
+    "suiteId": "SUITE-009",
+    "name": "Admin Panel User Management - QA Verification",
+    "description": "Ensures CRUD operations for user management are functioning on staging.",
+    "status": "Completed",
+    "startDate": "2025-09-30T09:00:00Z",
+    "endDate": "2025-09-30T11:00:00Z",
+    "createdBy": "USR-002",
+    "assignedTo": "USR-005",
+    "configurations": ["CFG-004"],
+    "tests": ["TEST-010", "TEST-011", "TEST-012"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-09-29T09:00:00Z",
+    "updatedAt": "2025-09-30T11:15:00Z"
+  },
+  {
+    "_id": "RUN-005",
+    "projectId": "PRJ-004",
+    "suiteId": "SUITE-012",
+    "name": "Booking API - Functional Test Run",
+    "description": "Tests API endpoints for booking creation and status updates.",
+    "status": "Completed",
+    "startDate": "2025-10-05T09:00:00Z",
+    "endDate": "2025-10-05T09:45:00Z",
+    "createdBy": "USR-003",
+    "assignedTo": "USR-003",
+    "configurations": ["CFG-005"],
+    "tests": ["TEST-013", "TEST-014"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-10-04T09:00:00Z",
+    "updatedAt": "2025-10-05T10:00:00Z"
+  },
+  {
+    "_id": "RUN-006",
+    "projectId": "PRJ-005",
+    "suiteId": "SUITE-015",
+    "name": "s fasdf ag asdfa sdf asdf asdf",
+    "description": "Verifies KPI values and data integrity against API.",
+    "status": "Not Started",
+    "startDate": "2025-09-29T09:00:00Z",
+    "endDate": "2025-09-29T11:00:00Z",
+    "createdBy": "USR-002",
+    "assignedTo": "USR-005",
+    "configurations": ["CFG-007"],
+    "tests": ["TEST-015", "TEST-016"],
+    "metrics": {
+      "untested": 15,
+      "passed": 0,
+      "failed": 0,
+      "blocked": 0
+    },
+    "createdAt": "2025-09-27T09:00:00Z",
+    "updatedAt": "2025-09-29T11:10:00Z"
+  },
+  {
+    "_id": "RUN-006",
+    "projectId": "PRJ-005",
+    "suiteId": "SUITE-015",
+    "name": " jtyjrukrujtdfgjruyt rt herth srth wth",
+    "description": "Verifies KPI values and data integrity against API.",
+    "status": "Not Started",
+    "startDate": "2025-09-29T09:00:00Z",
+    "endDate": "2025-09-29T11:00:00Z",
+    "createdBy": "USR-002",
+    "assignedTo": "USR-005",
+    "configurations": ["CFG-007"],
+    "tests": ["TEST-015", "TEST-016"],
+    "metrics": {
+      "untested": 152,
+      "passed": 0,
+      "failed": 0,
+      "blocked": 0
+    },
+    "createdAt": "2025-09-27T09:00:00Z",
+    "updatedAt": "2025-09-29T11:10:00Z"
+  },
+  {
+    "_id": "RUN-006",
+    "projectId": "PRJ-005",
+    "suiteId": "SUITE-015",
+    "name": "wergtujs gesth ukerszssg",
+    "description": "Verifies KPI values and data integrity against API.",
+    "status": "In Progress",
+    "startDate": "2025-09-29T09:00:00Z",
+    "endDate": "2025-09-29T11:00:00Z",
+    "createdBy": "USR-002",
+    "assignedTo": "USR-005",
+    "configurations": ["CFG-007"],
+    "tests": ["TEST-015", "TEST-016"],
+    "metrics": {
+      "untested": 250,
+      "passed": 15,
+      "failed": 20,
+      "blocked": 0
+    },
+    "createdAt": "2025-09-27T09:00:00Z",
+    "updatedAt": "2025-09-29T11:10:00Z"
+  },
+  {
+    "_id": "RUN-006",
+    "projectId": "PRJ-005",
+    "suiteId": "SUITE-015",
+    "name": "Analytics Dashboard - KPI Validation Run",
+    "description": "Verifies KPI values and data integrity against API.",
+    "status": "Completed",
+    "startDate": "2025-09-29T09:00:00Z",
+    "endDate": "2025-09-29T11:00:00Z",
+    "createdBy": "USR-002",
+    "assignedTo": "USR-005",
+    "configurations": ["CFG-007"],
+    "tests": ["TEST-015", "TEST-016"],
+    "metrics": {
+      "untested": 0,
+      "passed": 32,
+      "failed": 5,
+      "blocked": 1
+    },
+    "createdAt": "2025-09-27T09:00:00Z",
+    "updatedAt": "2025-09-29T11:10:00Z"
+  },
+  {
+    "_id": "RUN-007",
+    "projectId": "PRJ-006",
+    "suiteId": "SUITE-018",
+    "name": "B2B Legacy Validation - Data Migration Test",
+    "description": "Regression check to validate data migration accuracy for legacy bookings.",
+    "status": "Completed",
+    "startDate": "2025-09-10T10:00:00Z",
+    "endDate": "2025-09-10T11:30:00Z",
+    "createdBy": "USR-003",
+    "assignedTo": "USR-001",
+    "configurations": ["CFG-008"],
+    "tests": ["TEST-017"],
+    "metrics": {
+      "untested": 15,
+      "passed": 15,
+      "failed": 50,
+      "blocked": 100
+    },
+    "createdAt": "2025-09-08T09:00:00Z",
+    "updatedAt": "2025-09-10T11:45:00Z"
+  }
+]

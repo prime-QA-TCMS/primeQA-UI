@@ -1,0 +1,197 @@
+[
+  {
+    "_id": "STEP-001",
+    "caseId": "CASE-001",
+    "order": 1,
+    "action": "Open the Rider App",
+    "data": null,
+    "expected": "App home screen is displayed.",
+    "validationType": "UI",
+    "validationValue": "homeScreen.visible == true"
+  },
+  {
+    "_id": "STEP-002",
+    "caseId": "CASE-001",
+    "order": 2,
+    "action": "Tap on 'Login' button",
+    "expected": "Login form appears.",
+    "validationType": "UI",
+    "validationValue": "loginForm.displayed == true"
+  },
+  {
+    "_id": "STEP-003",
+    "caseId": "CASE-001",
+    "order": 3,
+    "action": "Enter valid email and password",
+    "data": "user@example.com / validPassword123",
+    "expected": "Credentials are accepted.",
+    "validationType": "UI",
+    "validationValue": "errorMessage == null"
+  },
+  {
+    "_id": "STEP-004",
+    "caseId": "CASE-001",
+    "order": 4,
+    "action": "Tap 'Login'",
+    "expected": "User is navigated to the dashboard.",
+    "validationType": "UI",
+    "validationValue": "dashboard.visible == true"
+  },
+  {
+    "_id": "STEP-005",
+    "caseId": "CASE-002",
+    "order": 1,
+    "action": "Navigate to Login screen",
+    "expected": "Login form is displayed.",
+    "validationType": "UI",
+    "validationValue": "loginForm.exists == true"
+  },
+  {
+    "_id": "STEP-006",
+    "caseId": "CASE-002",
+    "order": 2,
+    "action": "Enter valid email but invalid password",
+    "data": "user@example.com / wrongPassword",
+    "expected": "Error message 'Invalid credentials' appears.",
+    "validationType": "UI",
+    "validationValue": "errorMessage.text == 'Invalid credentials'"
+  },
+  {
+    "_id": "STEP-007",
+    "caseId": "CASE-003",
+    "order": 1,
+    "action": "Tap 'Forgot Password'",
+    "expected": "Reset password form is displayed.",
+    "validationType": "UI",
+    "validationValue": "resetForm.visible == true"
+  },
+  {
+    "_id": "STEP-008",
+    "caseId": "CASE-003",
+    "order": 2,
+    "action": "Enter registered email and submit",
+    "data": "user@example.com",
+    "expected": "Confirmation message shown.",
+    "validationType": "UI",
+    "validationValue": "confirmationText.contains('email sent')"
+  },
+  {
+    "_id": "STEP-009",
+    "caseId": "CASE-003",
+    "order": 3,
+    "action": "Open reset email and click link",
+    "expected": "Reset page opens in browser.",
+    "validationType": "UI",
+    "validationValue": "url.contains('/reset-password')"
+  },
+  {
+    "_id": "STEP-010",
+    "caseId": "CASE-004",
+    "order": 1,
+    "action": "Open the app and search for a ride",
+    "expected": "Available rides are displayed.",
+    "validationType": "UI",
+    "validationValue": "rideList.count > 0"
+  },
+  {
+    "_id": "STEP-011",
+    "caseId": "CASE-004",
+    "order": 2,
+    "action": "Select a ride option",
+    "expected": "Fare summary is shown.",
+    "validationType": "UI",
+    "validationValue": "fareSummary.visible == true"
+  },
+  {
+    "_id": "STEP-012",
+    "caseId": "CASE-004",
+    "order": 3,
+    "action": "Confirm booking",
+    "expected": "Booking status changes to CONFIRMED.",
+    "validationType": "API",
+    "validationValue": "response.status == 'CONFIRMED'"
+  },
+  {
+    "_id": "STEP-013",
+    "caseId": "CASE-004",
+    "order": 4,
+    "action": "Wait for ride completion",
+    "expected": "Status updates to COMPLETED with fare receipt.",
+    "validationType": "API",
+    "validationValue": "booking.status == 'COMPLETED'"
+  },
+  {
+    "_id": "STEP-014",
+    "caseId": "CASE-005",
+    "order": 1,
+    "action": "Receive new trip request",
+    "expected": "Trip details displayed with Accept/Reject buttons.",
+    "validationType": "UI",
+    "validationValue": "tripPopup.visible == true"
+  },
+  {
+    "_id": "STEP-015",
+    "caseId": "CASE-005",
+    "order": 2,
+    "action": "Tap 'Accept'",
+    "expected": "Trip is assigned and navigation starts.",
+    "validationType": "UI",
+    "validationValue": "status.text == 'In Progress'"
+  },
+  {
+    "_id": "STEP-016",
+    "caseId": "CASE-009",
+    "order": 1,
+    "action": "Send POST request to /bookings",
+    "data": "{ 'pickup': 'Airport', 'dropoff': 'Hotel', 'riderId': 'RIDER-123' }",
+    "expected": "Response code 201 with booking ID.",
+    "validationType": "API",
+    "validationValue": "response.code == 201 && response.body.id != null"
+  },
+  {
+    "_id": "STEP-017",
+    "caseId": "CASE-009",
+    "order": 2,
+    "action": "Verify booking exists via GET /bookings/{id}",
+    "expected": "Response contains correct booking details.",
+    "validationType": "API",
+    "validationValue": "response.body.status == 'CREATED'"
+  },
+  {
+    "_id": "STEP-018",
+    "caseId": "CASE-010",
+    "order": 1,
+    "action": "Send PUT request with payload {'status': 'COMPLETED'}",
+    "data": "{ 'status': 'COMPLETED' }",
+    "expected": "Response code 200 with updated status.",
+    "validationType": "API",
+    "validationValue": "response.code == 200"
+  },
+  {
+    "_id": "STEP-019",
+    "caseId": "CASE-010",
+    "order": 2,
+    "action": "Verify via GET endpoint",
+    "expected": "Booking status is 'COMPLETED'.",
+    "validationType": "API",
+    "validationValue": "response.body.status == 'COMPLETED'"
+  },
+  {
+    "_id": "STEP-020",
+    "caseId": "CASE-011",
+    "order": 1,
+    "action": "Load dashboard",
+    "expected": "Charts display within 3 seconds.",
+    "validationType": "UI",
+    "validationValue": "chart.loadTime < 3000"
+  },
+  {
+    "_id": "STEP-021",
+    "caseId": "CASE-011",
+    "order": 2,
+    "action": "Compare KPI totals with API response",
+    "expected": "Values match API output exactly.",
+    "validationType": "Integration",
+    "validationValue": "ui.kpi.total == api.kpi.total"
+  }
+]

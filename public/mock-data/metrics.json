@@ -1,0 +1,187 @@
+[
+  {
+    "_id": "METRIC-001",
+    "projectId": "PRJ-001",
+    "milestoneId": "MLS-001",
+    "period": "2025-10",
+    "type": "Execution",
+    "data": {
+      "totalRuns": 2,
+      "totalCases": 55,
+      "executed": 53,
+      "passed": 47,
+      "failed": 6,
+      "blocked": 0,
+      "retested": 2,
+      "passRate": 88.6,
+      "executionCoverage": 96.4,
+      "avgExecutionTimeSec": 105.3
+    },
+    "generatedAt": "2025-10-15T17:00:00Z"
+  },
+  {
+    "_id": "METRIC-002",
+    "projectId": "PRJ-001",
+    "milestoneId": "MLS-001",
+    "period": "2025-10",
+    "type": "Quality",
+    "data": {
+      "defectsLogged": 5,
+      "defectsResolved": 4,
+      "avgResolutionTimeHrs": 18.5,
+      "defectDensity": 0.09,
+      "automationCoverage": 64,
+      "flakyTests": 3,
+      "regressionLeakage": 1
+    },
+    "generatedAt": "2025-10-15T17:00:00Z"
+  },
+  {
+    "_id": "METRIC-003",
+    "projectId": "PRJ-002",
+    "milestoneId": "MLS-002",
+    "period": "2025-10",
+    "type": "Execution",
+    "data": {
+      "totalRuns": 1,
+      "totalCases": 30,
+      "executed": 30,
+      "passed": 30,
+      "failed": 0,
+      "blocked": 0,
+      "retested": 0,
+      "passRate": 100,
+      "executionCoverage": 100,
+      "avgExecutionTimeSec": 82.4
+    },
+    "generatedAt": "2025-10-12T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-004",
+    "projectId": "PRJ-002",
+    "milestoneId": "MLS-002",
+    "period": "2025-10",
+    "type": "Quality",
+    "data": {
+      "defectsLogged": 2,
+      "defectsResolved": 2,
+      "avgResolutionTimeHrs": 6.0,
+      "defectDensity": 0.05,
+      "automationCoverage": 40,
+      "flakyTests": 0,
+      "regressionLeakage": 0
+    },
+    "generatedAt": "2025-10-12T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-005",
+    "projectId": "PRJ-004",
+    "milestoneId": "MLS-004",
+    "period": "2025-10",
+    "type": "Execution",
+    "data": {
+      "totalRuns": 1,
+      "totalCases": 15,
+      "executed": 15,
+      "passed": 15,
+      "failed": 0,
+      "blocked": 0,
+      "retested": 0,
+      "passRate": 100,
+      "executionCoverage": 100,
+      "avgExecutionTimeSec": 45.8
+    },
+    "generatedAt": "2025-10-05T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-006",
+    "projectId": "PRJ-004",
+    "milestoneId": "MLS-004",
+    "period": "2025-10",
+    "type": "Quality",
+    "data": {
+      "defectsLogged": 0,
+      "defectsResolved": 0,
+      "avgResolutionTimeHrs": 0,
+      "defectDensity": 0,
+      "automationCoverage": 92,
+      "flakyTests": 0,
+      "regressionLeakage": 0
+    },
+    "generatedAt": "2025-10-05T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-007",
+    "projectId": "PRJ-005",
+    "milestoneId": "MLS-005",
+    "period": "2025-09",
+    "type": "Execution",
+    "data": {
+      "totalRuns": 1,
+      "totalCases": 12,
+      "executed": 12,
+      "passed": 11,
+      "failed": 1,
+      "blocked": 0,
+      "retested": 1,
+      "passRate": 91.6,
+      "executionCoverage": 100,
+      "avgExecutionTimeSec": 72.0
+    },
+    "generatedAt": "2025-09-29T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-008",
+    "projectId": "PRJ-005",
+    "milestoneId": "MLS-005",
+    "period": "2025-09",
+    "type": "Quality",
+    "data": {
+      "defectsLogged": 3,
+      "defectsResolved": 2,
+      "avgResolutionTimeHrs": 12.5,
+      "defectDensity": 0.25,
+      "automationCoverage": 55,
+      "flakyTests": 1,
+      "regressionLeakage": 0
+    },
+    "generatedAt": "2025-09-29T12:00:00Z"
+  },
+  {
+    "_id": "METRIC-009",
+    "projectId": "PRJ-006",
+    "milestoneId": "MLS-006",
+    "period": "2025-09",
+    "type": "Execution",
+    "data": {
+      "totalRuns": 1,
+      "totalCases": 5,
+      "executed": 5,
+      "passed": 5,
+      "failed": 0,
+      "blocked": 0,
+      "retested": 0,
+      "passRate": 100,
+      "executionCoverage": 100,
+      "avgExecutionTimeSec": 108.0
+    },
+    "generatedAt": "2025-09-10T11:00:00Z"
+  },
+  {
+    "_id": "METRIC-010",
+    "projectId": "PRJ-006",
+    "milestoneId": "MLS-006",
+    "period": "2025-09",
+    "type": "Quality",
+    "data": {
+      "defectsLogged": 1,
+      "defectsResolved": 1,
+      "avgResolutionTimeHrs": 10,
+      "defectDensity": 0.05,
+      "automationCoverage": 20,
+      "flakyTests": 0,
+      "regressionLeakage": 0
+    },
+    "generatedAt": "2025-09-10T11:00:00Z"
+  }
+]

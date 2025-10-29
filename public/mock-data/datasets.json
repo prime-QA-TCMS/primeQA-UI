@@ -1,0 +1,129 @@
+[
+  {
+    "_id": "DATA-001",
+    "name": "Rider Login Credentials",
+    "type": "Static",
+    "schema": {
+      "username": "string",
+      "password": "string"
+    },
+    "values": [
+      { "username": "rider.one@ecabs.com", "password": "Password123" },
+      { "username": "rider.two@ecabs.com", "password": "P@ssword456" },
+      { "username": "rider.invalid@ecabs.com", "password": "wrongpass" }
+    ],
+    "linkedCases": ["CASE-001", "CASE-002"],
+    "createdAt": "2025-02-10T08:45:00Z",
+    "updatedAt": "2025-10-01T09:30:00Z"
+  },
+  {
+    "_id": "DATA-002",
+    "name": "Password Reset Emails",
+    "type": "Generated",
+    "schema": {
+      "email": "string",
+      "token": "string"
+    },
+    "values": [
+      { "email": "rider.one@ecabs.com", "token": "abc123" },
+      { "email": "rider.two@ecabs.com", "token": "def456" }
+    ],
+    "linkedCases": ["CASE-003"],
+    "createdAt": "2025-02-15T09:00:00Z",
+    "updatedAt": "2025-10-10T09:00:00Z"
+  },
+  {
+    "_id": "DATA-003",
+    "name": "Ride Booking Payloads",
+    "type": "Static",
+    "schema": {
+      "pickup": "string",
+      "dropoff": "string",
+      "paymentMethod": "string"
+    },
+    "values": [
+      { "pickup": "Valletta", "dropoff": "Sliema", "paymentMethod": "Card" },
+      { "pickup": "Airport", "dropoff": "St. Julian’s", "paymentMethod": "Cash" }
+    ],
+    "linkedCases": ["CASE-004", "CASE-009"],
+    "createdAt": "2025-03-05T10:00:00Z",
+    "updatedAt": "2025-09-25T12:00:00Z"
+  },
+  {
+    "_id": "DATA-004",
+    "name": "Driver Trip Data",
+    "type": "Static",
+    "schema": {
+      "tripId": "string",
+      "status": "string",
+      "earnings": "number"
+    },
+    "values": [
+      { "tripId": "TRIP-001", "status": "Completed", "earnings": 12.5 },
+      { "tripId": "TRIP-002", "status": "Cancelled", "earnings": 0.0 },
+      { "tripId": "TRIP-003", "status": "Completed", "earnings": 8.75 }
+    ],
+    "linkedCases": ["CASE-005", "CASE-006"],
+    "createdAt": "2025-03-10T08:45:00Z",
+    "updatedAt": "2025-10-01T08:45:00Z"
+  },
+  {
+    "_id": "DATA-005",
+    "name": "API Booking Lifecycle",
+    "type": "Generated",
+    "schema": {
+      "endpoint": "string",
+      "payload": "object",
+      "expectedStatus": "string"
+    },
+    "values": [
+      {
+        "endpoint": "/bookings",
+        "payload": { "pickup": "Airport", "dropoff": "Hotel" },
+        "expectedStatus": "CREATED"
+      },
+      {
+        "endpoint": "/bookings/{id}/status",
+        "payload": { "status": "COMPLETED" },
+        "expectedStatus": "COMPLETED"
+      }
+    ],
+    "linkedCases": ["CASE-009", "CASE-010"],
+    "createdAt": "2025-05-01T09:00:00Z",
+    "updatedAt": "2025-09-25T12:10:00Z"
+  },
+  {
+    "_id": "DATA-006",
+    "name": "Analytics KPI Expectations",
+    "type": "Static",
+    "schema": {
+      "metric": "string",
+      "expectedValue": "number"
+    },
+    "values": [
+      { "metric": "DailyActiveRiders", "expectedValue": 1250 },
+      { "metric": "CancelledBookingsRate", "expectedValue": 0.03 },
+      { "metric": "AverageTripDuration", "expectedValue": 14.5 }
+    ],
+    "linkedCases": ["CASE-011"],
+    "createdAt": "2025-06-01T09:00:00Z",
+    "updatedAt": "2025-09-29T10:15:00Z"
+  },
+  {
+    "_id": "DATA-007",
+    "name": "B2B Migration Comparison Data",
+    "type": "Static",
+    "schema": {
+      "legacyId": "string",
+      "legacyValue": "string",
+      "newValue": "string"
+    },
+    "values": [
+      { "legacyId": "B2B-123", "legacyValue": "ClientA-Booking-1", "newValue": "Booking-1001" },
+      { "legacyId": "B2B-456", "legacyValue": "ClientB-Booking-2", "newValue": "Booking-1002" }
+    ],
+    "linkedCases": ["CASE-012"],
+    "createdAt": "2025-06-15T09:30:00Z",
+    "updatedAt": "2025-09-10T14:30:00Z"
+  }
+]

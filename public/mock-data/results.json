@@ -1,0 +1,182 @@
+[
+  {
+    "_id": "RES-001",
+    "testId": "TEST-001",
+    "runId": "RUN-001",
+    "status": "Passed",
+    "comment": "Test passed as expected on first attempt.",
+    "evidence": ["FILE-020"],
+    "timestamp": "2025-10-15T09:15:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-002",
+    "testId": "TEST-002",
+    "runId": "RUN-001",
+    "status": "Failed",
+    "comment": "Received generic error instead of expected 'Invalid credentials'.",
+    "evidence": ["FILE-010"],
+    "timestamp": "2025-10-15T09:30:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-003",
+    "testId": "TEST-002",
+    "runId": "RUN-002",
+    "status": "Retest",
+    "comment": "Re-executed after UI fix; result pending review.",
+    "evidence": [],
+    "timestamp": "2025-10-25T10:00:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-004",
+    "testId": "TEST-003",
+    "runId": "RUN-001",
+    "status": "Passed",
+    "comment": "Reset link opened successfully, password reset confirmed.",
+    "evidence": ["FILE-011"],
+    "timestamp": "2025-10-15T10:15:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-005",
+    "testId": "TEST-004",
+    "runId": "RUN-001",
+    "status": "Passed",
+    "comment": "Booking lifecycle completed correctly.",
+    "evidence": ["FILE-012"],
+    "timestamp": "2025-10-15T11:30:00Z",
+    "executedBy": "USR-003"
+  },
+  {
+    "_id": "RES-006",
+    "testId": "TEST-005",
+    "runId": "RUN-002",
+    "status": "Failed",
+    "comment": "Ride status remained CONFIRMED after trip completion.",
+    "evidence": ["FILE-013"],
+    "timestamp": "2025-10-25T09:30:00Z",
+    "executedBy": "USR-003"
+  },
+  {
+    "_id": "RES-007",
+    "testId": "TEST-006",
+    "runId": "RUN-002",
+    "status": "Passed",
+    "comment": "Login flow stable and repeatable.",
+    "evidence": [],
+    "timestamp": "2025-10-25T09:15:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-008",
+    "testId": "TEST-007",
+    "runId": "RUN-002",
+    "status": "Retest",
+    "comment": "Inconsistent validation message on iOS vs Android.",
+    "evidence": [],
+    "timestamp": "2025-10-25T10:00:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-009",
+    "testId": "TEST-008",
+    "runId": "RUN-003",
+    "status": "Passed",
+    "comment": "Trip accepted and navigation initiated successfully.",
+    "evidence": ["FILE-014"],
+    "timestamp": "2025-10-12T09:00:00Z",
+    "executedBy": "USR-004"
+  },
+  {
+    "_id": "RES-010",
+    "testId": "TEST-009",
+    "runId": "RUN-003",
+    "status": "Passed",
+    "comment": "Earnings summary matches transaction logs.",
+    "evidence": [],
+    "timestamp": "2025-10-12T09:30:00Z",
+    "executedBy": "USR-004"
+  },
+  {
+    "_id": "RES-011",
+    "testId": "TEST-010",
+    "runId": "RUN-004",
+    "status": "Passed",
+    "comment": "New admin user created with correct permissions.",
+    "evidence": ["FILE-015"],
+    "timestamp": "2025-09-30T09:45:00Z",
+    "executedBy": "USR-005"
+  },
+  {
+    "_id": "RES-012",
+    "testId": "TEST-011",
+    "runId": "RUN-004",
+    "status": "Passed",
+    "comment": "Filtering by Completed works as expected.",
+    "evidence": [],
+    "timestamp": "2025-09-30T10:00:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-013",
+    "testId": "TEST-012",
+    "runId": "RUN-004",
+    "status": "Blocked",
+    "comment": "API authentication failure, test skipped.",
+    "evidence": [],
+    "timestamp": "2025-09-30T10:15:00Z",
+    "executedBy": "USR-005"
+  },
+  {
+    "_id": "RES-014",
+    "testId": "TEST-013",
+    "runId": "RUN-005",
+    "status": "Passed",
+    "comment": "Booking successfully created via POST request.",
+    "evidence": ["FILE-016"],
+    "timestamp": "2025-10-05T09:15:00Z",
+    "executedBy": "USR-003"
+  },
+  {
+    "_id": "RES-015",
+    "testId": "TEST-014",
+    "runId": "RUN-005",
+    "status": "Passed",
+    "comment": "PUT request updated booking status to COMPLETED.",
+    "evidence": [],
+    "timestamp": "2025-10-05T09:30:00Z",
+    "executedBy": "USR-003"
+  },
+  {
+    "_id": "RES-016",
+    "testId": "TEST-015",
+    "runId": "RUN-006",
+    "status": "Failed",
+    "comment": "KPI discrepancy detected; UI displayed outdated cache.",
+    "evidence": ["FILE-017"],
+    "timestamp": "2025-09-29T09:30:00Z",
+    "executedBy": "USR-002"
+  },
+  {
+    "_id": "RES-017",
+    "testId": "TEST-016",
+    "runId": "RUN-006",
+    "status": "Passed",
+    "comment": "After cache clear, KPIs matched expected values.",
+    "evidence": [],
+    "timestamp": "2025-09-29T10:30:00Z",
+    "executedBy": "USR-005"
+  },
+  {
+    "_id": "RES-018",
+    "testId": "TEST-017",
+    "runId": "RUN-007",
+    "status": "Passed",
+    "comment": "Legacy booking data validated successfully after migration.",
+    "evidence": ["FILE-018"],
+    "timestamp": "2025-09-10T10:45:00Z",
+    "executedBy": "USR-001"
+  }
+]

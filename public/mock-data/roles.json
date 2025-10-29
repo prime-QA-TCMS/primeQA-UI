@@ -1,0 +1,104 @@
+[
+  {
+    "_id": "ROLE-001",
+    "name": "System Administrator",
+    "permissions": [
+      "manage_users",
+      "manage_roles",
+      "manage_projects",
+      "manage_system_settings",
+      "view_all_data",
+      "delete_data"
+    ],
+    "defaultForNewUsers": false
+  },
+  {
+    "_id": "ROLE-002",
+    "name": "Head of QA",
+    "permissions": [
+      "create_project",
+      "edit_project",
+      "delete_project",
+      "create_suite",
+      "edit_suite",
+      "delete_suite",
+      "create_case",
+      "edit_case",
+      "delete_case",
+      "create_run",
+      "execute_run",
+      "view_metrics",
+      "assign_users",
+      "manage_automation_integration"
+    ],
+    "defaultForNewUsers": false
+  },
+  {
+    "_id": "ROLE-003",
+    "name": "QA Engineer",
+    "permissions": [
+      "create_case",
+      "edit_case",
+      "execute_run",
+      "update_results",
+      "view_metrics",
+      "create_todo",
+      "update_todo",
+      "comment_todo",
+      "view_activities"
+    ],
+    "defaultForNewUsers": true
+  },
+  {
+    "_id": "ROLE-004",
+    "name": "Automation Engineer",
+    "permissions": [
+      "create_case",
+      "link_automation",
+      "edit_case",
+      "execute_run",
+      "view_results",
+      "trigger_ci_cd",
+      "view_metrics"
+    ],
+    "defaultForNewUsers": false
+  },
+  {
+    "_id": "ROLE-005",
+    "name": "Engineering Manager",
+    "permissions": [
+      "view_projects",
+      "view_metrics",
+      "comment_case",
+      "comment_run",
+      "view_activities",
+      "create_todo",
+      "update_todo"
+    ],
+    "defaultForNewUsers": false
+  },
+  {
+    "_id": "ROLE-006",
+    "name": "CTO",
+    "permissions": [
+      "view_all_data",
+      "view_metrics",
+      "manage_users",
+      "manage_projects",
+      "view_audit_logs"
+    ],
+    "defaultForNewUsers": false
+  },
+  {
+    "_id": "ROLE-007",
+    "name": "QA Intern",
+    "permissions": [
+      "view_projects",
+      "view_cases",
+      "execute_run",
+      "update_results",
+      "create_todo"
+    ],
+    "defaultForNewUsers": false
+  }
+]

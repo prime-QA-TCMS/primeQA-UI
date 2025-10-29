@@ -1,0 +1,101 @@
+[
+  {
+    "_id": "FILE-010",
+    "fileName": "invalid-login-error.png",
+    "fileType": "image/png",
+    "size": 154320,
+    "uploadedBy": "USR-002",
+    "uploadedAt": "2025-10-15T09:32:00Z",
+    "url": "/files/results/RUN-001/invalid-login-error.png"
+  },
+  {
+    "_id": "FILE-011",
+    "fileName": "password-reset-success.png",
+    "fileType": "image/png",
+    "size": 204550,
+    "uploadedBy": "USR-002",
+    "uploadedAt": "2025-10-15T10:18:00Z",
+    "url": "/files/results/RUN-001/password-reset-success.png"
+  },
+  {
+    "_id": "FILE-012",
+    "fileName": "booking-complete-log.json",
+    "fileType": "application/json",
+    "size": 98230,
+    "uploadedBy": "USR-003",
+    "uploadedAt": "2025-10-15T11:35:00Z",
+    "url": "/files/logs/RUN-001/booking-complete-log.json"
+  },
+  {
+    "_id": "FILE-013",
+    "fileName": "booking-fail-response.json",
+    "fileType": "application/json",
+    "size": 87300,
+    "uploadedBy": "USR-003",
+    "uploadedAt": "2025-10-25T09:35:00Z",
+    "url": "/files/logs/RUN-002/booking-fail-response.json"
+  },
+  {
+    "_id": "FILE-014",
+    "fileName": "driver-trip-acceptance.mp4",
+    "fileType": "video/mp4",
+    "size": 1832040,
+    "uploadedBy": "USR-004",
+    "uploadedAt": "2025-10-12T09:05:00Z",
+    "url": "/files/videos/RUN-003/driver-trip-acceptance.mp4"
+  },
+  {
+    "_id": "FILE-015",
+    "fileName": "admin-user-creation.png",
+    "fileType": "image/png",
+    "size": 142330,
+    "uploadedBy": "USR-005",
+    "uploadedAt": "2025-09-30T09:50:00Z",
+    "url": "/files/screenshots/RUN-004/admin-user-creation.png"
+  },
+  {
+    "_id": "FILE-016",
+    "fileName": "api-create-booking-response.json",
+    "fileType": "application/json",
+    "size": 45600,
+    "uploadedBy": "USR-003",
+    "uploadedAt": "2025-10-05T09:16:00Z",
+    "url": "/files/api/RUN-005/api-create-booking-response.json"
+  },
+  {
+    "_id": "FILE-017",
+    "fileName": "analytics-kpi-mismatch.png",
+    "fileType": "image/png",
+    "size": 162420,
+    "uploadedBy": "USR-002",
+    "uploadedAt": "2025-09-29T09:35:00Z",
+    "url": "/files/screenshots/RUN-006/analytics-kpi-mismatch.png"
+  },
+  {
+    "_id": "FILE-018",
+    "fileName": "b2b-data-compare-report.csv",
+    "fileType": "text/csv",
+    "size": 23455,
+    "uploadedBy": "USR-001",
+    "uploadedAt": "2025-09-10T10:50:00Z",
+    "url": "/files/reports/RUN-007/b2b-data-compare-report.csv"
+  },
+  {
+    "_id": "FILE-019",
+    "fileName": "ci-pipeline-log.txt",
+    "fileType": "text/plain",
+    "size": 145780,
+    "uploadedBy": "USR-003",
+    "uploadedAt": "2025-10-05T10:00:00Z",
+    "url": "/files/automation/RUN-005/ci-pipeline-log.txt"
+  },
+  {
+    "_id": "FILE-020",
+    "fileName": "successful-login-screenshot.png",
+    "fileType": "image/png",
+    "size": 174560,
+    "uploadedBy": "USR-002",
+    "uploadedAt": "2025-10-15T09:15:00Z",
+    "url": "/files/screenshots/RUN-001/successful-login-screenshot.png"
+  }
+]

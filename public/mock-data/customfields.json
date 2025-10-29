@@ -1,0 +1,110 @@
+[
+  {
+    "_id": "FIELD-001",
+    "name": "Component",
+    "type": "Dropdown",
+    "options": ["Frontend", "Backend", "API", "Mobile", "Database"],
+    "appliesTo": "TestCase",
+    "isRequired": true,
+    "defaultValue": "Frontend"
+  },
+  {
+    "_id": "FIELD-002",
+    "name": "Epic Link",
+    "type": "Text",
+    "options": [],
+    "appliesTo": "TestCase",
+    "isRequired": false,
+    "defaultValue": null
+  },
+  {
+    "_id": "FIELD-003",
+    "name": "Build Number",
+    "type": "Text",
+    "options": [],
+    "appliesTo": "TestRun",
+    "isRequired": true,
+    "defaultValue": "v1.0.0"
+  },
+  {
+    "_id": "FIELD-004",
+    "name": "Test Type",
+    "type": "Dropdown",
+    "options": ["Functional", "Regression", "Smoke", "Sanity", "Performance"],
+    "appliesTo": "TestCase",
+    "isRequired": true,
+    "defaultValue": "Functional"
+  },
+  {
+    "_id": "FIELD-005",
+    "name": "Risk Level",
+    "type": "Dropdown",
+    "options": ["Low", "Medium", "High", "Critical"],
+    "appliesTo": "TestCase",
+    "isRequired": false,
+    "defaultValue": "Medium"
+  },
+  {
+    "_id": "FIELD-006",
+    "name": "Sprint ID",
+    "type": "Text",
+    "options": [],
+    "appliesTo": "TestRun",
+    "isRequired": false,
+    "defaultValue": null
+  },
+  {
+    "_id": "FIELD-007",
+    "name": "Owner Department",
+    "type": "Dropdown",
+    "options": ["QA", "Development", "Product", "DevOps"],
+    "appliesTo": "Project",
+    "isRequired": false,
+    "defaultValue": "QA"
+  },
+  {
+    "_id": "FIELD-008",
+    "name": "Data Privacy Impact",
+    "type": "Checkbox",
+    "options": [],
+    "appliesTo": "TestCase",
+    "isRequired": false,
+    "defaultValue": false
+  },
+  {
+    "_id": "FIELD-009",
+    "name": "Automation Framework",
+    "type": "Dropdown",
+    "options": ["Playwright", "Cypress", "Selenium", "Appium", "Postman"],
+    "appliesTo": "Project",
+    "isRequired": false,
+    "defaultValue": "Playwright"
+  },
+  {
+    "_id": "FIELD-010",
+    "name": "Linked Jira Board",
+    "type": "Text",
+    "options": [],
+    "appliesTo": "Project",
+    "isRequired": false,
+    "defaultValue": "QA-BOARD"
+  },
+  {
+    "_id": "FIELD-011",
+    "name": "Data Source",
+    "type": "Dropdown",
+    "options": ["Manual", "Generated", "Imported"],
+    "appliesTo": "Dataset",
+    "isRequired": false,
+    "defaultValue": "Manual"
+  },
+  {
+    "_id": "FIELD-012",
+    "name": "ISO Compliance Tag",
+    "type": "Dropdown",
+    "options": ["ISO9001", "ISO27001", "GDPR", "None"],
+    "appliesTo": "TestRun",
+    "isRequired": false,
+    "defaultValue": "ISO9001"
+  }
+]
