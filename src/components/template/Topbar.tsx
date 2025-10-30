@@ -7,7 +7,7 @@ const Topbar: React.FC<TopBarProps> = ({ pageTitle }) => {
     const navigate = useNavigate();
 
     const handleAdminClick = () => {
-        navigate('/admin');
+        navigate('/configuration');
     };
   
     const handleLogout = () => {

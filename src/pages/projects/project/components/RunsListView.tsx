@@ -1,12 +1,14 @@
 import React from 'react';
-import { Box, Paper } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { TestRunListItemProps } from "./types";
-import { useJsonData } from '../../../utils/useJsonData';
-import AccordionList, { AccordionItem } from '../../../components/lists/AccordionList';
-import GenericPieChart, { chartData } from '../../../components/charts/GenericPieChart';
-import { TestRun } from '../../../types/database/Runs';
-import { User } from '../../../types/database/Users';
+import GenericPieChart from '../../../../components/charts/pieChart/GenericPieChart';
+import { TestRun } from '../../../../types/database/Runs';
+import { User } from '../../../../types/database/Users';
+import { useJsonData } from '../../../../utils/useJsonData';
+import { chartData } from '../../../../components/charts/pieChart/type';
+import { RocketLaunchOutlined } from '@mui/icons-material';
+import GenericList, { ListItemData } from '../../../../components/lists/List';
 
 const RecordListItem: React.FC<TestRunListItemProps> = ({ recordObject, projectID }) => {
     const navigate = useNavigate();
@@ -66,10 +68,9 @@ export const RunsListView: React.FC = () => {
     const projectRuns = data.filter((p) => p.projectId === projectID);
 
     // Separate projects by state
-    const activeData = projectRuns.filter((p) => p.status != "Completed");
+    const activeData = projectRuns.filter((p) => p.status !== "Completed");
 
-    
-    const activeAccordion: AccordionItem[] = activeData.map((record) => {
+    const activeAccordion: ListItemData[] = activeData.map((record) => {
         const total =
             (record.metrics?.passed ?? 0) +
             (record.metrics?.failed ?? 0) +
@@ -80,16 +81,21 @@ export const RunsListView: React.FC = () => {
 
         return {
             id: record._id,
-            title: record.name,
-            percentage: percentage,
-            component: <RecordListItem recordObject={record} projectID={projectID} />,
+            title: record.name + " (" + percentage + "%)",
+            icon: <RocketLaunchOutlined />,
+            link: "/project/" + projectID + "/milestone/" + record._id,
         };
     });
 
     return (
-        <Paper>
-            Active Runs:
-            <AccordionList items={activeAccordion} />
-        </Paper>
+        <>
+            {activeAccordion.length > 0 ? 
+            <>
+                <Typography variant="h6" color="text.secondary">Active Runs:</Typography>
+                <GenericList items={activeAccordion} />
+            </>
+            : <Typography variant="h6" color="text.secondary">No Active Runs</Typography>
+            }
+        </>
     );
 } ;

@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Box, Typography } from '@mui/material';
-
-// Define the structure for the tabs data
-interface TabData {
-    label: string;
-    content: React.ReactNode;
-}
-
-// Define props for the generic component
-interface GenericTabsProps {
-    tabsData: TabData[];
-}
+import { GenericTabsProps } from './types';
 
 const GenericTabs: React.FC<GenericTabsProps> = ({ tabsData }) => {
     const [activeTab, setActiveTab] = useState(0);

@@ -1,10 +1,13 @@
 export interface TestCase {
-  _id?: string;
+  _id: string;
   suiteId: string;
   title: string;
   description?: string;
   preconditions?: string;
-  steps?: TestStep[];
+  steps?: string;
+  expectedResult?: string;
+  sharedSteps?: TestStep[];
+  sectionId?: string;
   priority?: 'Low' | 'Medium' | 'High' | 'Critical';
   type?: 'Functional' | 'Regression' | 'Integration' | 'Exploratory';
   status?: 'Draft' | 'Approved' | 'Deprecated';

@@ -59,149 +59,35 @@ export const testCaseAttachmentsFormFields: FormField[] = [
 
 export const casesFormFields: FormField[] = [
     { 
-        name: 'id', 
+        name: '_id', 
         label: 'id', 
-        type: 'number', 
-        required: false
+        type: 'text', 
+        disabled: true
     },
     { 
         name: 'title', 
         label: 'title', 
-        type: 'number', 
-        required: false
+        type: 'text', 
+        required: true
     },
     { 
-        name: 'section_id', 
-        label: 'section_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'template_id', 
-        label: 'template_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'type_id', 
-        label: 'type_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'priority_id', 
-        label: 'priority_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'milestone_id', 
-        label: 'milestone_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'refs', 
-        label: 'refs', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'created_by', 
-        label: 'created_by', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'created_on', 
-        label: 'created_on', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'updated_by', 
-        label: 'updated_by', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'updated_on', 
-        label: 'updated_on', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'estimate', 
-        label: 'estimate', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'estimate_forecast', 
-        label: 'estimate_forecast', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'suite_id', 
-        label: 'suite_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'display_order', 
-        label: 'display_order', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'is_deleted', 
-        label: 'is_deleted', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'custom_automation_type', 
-        label: 'custom_automation_type', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'custom_preconds', 
-        label: 'custom_preconds', 
-        type: 'number', 
+        name: 'preconditions', 
+        label: 'Preconditions', 
+        type: 'textarea', 
         required: false
     },
     { 
         name: 'steps', 
-        label: 'steps', 
-        type: 'number', 
+        label: 'Steps', 
+        type: 'textarea', 
         required: false
     },
     { 
-        name: 'expected', 
-        label: 'expected', 
-        type: 'number', 
+        name: 'expectedResult', 
+        label: 'Expected Results', 
+        type: 'textarea', 
         required: false
     },
-    { 
-        name: 'steps_separated', 
-        label: 'steps_separated', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'mission', 
-        label: 'mission', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'goals', 
-        label: 'goals', 
-        type: 'number', 
-        required: false
-    }
 ];
 
 export const sharedStepsFormFields: FormField[] = [
@@ -355,6 +241,22 @@ export const suitesFormFields: FormField[] = [
         name: 'url', 
         label: 'url', 
         type: 'number', 
+        required: false
+    }
+];
+
+
+export const suiteFilterFormFields: FormField[] = [
+    { 
+        name: 'suite', 
+        label: 'Suite', 
+        type: 'text', 
+        required: false
+    },
+    { 
+        name: 'testCase', 
+        label: 'Test Case', 
+        type: 'text', 
         required: false
     }
 ];

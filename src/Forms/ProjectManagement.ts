@@ -272,3 +272,24 @@ export const milestonesFormFields: FormField[] = [
         required: false
     }
 ];
+
+export const todoFilterFormFields: FormField[] = [
+    { 
+        name: 'id', 
+        label: 'id', 
+        type: 'number', 
+        required: false
+    },
+    { 
+        name: 'completed_on', 
+        label: 'completed_on', 
+        type: 'select', 
+        required: false
+    },
+    { 
+        name: 'description', 
+        label: 'description', 
+        type: 'select', 
+        required: false
+    }
+];

@@ -5,27 +5,19 @@ import { MenuItem } from "../template/types";
 export const dashboardMenu: Record<string, MenuItem[]> = {
   "Project": [
     { label: "Dashboard", path: "/dashboard" },
-  ],
-  "Settings": [
-    { label: "Priorities", path: "/dashboard" },
-    { label: "Statuses", path: "/dashboard" },
-    { label: "Case Types", path: "/dashboard" },
-    { label: "Branding", path: "/dashboard" },
-  ],
+  ]
 };
 
 export const projectMenu: Record<string, MenuItem[]> = {
+  "": [
+    { label: "Home", path: "/dashboard" },
+  ],
   "Project": [
     { label: "Project Dashboard", path: "/project/:id" },
-    { label: "To Do", path: "/dashboard" },
-    { label: "Test Runs", path: "/dashboard" },
+    // { label: "To Do", path: "/project/:id/todos" },
+    { label: "Test Runs", path: "/project/:id/runs" },
     { label: "Test Suites", path: "/project/:id/suites" },
-    { label: "Milestones", path: "/dashboard" },
-  ],
-  "Other": [
-    { label: "System Dashboard", path: "/dashboard" },
-    { label: "Edit Project", path: "/dashboard" },
-    { label: "reports", path: "/dashboard" }
+    { label: "Milestones", path: "/project/:id/milestones" },
   ],
 };
 
@@ -36,33 +28,13 @@ export const userMenu: MenuItem[] = [
 ];
 
 export const settingsMenu: Record<string, MenuItem[]> = {
-  "User Management": [
-    { label: "Permissions", path: "/dashboard" },
-    { label: "Teams & Roles", path: "/dashboard" },
-    { label: "Users", path: "/dashboard" },
-    { label: "Session Overview", path: "/dashboard" },
+  "": [
+    { label: "Home", path: "/dashboard" },
   ],
-  "Administration": [
-    { label: "Metadata", path: "/dashboard" },
-    { label: "Environments", path: "/dashboard" },
-    { label: "Audit Logs", path: "/dashboard" },
-    { label: "Integration", path: "/dashboard" },
-    { label: "Data Management", path: "/dashboard" },
-    { label: "Site Settings", path: "/dashboard" }
-  ],
-  "Customization": [
-    { label: "Global Fields", path: "/dashboard" },
-    { label: "Branding", path: "/dashboard" },
-    { label: "Case Types", path: "/dashboard" },
-    { label: "Branding", path: "/dashboard" },
-  ],
-  "Test Cases": [
-    { label: "Priorities", path: "/dashboard" },
-    { label: "Statuses", path: "/dashboard" },
-    { label: "Case Types", path: "/dashboard" },
-    { label: "Branding", path: "/dashboard" },
-  ],
-  "Project": [
-    { label: "Projects", path: "/dashboard" },
+  "Configuration Pages": [
+    { label: "User Management", path: "/configuration/user-management" },
+    //{ label: "System Settings", path: "/configuration/administration" },
+    { label: "Customizations", path: "/configuration/customization" },
+    //{ label: "Testing Configs", path: "/configuration/testing" }
   ],
 };

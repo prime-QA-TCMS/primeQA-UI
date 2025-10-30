@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Container } from '@mui/material';
+import { Button, Container, useTheme } from '@mui/material';
 import { testing } from '../../Forms/ProjectManagement';
 import GenericForm from '../../components/forms/Form';
 import Popup from '../../components/popup/popup';
-import { ProjectListView } from '../projects/components/ProjectListView';
+import { ProjectListView } from '../projects/project/components/ProjectListView';
+import { contentContainer } from '../../style/muiComponentStyles/containerStyles';
 
 const Dashboard: React.FC = () => {
+    const theme = useTheme();
+    const styles = contentContainer(theme);
     localStorage.setItem('pageTitle', 'Dashboard');
     const [isCreateProjectPopupOpen, setIsCreateProjectPopupOpen] = useState(false);
     const handleCreateProjectOpen = () => setIsCreateProjectPopupOpen(true);
@@ -20,7 +23,7 @@ const Dashboard: React.FC = () => {
     };
 
     return (
-        <Container>
+        <Container sx={styles.root}>
             <Button onClick={handleCreateProjectOpen}>Create Project</Button>
             <Popup title="Create New Project" open={isCreateProjectPopupOpen} onClose={handleCreateProjectClose} component={
                 <GenericForm fields={testing} onSubmit={handleCreateProject} submitButtonText={'Create'}/>

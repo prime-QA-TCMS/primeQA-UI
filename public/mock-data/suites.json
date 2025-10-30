@@ -121,6 +121,28 @@
     "updatedAt": "2025-09-29T10:15:00Z"
   },
   {
+    "_id": "SUITE-025",
+    "projectId": "PRJ-005",
+    "parentId": null,
+    "name": "some other suite",
+    "description": " asdkfj alsdkfj aaskdjfl asdjf lasdjflasdjflaskdj fasdjf lasdjf asdjflaksdjf lasdjfalsdjflasdjflasjdf;as dfj adkfj alskdjf askldjf asdjf laksdjf.",
+    "order": 1,
+    "isArchived": false,
+    "createdAt": "2025-05-05T13:00:00Z",
+    "updatedAt": "2025-09-29T10:15:00Z"
+  },
+  {
+    "_id": "SUITE-035",
+    "projectId": "PRJ-005",
+    "parentId": null,
+    "name": "Dashboard Metrics 2",
+    "description": "Vasadkfj aslkdfjasldkfj oawierjtoqirwg laskdjf asdjfalsd falskdjf alskdjf .",
+    "order": 1,
+    "isArchived": true,
+    "createdAt": "2025-05-05T13:00:00Z",
+    "updatedAt": "2025-09-29T10:15:00Z"
+  },
+  {
     "_id": "SUITE-018",
     "projectId": "PRJ-006",
     "parentId": null,

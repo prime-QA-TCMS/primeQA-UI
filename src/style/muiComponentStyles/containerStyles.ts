@@ -33,13 +33,16 @@ export const contentContainer = (theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(0),
     boxShadow: theme.shadows[2],
-    display: 'flex',
-    justifyContent: 'left',
+    justifyContent: 'center',
     alignItems: 'left',
-    minHeight: '100vh',
+    minHeight: 'calc(100vh - 80px)',
+    maxHeight: 'calc(100vh - 80px)',
     minWidth: '100%',
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
 });
+
 export const wrapContainer = (theme: Theme) => ({
   root: {
     display: 'flex',
@@ -67,11 +70,11 @@ export const DrawerContainer = (theme: Theme) => ({
 export const halfScreenContainer = (theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
     boxShadow: theme.shadows[2],
     width: '48%', // keep this
-    display: 'flex',
-    flexDirection: 'column',
     borderRadius: theme.shape.borderRadius,
+    float: "left",
+    margin: "15px 1%",
+    padding: '15px 0'
   },
 });

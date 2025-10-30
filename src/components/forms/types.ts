@@ -43,6 +43,7 @@ export interface FormField {
         rule: keyof typeof validationRules; // ensures rule names match
         args?: any[];
     }[];
+    width?: "full" | "half"; 
 }
 
 // Custom button structure for additional actions

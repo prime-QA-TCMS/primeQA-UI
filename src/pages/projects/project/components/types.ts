@@ -1,5 +1,5 @@
-import { Milestone, Project } from "../../../types/database/Projects";
-import { TestRun } from "../../../types/database/Runs";
+import { Project, Milestone } from "../../../../types/database/Projects";
+import { TestRun } from "../../../../types/database/Runs";
 
 export interface ProjectListViewProps {
   projectObject: Project;

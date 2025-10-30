@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ProjectListViewProps } from "./types";
-import { Project } from '../../../types/database/Projects';
-import { useJsonData } from '../../../utils/useJsonData';
-import AccordionList, { AccordionItem } from '../../../components/lists/AccordionList';
 import { RocketLaunchOutlined } from '@mui/icons-material';
-import GenericList, { ListItemData } from '../../../components/lists/List';
+import AccordionList, { AccordionItem } from '../../../../components/lists/AccordionList';
+import GenericList, { ListItemData } from '../../../../components/lists/List';
+import { Project } from '../../../../types/database/Projects';
+import { useJsonData } from '../../../../utils/useJsonData';
 
 const ProjectListItem: React.FC<ProjectListViewProps> = ({ projectObject }) => {
     const navigate = useNavigate();
@@ -60,11 +60,21 @@ export const ProjectListView: React.FC = () => {
     }));
 
     return (
-        <Paper>
-            Active Projects:
-            <AccordionList items={activeAccordion} />
-            Archived Projects:
-            <GenericList items={archivedAccordion} />
-        </Paper>
+        <>
+            {activeAccordion.length > 0 ? 
+            <>
+                <Typography variant="h6" color="text.secondary">Active Projects:</Typography>
+                <AccordionList items={activeAccordion} />
+            </>
+            : <Typography variant="h6" color="text.secondary">No Active Projects</Typography>
+            }
+            {archivedAccordion.length > 0 ? 
+            <>
+                <Typography variant="h6" color="text.secondary">Archived Projects:</Typography>
+                <GenericList items={archivedAccordion} />
+            </>
+            : <Typography variant="h6" color="text.secondary">No Archived Projects</Typography>
+            }
+        </>
     );
 } ;

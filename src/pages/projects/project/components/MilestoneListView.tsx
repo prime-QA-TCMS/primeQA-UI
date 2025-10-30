@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ListItemProps } from "./types";
-import { Milestone } from '../../../types/database/Projects';
-import { useJsonData } from '../../../utils/useJsonData';
-import AccordionList, { AccordionItem } from '../../../components/lists/AccordionList';
 import { RocketLaunchOutlined } from '@mui/icons-material';
-import GenericList, { ListItemData } from '../../../components/lists/List';
-import GenericPieChart, { chartData } from '../../../components/charts/GenericPieChart';
+import GenericPieChart from '../../../../components/charts/pieChart/GenericPieChart';
+import GenericList, { ListItemData } from '../../../../components/lists/List';
+import { Milestone } from '../../../../types/database/Projects';
+import { useJsonData } from '../../../../utils/useJsonData';
+import { chartData } from '../../../../components/charts/pieChart/type';
 
 const RecordListItem: React.FC<ListItemProps> = ({ recordObject, projectID }) => {
     const navigate = useNavigate();
@@ -61,11 +61,11 @@ export const MilestoneListView: React.FC = () => {
 
     // Separate projects by state
     const activeProjects = projectMilestones.filter((p) => p.status === "Active");
-    const activeAccordion: AccordionItem[] = activeProjects.map((record) => ({
+    const activeAccordion: ListItemData[] = activeProjects.map((record) => ({
         id: record._id,
         title: record.name,
-        percentage: null,
-        component: <RecordListItem recordObject={record} projectID={projectID}/>,
+        icon: <RocketLaunchOutlined />,
+        link: "/project/" + projectID + "/milestone/" + record._id
     }));
 
     const completedProjects = projectMilestones.filter((p) => p.status === "Completed");
@@ -77,11 +77,21 @@ export const MilestoneListView: React.FC = () => {
     }));
 
     return (
-        <Paper>
-            Active Milestones:
-            <AccordionList items={activeAccordion} />
-            Completed Milestones:
-            <GenericList items={completedAccordion} />
-        </Paper>
+        <>
+            {activeAccordion.length > 0 ? 
+            <>
+                <Typography variant="h6" color="text.secondary">Active Milestones:</Typography>
+                <GenericList items={activeAccordion} />
+            </>
+            : <Typography variant="h6" color="text.secondary">No Active Milestones</Typography>
+            }
+            {completedAccordion.length > 0 ? 
+            <>
+                <Typography variant="h6" color="text.secondary">Completed Milestones:</Typography>
+                <GenericList items={completedAccordion} />
+            </>
+            : <Typography variant="h6" color="text.secondary">No Completed Milestones</Typography>
+            }
+        </>
     );
 } ;

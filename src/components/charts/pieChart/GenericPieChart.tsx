@@ -3,22 +3,7 @@ import { Box, Typography, Grid, IconButton, Paper } from '@mui/material';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import DownloadIcon from '@mui/icons-material/Download';
-
-// Data interface
-export interface chartData {
-  status: string;
-  count: number;
-  percentage: number;
-  color: string;
-}
-
-// Props
-interface statusSummaryProps {
-  title?: string;
-  data: chartData[];
-  onRefresh?: () => void;
-  onExportCsv?: () => void;
-}
+import { statusSummaryProps } from './type';
 
 const GenericPieChart: React.FC<statusSummaryProps> = ({
   title,
@@ -26,8 +11,6 @@ const GenericPieChart: React.FC<statusSummaryProps> = ({
   onRefresh,
   onExportCsv,
 }) => {
-  const total = data.reduce((sum, item) => sum + item.count, 0);
-
   return (
     <Paper>
       <Typography variant="h5" sx={{ mb: 2 }}>
