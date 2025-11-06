@@ -1,5 +1,4 @@
-import { Project, Milestone } from "../../../../types/database/Projects";
-import { TestRun } from "../../../../types/database/Runs";
+import { Project, Milestone, TestRun } from "../../../../types";
 
 export interface ProjectListViewProps {
   projectObject: Project;
@@ -7,12 +6,12 @@ export interface ProjectListViewProps {
 
 export interface ListItemProps {
   recordObject: Milestone;
-  projectID: any;
+  projectId: any;
 }
 
 
 export interface TestRunListItemProps {
   recordObject: TestRun;
-  projectID: any;
+  projectId: any;
 }
 

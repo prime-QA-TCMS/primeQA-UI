@@ -1,6 +1,6 @@
-import { Suite } from "../../../../types/database/Suites";
+import { Suite } from "../../../../types";
 
 export interface SuiteListItemProps {
   recordObject: Suite;
-  projectID: any;
+  projectId: any;
 }

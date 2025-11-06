@@ -1,97 +1,160 @@
-import React from 'react';
-import { Box, Paper, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { ListItemProps } from "./types";
-import { RocketLaunchOutlined } from '@mui/icons-material';
-import GenericPieChart from '../../../../components/charts/pieChart/GenericPieChart';
-import GenericList, { ListItemData } from '../../../../components/lists/List';
-import { Milestone } from '../../../../types/database/Projects';
-import { useJsonData } from '../../../../utils/useJsonData';
-import { chartData } from '../../../../components/charts/pieChart/type';
+import React, { useCallback } from "react";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import { useNavigate, useParams  } from "react-router-dom";
+import { RocketLaunchOutlined } from "@mui/icons-material";
 
-const RecordListItem: React.FC<ListItemProps> = ({ recordObject, projectID }) => {
-    const navigate = useNavigate();
+import GenericPieChart from "../../../../components/charts/pieChart/GenericPieChart";
+import GenericList, { ListItemData } from "../../../../components/lists/List";
+import { chartData } from "../../../../components/charts/pieChart/type";
 
-    const metrics = recordObject.metrics || {};
-    const rawData = [
-        { status: "Passed", count: metrics.passed ?? 0, color: "#4CAF50" },
-        { status: "Failed", count: metrics.failed ?? 0, color: "#E91E63" },
-        { status: "Blocked", count: metrics.blocked ?? 0, color: "#757575" },
-        { status: "Untested", count: metrics.untested ?? 0, color: "#FFC107" },
-    ];
-    const total = rawData.reduce((sum, item) => sum + item.count, 0);
-    
-    const testData: chartData[] = rawData.map((item) => ({
-        ...item,
-        percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
-    }));
+import { Milestone } from "../../../../types";
+import { useApi } from "../../../../hooks/useApi";
+import { ProjectAPI } from "../../../../api";
 
-    const handleNavigation = () => {
-        try {
-            localStorage.setItem('pageTitle', recordObject.name);
+// ---------- Single Milestone Item ----------
+interface ListItemProps {
+  recordObject: Milestone;
+  projectId: string;
+}
 
-            // ✅ Manually trigger a storage event for same-tab updates
-            globalThis.dispatchEvent(new StorageEvent('storage', { key: 'pageTitle', newValue: recordObject.name }));
+const RecordListItem: React.FC<ListItemProps> = ({ recordObject, projectId }) => {
+  const navigate = useNavigate();
 
-            navigate("/project/" + projectID + "/milestone/" + recordObject._id);
-        } catch (error) {
-            console.error('Error during navigation:', error);
-        }
-    };
+  // ✅ Generate test metrics (fallback-safe)
+  const metrics = recordObject.metrics || {};
+  const rawData = [
+    { status: "Passed", count: metrics.passed ?? 0, color: "#4CAF50" },
+    { status: "Failed", count: metrics.failed ?? 0, color: "#E91E63" },
+    { status: "Blocked", count: metrics.blocked ?? 0, color: "#757575" },
+    { status: "Untested", count: metrics.untested ?? 0, color: "#FFC107" },
+  ];
 
-    return (
-        <Box>
-            <GenericPieChart data={testData} title={"Overview"}/>
-            <p><b>Description: </b>{recordObject.description ? recordObject.description : "No Project Description"}</p>
-            <p><b>Status: </b>{recordObject.status ? recordObject.status : "No Project status"}</p>
-            <button onClick={handleNavigation}>View Project</button>
-        </ Box>
-    )
-} ;
+  const total = rawData.reduce((sum, item) => sum + item.count, 0);
+  const testData: chartData[] = rawData.map((item) => ({
+    ...item,
+    percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+  }));
 
+  // ✅ Navigate to milestone detail page
+  const handleNavigation = () => {
+    try {
+      localStorage.setItem("pageTitle", recordObject.title);
+      globalThis.dispatchEvent(
+        new StorageEvent("storage", { key: "pageTitle", newValue: recordObject.title })
+      );
+      navigate(`/project/${projectId}/milestone/${recordObject._id}`);
+    } catch (error) {
+      console.error("Error during navigation:", error);
+    }
+  };
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <GenericPieChart data={testData} title="Overview" />
+      <Typography variant="body2" sx={{ mt: 1 }}>
+        <b>Description:</b> {recordObject.description || "No milestone description"}
+      </Typography>
+      <Typography variant="body2">
+        <b>Status:</b> {recordObject.isCompleted ? "Completed" : "Active"}
+      </Typography>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        sx={{ mt: 1 }}
+        onClick={handleNavigation}
+      >
+        View Milestone
+      </Button>
+    </Box>
+  );
+};
+
+// ---------- Milestone List View ----------
 export const MilestoneListView: React.FC = () => {
-    const projectID = localStorage.getItem("projectId");
-    const { data, loading, error } = useJsonData<Milestone[]>("/mock-data/milestones.json");
+  const { projectId } = useParams<{ projectId: string }>();
 
-    if (loading) return <p>Loading users...</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-    if (!data || data.length === 0) return <p>No users found.</p>;
+  // ✅ useCallback ensures stable reference across re-renders
+  const fetchMilestones = useCallback(
+    () => ProjectAPI.milestoneGetAll(projectId ? projectId : "notFound"),
+    [projectId]
+  );
 
-    const projectMilestones = data.filter((p) => p.projectId === projectID);
+  // ✅ This now runs ONCE per mount (unless projectId changes)
+  const { data: milestones, loading, error } = useApi<Milestone[]>(fetchMilestones, [projectId]);
 
-    // Separate projects by state
-    const activeProjects = projectMilestones.filter((p) => p.status === "Active");
-    const activeAccordion: ListItemData[] = activeProjects.map((record) => ({
-        id: record._id,
-        title: record.name,
-        icon: <RocketLaunchOutlined />,
-        link: "/project/" + projectID + "/milestone/" + record._id
-    }));
-
-    const completedProjects = projectMilestones.filter((p) => p.status === "Completed");
-    const completedAccordion: ListItemData[] = completedProjects.map((record) => ({
-        id: record._id,
-        title: record.name,
-        icon: <RocketLaunchOutlined />,
-        link: "/project/" + projectID + "/milestone/" + record._id
-    }));
-
+  if (loading)
     return (
-        <>
-            {activeAccordion.length > 0 ? 
-            <>
-                <Typography variant="h6" color="text.secondary">Active Milestones:</Typography>
-                <GenericList items={activeAccordion} />
-            </>
-            : <Typography variant="h6" color="text.secondary">No Active Milestones</Typography>
-            }
-            {completedAccordion.length > 0 ? 
-            <>
-                <Typography variant="h6" color="text.secondary">Completed Milestones:</Typography>
-                <GenericList items={completedAccordion} />
-            </>
-            : <Typography variant="h6" color="text.secondary">No Completed Milestones</Typography>
-            }
-        </>
+      <Box sx={{ textAlign: "center", mt: 4 }}>
+        <CircularProgress size={28} />
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Loading milestones...
+        </Typography>
+      </Box>
     );
-} ;
+
+  if (error)
+    return (
+      <Typography color="error" sx={{ mt: 2 }}>
+        Failed to load milestones. {String(error)}
+      </Typography>
+    );
+
+  if (!milestones?.length)
+    return (
+      <Typography variant="h6" color="text.secondary" sx={{ mt: 2 }}>
+        No milestones found for this project.
+      </Typography>
+    );
+
+  // ✅ Separate Active vs Completed
+  const activeMilestones = milestones.filter((m) => !m.isCompleted);
+  const completedMilestones = milestones.filter((m) => m.isCompleted);
+
+  // ✅ Create list items for each
+  const activeList: ListItemData[] = activeMilestones.map((record) => ({
+    id: record._id || "",
+    title: record.title,
+    icon: <RocketLaunchOutlined />,
+    link: `/project/${projectId}/milestone/${record._id}`,
+  }));
+
+  const completedList: ListItemData[] = completedMilestones.map((record) => ({
+    id: record._id || "",
+    title: record.title,
+    icon: <RocketLaunchOutlined />,
+    link: `/project/${projectId}/milestone/${record._id}`,
+  }));
+
+  return (
+    <>
+      {activeList.length > 0 ? (
+        <>
+          <Typography variant="h6" color="text.secondary">
+            Active Milestones
+          </Typography>
+          <GenericList items={activeList} />
+        </>
+      ) : (
+        <Typography variant="h6" color="text.secondary">
+          No Active Milestones
+        </Typography>
+      )}
+
+      {completedList.length > 0 ? (
+        <>
+          <Typography variant="h6" color="text.secondary" sx={{ mt: 2 }}>
+            Completed Milestones
+          </Typography>
+          <GenericList items={completedList} />
+        </>
+      ) : (
+        <Typography variant="h6" color="text.secondary" sx={{ mt: 2 }}>
+          No Completed Milestones
+        </Typography>
+      )}
+    </>
+  );
+};
+
+export default MilestoneListView;

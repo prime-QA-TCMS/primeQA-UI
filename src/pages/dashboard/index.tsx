@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Container, useTheme } from '@mui/material';
-import { testing } from '../../Forms/ProjectManagement';
+import { createProject } from '../../Forms/ProjectManagement';
 import GenericForm from '../../components/forms/Form';
 import Popup from '../../components/popup/popup';
 import { ProjectListView } from '../projects/project/components/ProjectListView';
 import { contentContainer } from '../../style/muiComponentStyles/containerStyles';
+import { ProjectAPI } from '../../api/project.api';
 
 const Dashboard: React.FC = () => {
     const theme = useTheme();
@@ -16,9 +17,24 @@ const Dashboard: React.FC = () => {
     
     const handleCreateProject = async (formData: { [key: string]: any }) => {
         try {
-            console.log("you created project:", formData);
+            const newProject = {
+                name: formData.name,
+                key: formData.key,
+                description: formData.description || "",
+                visibility: formData.visibility || "private",
+                owner: localStorage.getItem("userId") || "", // assuming user is logged in
+                isActive: true
+            };
+            
+            const response = await ProjectAPI.projectCreate(newProject);
+
+            if (response) {
+                console.log("✅ Project created successfully:", response);
+            } else {
+                console.warn("⚠️ Project creation returned null or empty response.");
+            }
         } catch (error) {
-            console.error("Error during login:", error);
+            console.error("❌ Error creating project:", error);
         }
     };
 
@@ -26,7 +42,7 @@ const Dashboard: React.FC = () => {
         <Container sx={styles.root}>
             <Button onClick={handleCreateProjectOpen}>Create Project</Button>
             <Popup title="Create New Project" open={isCreateProjectPopupOpen} onClose={handleCreateProjectClose} component={
-                <GenericForm fields={testing} onSubmit={handleCreateProject} submitButtonText={'Create'}/>
+                <GenericForm fields={createProject} onSubmit={handleCreateProject} submitButtonText={'Create'}/>
             } />
             
             <ProjectListView />

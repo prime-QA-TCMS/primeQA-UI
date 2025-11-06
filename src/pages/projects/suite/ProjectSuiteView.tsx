@@ -1,62 +1,193 @@
-import React from "react";
-import { Box, Container, Typography, useTheme } from "@mui/material";
-import AccordionList, { AccordionItem } from "../../../components/lists/AccordionList";
-import GenericForm from "../../../components/forms/Form";
-import { useJsonData } from "../../../utils/useJsonData";
-import { Section } from "../../../types/database/Suites";
-import { TestCase } from "../../../types/database/TestCase";
-import { casesFormFields } from "../../../Forms/TestCaseManagement";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  useTheme,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Collapse,
+  Paper,
+} from "@mui/material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { contentContainer } from "../../../style/muiComponentStyles/containerStyles";
+import { useSections, useTestcases } from "../../../hooks/useTestCases";
+import { Section, TestCase } from "../../../types";
+import { useParams } from "react-router-dom";
 
 const ProjectSuiteView: React.FC = () => {
-    const theme = useTheme();
-    const styles = contentContainer(theme);
-  const suiteId = localStorage.getItem("suiteId") || "";
+  const theme = useTheme();
+  const styles = contentContainer(theme);
+  const { suiteId } = useParams<{ suiteId: string }>();
 
-  const { data: testCases, loading: tcLoading, error: tcError } = useJsonData<TestCase[]>("/mock-data/testcases.json");
-  const { data: sections, loading: secLoading, error: secError } = useJsonData<Section[]>("/mock-data/sections.json");
+  // ✅ Local state to store fetched data once
+  const [sectionsData, setSectionsData] = useState<Section[]>([]);
+  const [testcasesData, setTestcasesData] = useState<TestCase[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-  if (tcLoading || secLoading) return <p>Loading...</p>;
-  if (tcError || secError) return <p style={{ color: "red" }}>Error loading data.</p>;
-  if (!sections || !testCases) return <p>No data found.</p>;
+  const {
+    data: sections,
+    loading: secLoading,
+    error: secError,
+  } = useSections(suiteId || "notFound");
 
-  const suiteSections = sections.filter((sec) => sec.suiteId === suiteId);
+  const {
+    data: testcases,
+    loading: tcLoading,
+    error: tcError,
+  } = useTestcases(suiteId || "notFound");
 
-  const sectionAccordions: AccordionItem[] = suiteSections.map((section, index) => {
-    const sectionCases = testCases.filter((tc) => tc.sectionId === section._id && tc.suiteId === suiteId);
+  const loading = secLoading || tcLoading;
+  const error = secError || tcError;
 
-    return {
-      id: index + 1,
-      title: section.name + " (Case Count: " + sectionCases.length + ") ",
-      percentage: null,
-      component: (
-        <AccordionList
-          items={sectionCases.map((test, idx) => ({
-            id: idx + test._id,
-            title: test.title,
-            percentage: null,
-            component: (
-              <GenericForm
-                initialValues={test}
-                fields={casesFormFields}
-                onSubmit={(data) => console.log(`Saved ${test.title}:`, data)}
-                submitButtonText="Save"
-              />
-            ),
-          }))}
-        />
-      ),
-    };
-  });
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // ✅ Only store data once after first successful load
+  useEffect(() => {
+    if (!dataLoaded && !loading && sections?.length && testcases?.length) {
+      setSectionsData(sections);
+      setTestcasesData(testcases);
+      setDataLoaded(true);
+    }
+  }, [loading, sections, testcases, dataLoaded]);
+
+  // ✅ Loading
+  if (!dataLoaded && loading) {
+    return (
+      <Box sx={{ textAlign: "center", mt: 4 }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Loading suite data...
+        </Typography>
+      </Box>
+    );
+  }
+
+  // ✅ Error
+  if (error) {
+    return (
+      <Typography color="error" sx={{ mt: 2 }}>
+        Failed to load suite data. {error}
+      </Typography>
+    );
+  }
+
+  // ✅ No data
+  if (!sectionsData?.length) {
+    return <Typography sx={{ mt: 2 }}>No sections found for this suite.</Typography>;
+  }
+
+  const suiteSections = sectionsData.filter(
+    (section: Section) => section.suiteId === suiteId
+  );
 
   return (
     <Container sx={styles.root}>
       <Box sx={{ p: 3 }}>
-        {sectionAccordions.length > 0 ? (
-          <AccordionList items={sectionAccordions} />
-        ) : (
-          <Typography>No sections found for this suite.</Typography>
-        )}
+        <Typography variant="h5" gutterBottom>
+          Suite Sections
+        </Typography>
+
+        <TableContainer component={Paper}>
+          <Table aria-label="sections table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Section Name</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell align="center">Test Case Count</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {suiteSections.map((section: Section) => {
+                const sectionCases = testcasesData?.filter(
+                  (tc: TestCase) => tc.sectionId === section._id
+                );
+                const isOpen = openSection === section._id;
+
+                return (
+                  <React.Fragment key={section._id}>
+                    {/* Main Row */}
+                    <TableRow
+                      hover
+                      sx={{ cursor: "pointer" }}
+                      onClick={() =>
+                        setOpenSection(isOpen ? null : section._id)
+                      }
+                    >
+                      <TableCell width="5%">
+                        <IconButton size="small">
+                          {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>{section.name}</TableCell>
+                      <TableCell>{section.description || "—"}</TableCell>
+                      <TableCell align="center">
+                        {sectionCases?.length || 0}
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Expandable Row */}
+                    <TableRow>
+                      <TableCell
+                        style={{ paddingBottom: 0, paddingTop: 0 }}
+                        colSpan={4}
+                      >
+                        <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                          <Box sx={{ margin: 2 }}>
+                            <Typography variant="subtitle1" gutterBottom>
+                              Test Cases
+                            </Typography>
+
+                            {sectionCases && sectionCases.length > 0 ? (
+                              <Table size="small" aria-label="test cases">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Title</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Status</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {sectionCases.map((test: TestCase) => (
+                                    <TableRow key={test._id}>
+                                      <TableCell>{test.title}</TableCell>
+                                      <TableCell>
+                                        {test.description || "—"}
+                                      </TableCell>
+                                      <TableCell>
+                                        {"Not Set"}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            ) : (
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ ml: 2 }}
+                              >
+                                No test cases found for this section.
+                              </Typography>
+                            )}
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   );

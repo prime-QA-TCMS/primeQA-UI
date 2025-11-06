@@ -1,7 +1,7 @@
 import { FormField } from "../components/forms/types";
 
 
-export const testing: FormField[] = [
+export const createProject: FormField[] = [
   // ──────────────── Basic Info ────────────────
   {
     name: 'name',
@@ -18,112 +18,21 @@ export const testing: FormField[] = [
     placeholder: 'Brief project summary',
   },
   {
-    name: 'ownerEmail',
-    label: 'Owner Email',
-    type: 'email',
-    required: true,
-    placeholder: 'owner@company.com',
-  },
-  {
-    name: 'password',
-    label: 'API Access Password',
-    type: 'password',
-    required: false,
-  },
-  {
-    name: 'priority',
-    label: 'Priority Level',
-    type: 'number',
-    required: true,
-  },
-
-  // ──────────────── Selection & Toggles ────────────────
-  {
-    name: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      { label: 'Active', value: 'active' },
-      { label: 'On Hold', value: 'hold' },
-      { label: 'Completed', value: 'completed' },
-    ],
-    required: true,
-  },
-  {
-    name: 'tags',
-    label: 'Tags',
-    type: 'multiselect',
-    options: [
-      { label: 'Frontend', value: 'frontend' },
-      { label: 'Backend', value: 'backend' },
-      { label: 'API', value: 'api' },
-      { label: 'QA', value: 'qa' },
-    ],
-    required: false,
-  },
-  {
-    name: 'isPublic',
-    label: 'Public Project',
-    type: 'switch',
-    required: false,
-  },
-  {
-    name: 'customerSatisfaction',
-    label: 'Customer Satisfaction Rating',
-    type: 'rating',
-    required: false,
-  },
-
-  // ──────────────── Date & Time ────────────────
-  {
-    name: 'startDate',
-    label: 'Start Date',
-    type: 'date',
-    required: true,
-  },
-  {
-    name: 'deadline',
-    label: 'Deadline',
-    type: 'datetime',
-    required: false,
-  },
-  {
-    name: 'reviewWindow',
-    label: 'Review Window',
-    type: 'daterange',
-    required: false,
-  },
-
-  // ──────────────── Radio & Media ────────────────
-  {
     name: 'visibility',
     label: 'Visibility',
-    type: 'radio',
+    type: 'select',
     options: [
       { label: 'Private', value: 'private' },
-      { label: 'Internal', value: 'internal' },
       { label: 'Public', value: 'public' },
     ],
     required: true,
   },
   {
-    name: 'projectBrief',
-    label: 'Project Brief (PDF or Doc)',
-    type: 'file',
+    name: 'isActive',
+    label: 'Active?',
+    type: 'switch',
     required: false,
-  },
-  {
-    name: 'projectLogo',
-    label: 'Project Logo',
-    type: 'image',
-    required: false,
-  },
-  {
-    name: 'demoVideo',
-    label: 'Demo Video',
-    type: 'video',
-    required: false,
-  },
+  }
 ];
 
 

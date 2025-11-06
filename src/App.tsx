@@ -24,13 +24,14 @@ const App: React.FC = () => {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Login />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/dashboard" element={<ProtectedRoute children={<Dashboard />} menuItems={dashboardMenu} />} />
                         
-                        <Route path="/project/:id" element={<ProtectedRoute children={<ProjectDashboard />} menuItems={projectMenu} />} />
-                        <Route path="/project/:id/suites" element={<ProtectedRoute children={<ProjectSuite />} menuItems={projectMenu} />} />
-                        <Route path="/project/:id/suite/:suiteId" element={<ProtectedRoute children={<ProjectSuiteView />} menuItems={projectMenu} />} />
-                        <Route path="/project/:id/milestones" element={<ProtectedRoute children={<MilestonesDashboard />} menuItems={projectMenu} />} />
-                        <Route path="/project/:id/runs" element={<ProtectedRoute children={<RunsDashboard />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId" element={<ProtectedRoute children={<ProjectDashboard />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId/suites" element={<ProtectedRoute children={<ProjectSuite />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId/suite/:suiteId" element={<ProtectedRoute children={<ProjectSuiteView />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId/milestones" element={<ProtectedRoute children={<MilestonesDashboard />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId/runs" element={<ProtectedRoute children={<RunsDashboard />} menuItems={projectMenu} />} />
                         
                         <Route path="/configuration" element={<ProtectedRoute children={<ConfigurationDashboard />} menuItems={settingsMenu} />} />
                         <Route path="/configuration/user-management" element={<ProtectedRoute children={<UserManagementDashboard />} menuItems={settingsMenu} />} />
