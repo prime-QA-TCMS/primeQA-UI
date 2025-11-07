@@ -37,18 +37,10 @@ const UserGroupCard: React.FC<UserGroupCardProps> = ({_id, name, description, pe
       </AccordionSummary>
       <AccordionDetails>
         {description}<br/><br/>
-        
         List of Permissions: <br/>
         {permissionsList.length > 0 ? (
-            permissionsList.map((permission) => (
-              permission + ', '
-            ))
-        ) : (
-            <p>No Permissions Assigned.</p>
-        )}
-
-        
-
+            permissionsList.map((permission) => (permission + ', '))
+        ) : (<p>No Permissions Assigned.</p>)}
       </AccordionDetails>
     </Accordion>
   );

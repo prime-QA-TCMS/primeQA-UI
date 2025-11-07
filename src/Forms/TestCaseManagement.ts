@@ -161,89 +161,147 @@ export const sharedStepFormFields: FormField[] = [
     }
 ];
 
-export const sectionsFormFields: FormField[] = [
+export const testCaseFormFields = (projectId: string | undefined, suiteId: string | undefined, sectionId: string | undefined): FormField[] => [
     { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
+        name: "projectId",
+        label: "Project",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/projects",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: projectId || null
+    },
+    { 
+        name: "suiteId",
+        label: "Suite",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/suites",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: suiteId || null
+    },
+    { 
+        name: "sectionId",
+        label: "Section",
+        type: "select",
+        required: true,
+        disabled: !!sectionId,
+        apiEndpoint: "/sections/suite/" + suiteId,
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: suiteId || null
+    },
+    { 
+        name: "title",
+        label: "Name",
+        type: "text",
+        required: true
+    },
+    { 
+        name: "description",
+        label: "Description",
+        type: "textarea",
         required: false
     },
     { 
-        name: 'depth', 
-        label: 'depth', 
-        type: 'number', 
+        name: "preconditions",
+        label: "Preconditions",
+        type: "textarea",
         required: false
     },
     { 
-        name: 'description', 
-        label: 'description', 
-        type: 'number', 
+        name: "steps",
+        label: "Steps",
+        type: "textarea",
         required: false
     },
     { 
-        name: 'display_order', 
-        label: 'display_order', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'parent_id', 
-        label: 'parent_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'suite_id', 
-        label: 'suite_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'number', 
+        name: "expectedResults",
+        label: "Expected Results",
+        type: "textarea",
         required: false
     }
 ];
 
-export const suitesFormFields: FormField[] = [
+export const sectionsFormFields = (projectId: string | undefined, suiteId: string | undefined): FormField[] => [
     { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
+        name: "projectId",
+        label: "Project",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/projects",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: projectId || null
+    },
+    { 
+        name: "suiteId",
+        label: "Suite",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/suites",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: suiteId || null
+    },
+    { 
+        name: "name",
+        label: "Name",
+        type: "text",
+        required: true
+    },
+    { 
+        name: "description",
+        label: "Description",
+        type: "textarea",
         required: false
     },
     { 
-        name: 'description', 
-        label: 'description', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'url', 
-        label: 'url', 
-        type: 'number', 
+        name: "isActive",
+        label: "Active?",
+        type: "switch",
         required: false
     }
 ];
+
+export const suitesFormFields = (projectId: string | undefined): FormField[] => [
+  { 
+    name: "projectId",
+    label: "Project",
+    type: "select",
+    required: true,
+    disabled: !!projectId,
+    apiEndpoint: "/projects",
+    optionLabelKey: "name",
+    optionValueKey: "_id",
+    defaultValue: projectId || null
+  },
+  { 
+    name: "name",
+    label: "Name",
+    type: "text",
+    required: true
+  },
+  { 
+    name: "description",
+    label: "Description",
+    type: "textarea",
+    required: false
+  },
+  { 
+    name: "isActive",
+    label: "Active?",
+    type: "switch",
+    required: false
+  }
+];
+
 
 
 export const suiteFilterFormFields: FormField[] = [

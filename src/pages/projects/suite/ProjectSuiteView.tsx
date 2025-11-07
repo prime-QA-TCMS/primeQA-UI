@@ -1,195 +1,216 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  useTheme,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  IconButton,
-  Collapse,
-  Paper,
-} from "@mui/material";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { contentContainer } from "../../../style/muiComponentStyles/containerStyles";
-import { useSections, useTestcases } from "../../../hooks/useTestCases";
-import { Section, TestCase } from "../../../types";
+import React, { useState } from "react";
+import { Box, Container, Typography, CircularProgress } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
+import { contentContainer } from "../../../style/muiComponentStyles/containerStyles";
+import {
+  useCreateSection,
+  useCreateTestcase,
+  useSections,
+  useSuiteById,
+} from "../../../hooks/useTestCases";
+import { Section, TestCase } from "../../../types";
+import { TestcaseAPI } from "../../../api";
+import { DataTable } from "../../../components/table/DataTable";
+import { Column, NestedConfig } from "../../../components/table/types";
+import PopUpForm from "../../../components/forms/PopUpForm";
+import {
+  sectionsFormFields,
+  testCaseFormFields,
+} from "../../../Forms/TestCaseManagement"; // ✅ assuming you have a test case form config
 
+// ✅ Top-level suite view
 const ProjectSuiteView: React.FC = () => {
   const theme = useTheme();
   const styles = contentContainer(theme);
-  const { suiteId } = useParams<{ suiteId: string }>();
 
-  // ✅ Local state to store fetched data once
-  const [sectionsData, setSectionsData] = useState<Section[]>([]);
-  const [testcasesData, setTestcasesData] = useState<TestCase[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const { projectId, suiteId } = useParams<{ projectId: string; suiteId: string }>();
+  const [testcasesMap, setTestcasesMap] = useState<Record<string, TestCase[]>>({});
+  const [loadingSections, setLoadingSections] = useState<Record<string, boolean>>({});
 
+  const { data, loading, error } = useSuiteById(suiteId || "notfound");
   const {
     data: sections,
-    loading: secLoading,
-    error: secError,
+    loading: sectionsLoading,
+    error: sectionsError,
+    refetch,
   } = useSections(suiteId || "notFound");
 
-  const {
-    data: testcases,
-    loading: tcLoading,
-    error: tcError,
-  } = useTestcases(suiteId || "notFound");
+  const { createSection } = useCreateSection();
 
-  const loading = secLoading || tcLoading;
-  const error = secError || tcError;
-
-  const [openSection, setOpenSection] = useState<string | null>(null);
-
-  // ✅ Only store data once after first successful load
-  useEffect(() => {
-    if (!dataLoaded && !loading && sections?.length && testcases?.length) {
-      setSectionsData(sections);
-      setTestcasesData(testcases);
-      setDataLoaded(true);
-    }
-  }, [loading, sections, testcases, dataLoaded]);
-
-  // ✅ Loading
-  if (!dataLoaded && loading) {
+  // ✅ Loading & error handling
+  if (loading) {
     return (
       <Box sx={{ textAlign: "center", mt: 4 }}>
         <CircularProgress />
         <Typography variant="body2" sx={{ mt: 1 }}>
-          Loading suite data...
+          Loading test suite...
         </Typography>
       </Box>
     );
   }
 
-  // ✅ Error
   if (error) {
     return (
       <Typography color="error" sx={{ mt: 2 }}>
-        Failed to load suite data. {error}
+        Failed to load test suite. {error}
       </Typography>
     );
   }
 
-  // ✅ No data
-  if (!sectionsData?.length) {
-    return <Typography sx={{ mt: 2 }}>No sections found for this suite.</Typography>;
+  if (!data) {
+    return <Typography>No test suite found for this project.</Typography>;
   }
 
-  const suiteSections = sectionsData.filter(
+  // 🔄 Fetch test cases when expanding a section
+  const fetchTestCases = async (sectionId: string) => {
+    if (testcasesMap[sectionId]) return; // Already fetched
+
+    setLoadingSections((prev) => ({ ...prev, [sectionId]: true }));
+    try {
+      const data = await TestcaseAPI.testcaseGetAll(sectionId);
+      if (data) {
+        setTestcasesMap((prev) => ({
+          ...prev,
+          [sectionId]: data,
+        }));
+      }
+    } catch (err) {
+      console.error(`❌ Failed to fetch test cases for section ${sectionId}:`, err);
+    } finally {
+      setLoadingSections((prev) => ({ ...prev, [sectionId]: false }));
+    }
+  };
+
+  const projectSections = (sections || []).filter(
     (section: Section) => section.suiteId === suiteId
   );
+
+  // ✅ Handle create new section
+  const handleCreateSave = async (formData: any) => {
+    try {
+      const response = await createSection(formData);
+      if (response) {
+        console.log("✅ Section created successfully:", response);
+        await refetch(suiteId);
+      }
+      return response;
+    } catch (err) {
+      console.error("❌ Error creating section:", err);
+      return null;
+    }
+  };
+
+  // ✅ Table column configuration
+  const sectionColumns: Column<Section>[] = [
+    { key: "name", label: "Section Name" },
+    { key: "description", label: "Description" },
+    {
+      key: "count",
+      label: "Test Case Count",
+      align: "center",
+      render: (item) => testcasesMap[item._id]?.length || 0,
+    },
+  ];
+
+  // ✅ Nested table configuration
+  const dynamicNestedConfig: NestedConfig<Section> = {
+    getNestedData: (section) => {
+      if (!testcasesMap[section._id]) {
+        void fetchTestCases(section._id);
+      }
+      return testcasesMap[section._id] || [];
+    },
+    nestedColumns: [
+      { key: "title", label: "Title" },
+      { key: "description", label: "Description" },
+      {
+        key: "status",
+        label: "Status",
+        render: () => "Not Set",
+      },
+    ],
+    loading: Object.values(loadingSections).some(Boolean),
+  };
 
   return (
     <Container sx={styles.root}>
       <Box sx={{ p: 3 }}>
         <Typography variant="h5" gutterBottom>
-          Suite Sections
+          {data.name}
         </Typography>
 
-        <TableContainer component={Paper}>
-          <Table aria-label="sections table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Section Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell align="center">Test Case Count</TableCell>
-              </TableRow>
-            </TableHead>
+        {/* ✅ Create Section Popup */}
+        <PopUpForm
+          suitesFormFields={sectionsFormFields(projectId, suiteId)}
+          onSubmit={handleCreateSave}
+          submitText="Save Section"
+          buttonText="Add Section"
+          title="Create New Section"
+        />
 
-            <TableBody>
-              {suiteSections.map((section: Section) => {
-                const sectionCases = testcasesData?.filter(
-                  (tc: TestCase) => tc.sectionId === section._id
-                );
-                const isOpen = openSection === section._id;
-
-                return (
-                  <React.Fragment key={section._id}>
-                    {/* Main Row */}
-                    <TableRow
-                      hover
-                      sx={{ cursor: "pointer" }}
-                      onClick={() =>
-                        setOpenSection(isOpen ? null : section._id)
-                      }
-                    >
-                      <TableCell width="5%">
-                        <IconButton size="small">
-                          {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>{section.name}</TableCell>
-                      <TableCell>{section.description || "—"}</TableCell>
-                      <TableCell align="center">
-                        {sectionCases?.length || 0}
-                      </TableCell>
-                    </TableRow>
-
-                    {/* Expandable Row */}
-                    <TableRow>
-                      <TableCell
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                        colSpan={4}
-                      >
-                        <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                          <Box sx={{ margin: 2 }}>
-                            <Typography variant="subtitle1" gutterBottom>
-                              Test Cases
-                            </Typography>
-
-                            {sectionCases && sectionCases.length > 0 ? (
-                              <Table size="small" aria-label="test cases">
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Title</TableCell>
-                                    <TableCell>Description</TableCell>
-                                    <TableCell>Status</TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {sectionCases.map((test: TestCase) => (
-                                    <TableRow key={test._id}>
-                                      <TableCell>{test.title}</TableCell>
-                                      <TableCell>
-                                        {test.description || "—"}
-                                      </TableCell>
-                                      <TableCell>
-                                        {"Not Set"}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            ) : (
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{ ml: 2 }}
-                              >
-                                No test cases found for this section.
-                              </Typography>
-                            )}
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {/* ✅ Main Data Table with nested "Create Test Case" component */}
+        <DataTable<Section>
+          title="Sections"
+          data={projectSections}
+          columns={sectionColumns}
+          loading={sectionsLoading}
+          nestedConfig={dynamicNestedConfig}
+          emptyMessage="No sections available."
+          nestedHeaderComponent={(section) => (
+            <CreateTestCaseComponent
+              projectId={projectId!}
+              suiteId={suiteId!}
+              sectionId={section._id}
+              refetch={() => fetchTestCases(section._id)}
+            />
+          )}
+        />
       </Box>
     </Container>
+  );
+};
+
+// ✅ Create Test Case Form displayed above nested table
+interface CreateTestCaseComponentProps {
+  projectId: string;
+  suiteId: string;
+  sectionId: string;
+  refetch: () => Promise<void> | void;
+}
+
+const CreateTestCaseComponent: React.FC<CreateTestCaseComponentProps> = ({
+  projectId,
+  suiteId,
+  sectionId,
+  refetch,
+}) => {
+  const { createTestcase } = useCreateTestcase();
+
+  const handleCreateSave = async (formData: any) => {
+    try {
+      console.log("formData",formData)
+      const response = await createTestcase(formData);
+      if (response) {
+        console.log("✅ Test case created successfully:", response);
+        await refetch();
+      }
+      //return response;
+    } catch (err) {
+      console.error("❌ Error creating test case:", err);
+      //return null;
+    }
+  };
+
+  console.log("sectionId: ", sectionId);
+  return (
+    <PopUpForm
+      suitesFormFields={testCaseFormFields(projectId, suiteId, sectionId)}
+      onSubmit={handleCreateSave}
+      submitText="Save Test Case"
+      buttonText="Add Test Case"
+      title="Create New Test Case"
+    />
   );
 };
 

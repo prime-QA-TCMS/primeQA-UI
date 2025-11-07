@@ -3,7 +3,6 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 import { AxiosHelper } from "../utils/axiosHelper";
 import { API_BASE_URLS } from "../config/apiConfig";
 
-// ✅ Define microservice APIs
 interface AxiosHelpers {
   userApi: AxiosHelper;
   projectApi: AxiosHelper;
@@ -14,14 +13,12 @@ interface AxiosHelpers {
 
 const AxiosContext = createContext<AxiosHelpers | undefined>(undefined);
 
-// ✅ Hook to access axios context
 export const useAxios = (): AxiosHelpers => {
   const context = useContext(AxiosContext);
   if (!context) throw new Error("useAxios must be used within an AxiosProvider");
   return context;
 };
 
-// ✅ Helper to create axios instances with refresh token support
 const createAxiosInstance = (baseURL: string, withAuth = true): AxiosHelper => {
   const token = localStorage.getItem("token");
   const instance: AxiosInstance = axios.create({
@@ -30,7 +27,6 @@ const createAxiosInstance = (baseURL: string, withAuth = true): AxiosHelper => {
     headers: { "Content-Type": "application/json" },
   });
   
-  // 🔹 Attach access token to all requests
   instance.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem("accessToken");
@@ -46,7 +42,6 @@ const createAxiosInstance = (baseURL: string, withAuth = true): AxiosHelper => {
   return new AxiosHelper(instance);
 };
 
-// ✅ Axios Provider: registers all microservice instances
 export const AxiosProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const axiosHelpers: AxiosHelpers = {
     // userApi: no auth for login/register/refresh

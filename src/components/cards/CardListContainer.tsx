@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 import CardView from './CardView';
 
 export interface CardItem {
-    id: number;
+    id: string | number;
     title?: string;
     description: string;
     component?: React.ReactNode;

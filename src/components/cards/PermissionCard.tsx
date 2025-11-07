@@ -16,30 +16,19 @@ export interface PermissionCardProps {
 }
 
 const PermissionCard: React.FC<PermissionCardProps> = ({ data }) => {
-  const [selectedActions, setSelectedActions] = useState<string[]>([]);
+  const handleFormSubmit = async (submittedData: any) => {submittedData.preventDefault();};
 
-  const handleFormSubmit = async (submittedData: any) => {
-        submittedData.preventDefault();
-    };
-
-    const actionFields: FormField[] = data.actions.map((action) => ({
-        name: action,
-        label: action.charAt(0).toUpperCase() + action.slice(1),
-        type: "switch",
-        required: false,
-      }));
+  const actionFields: FormField[] = data.actions.map((action) => ({
+    name: action,
+    label: action.charAt(0).toUpperCase() + action.slice(1),
+    type: "switch",
+    required: false,
+  }));
 
   return (
     <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header" >
-      {data.name.replace("_", " ")}
-      </AccordionSummary>
-      <AccordionDetails>
-        <GenericForm 
-          fields={actionFields} 
-          onSubmit={handleFormSubmit} 
-        />
-      </AccordionDetails>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header" >{data.name.replace("_", " ")}</AccordionSummary>
+      <AccordionDetails><GenericForm fields={actionFields} onSubmit={handleFormSubmit} /></AccordionDetails>
     </Accordion>
   );
 };

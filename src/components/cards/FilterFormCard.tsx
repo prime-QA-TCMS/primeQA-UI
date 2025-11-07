@@ -24,12 +24,8 @@ const FilterFormCard: React.FC<FilterFormCardProps> = ({name, filterFormFields, 
 
   return (
     <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        {name.replace("_", " ")} 
-      </AccordionSummary>
-      <AccordionDetails>
-        <GenericForm fields={filterFormFields} onSubmit={handleSubmit} submitButtonText={'Search'}/>
-      </AccordionDetails>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>{name.replace("_", " ")} </AccordionSummary>
+      <AccordionDetails><GenericForm fields={filterFormFields} onSubmit={handleSubmit} submitButtonText={'Search'}/></AccordionDetails>
     </Accordion>
   );
 };

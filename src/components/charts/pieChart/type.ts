@@ -5,7 +5,6 @@ export interface chartData {
   color: string;
 }
 
-// Props
 export interface statusSummaryProps {
   title?: string;
   data: chartData[];

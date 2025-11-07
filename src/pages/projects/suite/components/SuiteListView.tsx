@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { SuiteListItemProps } from "./types";
 import { Suite, Section, TestCase } from "../../../../types";
-import { useSuites, useSections, useTestcases } from "../../../../hooks/useTestCases";
+import { useSuites, useSections, useTestcases, useCreateSuite } from "../../../../hooks/useTestCases";
 import { RocketLaunchOutlined } from "@mui/icons-material";
 import GenericList, { ListItemData } from "../../../../components/lists/List";
+import { suitesFormFields } from "../../../../Forms/TestCaseManagement";
+import PopUpForm from "../../../../components/forms/PopUpForm";
 
 const RecordListItem: React.FC<SuiteListItemProps> = ({ recordObject, projectId }) => {
   const navigate = useNavigate();
@@ -82,8 +84,6 @@ const RecordListItem: React.FC<SuiteListItemProps> = ({ recordObject, projectId 
 
 export const SuiteListView: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-
-  // ✅ Use the real API instead of mock JSON
   const { data: suites, loading, error } = useSuites();
 
   if (loading) {
@@ -121,7 +121,8 @@ export const SuiteListView: React.FC = () => {
       link: `/project/${projectId}/suite/${suite._id}`,
   }));
 
-  return <GenericList items={accordionItems} />;
+
+  return (<GenericList items={accordionItems} />);
 };
 
 export default SuiteListView;

@@ -20,44 +20,17 @@ interface PopupProps {
 
 const Popup: React.FC<PopupProps> = ({ title, open, onClose, component, buttons }) => {
     return (
-        <Dialog 
-            open={open}
-            onClose={onClose} 
-            fullWidth
-            maxWidth="sm"
-            sx={{
-                '& .MuiDialog-paper': { borderRadius: '12px' } // Rounded edges
-            }}
-        >
-            {/* Title Section with Close Button */}
+        <Dialog open={open} onClose={onClose}  fullWidth maxWidth="sm" sx={{ '& .MuiDialog-paper': { borderRadius: '12px' } }} >
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 {title}
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
+                <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8, }} ><CloseIcon /></IconButton>
             </DialogTitle>
 
-            {/* Main Content */}
-            <DialogContent>
-                <Box>
-                    {component}
-                </Box>
-            </DialogContent>
+            <DialogContent><Box>{component}</Box></DialogContent>
 
-            {/* Footer Buttons */}
             <DialogActions>
                 {buttons?.map((button, index) => (
-                    <Button key={index} onClick={button.onClick} variant="contained">
-                        {button.text}
-                    </Button>
+                    <Button key={index} onClick={button.onClick} variant="contained">{button.text}</Button>
                 ))}
             </DialogActions>
         </Dialog>

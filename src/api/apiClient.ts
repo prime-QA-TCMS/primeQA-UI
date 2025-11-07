@@ -15,11 +15,11 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-/* apiClient.interceptors.response.use(
+apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && error.response.data?.message === "Invalid or expired token" &&  !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem("refreshToken");
@@ -38,6 +38,6 @@ apiClient.interceptors.request.use((config) => {
     }
     return Promise.reject(error);
   }
-); */
+);
 
 export default apiClient;

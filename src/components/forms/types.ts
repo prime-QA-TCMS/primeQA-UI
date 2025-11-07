@@ -1,33 +1,12 @@
-// src/types.ts
-
 import { validationRules } from "./validation";
 
-// Defining all possible field types
-export type FieldType =
-    | 'text'
-    | 'email'
-    | 'password'
-    | 'number'
-    | 'select'
-    | 'multiselect'
-    | 'switch'
-    | 'rating'
-    | 'textarea'
-    | 'date'
-    | 'datetime'
-    | 'daterange'
-    | 'radio'
-    | 'file'
-    | 'image'
-    | 'video';
+export type FieldType = | 'text' | 'email' | 'password' | 'number' | 'select' | 'multiselect' | 'switch' | 'rating' | 'textarea' | 'date' | 'datetime' | 'daterange' | 'radio' | 'file' | 'image' | 'video';
 
-// Option type for fields requiring selection (e.g., dropdowns, radio buttons)
 export interface Option {
     label: string;
     value: string | number;
 }
 
-// Base structure for each form field
 export interface FormField {
     name: string;
     label: string;
@@ -37,16 +16,19 @@ export interface FormField {
     minLength?: number;
     maxLength?: number;
     onChange?: (value: string) => void;
-    options?: Option[]; // For Select, MultiSelect, and Radio buttons
+    options?: Option[];
     placeholder?: string;
     validations?: {
-        rule: keyof typeof validationRules; // ensures rule names match
+        rule: keyof typeof validationRules;
         args?: any[];
     }[];
+    defaultValue?: any;
+    apiEndpoint?: string;
+    optionLabelKey?: string;
+    optionValueKey?: string;
     width?: "full" | "half"; 
 }
 
-// Custom button structure for additional actions
 export interface CustomButton {
     text: string;
     onClick: () => void;
@@ -54,13 +36,34 @@ export interface CustomButton {
     variant?: 'text' | 'outlined' | 'contained';
 }
 
-// Main form props for dynamic form generation
 export interface FormProps {
-    fields: FormField[];  // List of fields to render
-    onSubmit?: (values: { [key: string]: any }) => void; // Submission handler
-    submitButtonText?: string;  // Optional submit button label
-    cancelButtonText?: string;  // Optional cancel button label
-    onCancel?: () => void;      // Optional cancel handler
-    customButtons?: CustomButton[]; // Additional buttons for form actions
-    initialValues?: { [key: string]: any }; // ✅ Added for pre-filled data support
+    fields: FormField[]; 
+    onSubmit?: (values: { [key: string]: any }) => void;
+    submitButtonText?: string;
+    cancelButtonText?: string;
+    onCancel?: () => void;
+    customButtons?: CustomButton[];
+    initialValues?: { [key: string]: any };
+}
+
+export interface FieldOption {
+  value: string;
+  label: string;
+}
+
+export interface Field {
+  name: string;
+  label: string;
+  type: string;
+  width?: "half" | "full";
+  required?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  options?: FieldOption[];
+  defaultValue?: any;
+  apiEndpoint?: string;
+  optionLabelKey?: string;
+  optionValueKey?: string;
+  validations?: { rule: string; args?: any[] }[];
+  onChange?: (value: any) => void;
 }

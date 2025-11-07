@@ -13,11 +13,11 @@ export const projectMenu: Record<string, MenuItem[]> = {
     { label: "Home", path: "/dashboard" },
   ],
   "Project": [
-    { label: "Project Dashboard", path: "/project/:id" },
-    // { label: "To Do", path: "/project/:id/todos" },
-    { label: "Test Runs", path: "/project/:id/runs" },
-    { label: "Test Suites", path: "/project/:id/suites" },
-    { label: "Milestones", path: "/project/:id/milestones" },
+    { label: "Project Dashboard", path: "/project/:projectId" },
+    // { label: "To Do", path: "/project/:projectId/todos" },
+    { label: "Test Runs", path: "/project/:projectId/runs" },
+    { label: "Test Suites", path: "/project/:projectId/suites" },
+    { label: "Milestones", path: "/project/:projectId/milestones" },
   ],
 };
 

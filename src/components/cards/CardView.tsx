@@ -1,6 +1,6 @@
 // src/components/CardView.tsx
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Button, Box } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box } from '@mui/material';
 
 interface CardViewProps {
     title?: string | null;
@@ -13,47 +13,22 @@ const CardView: React.FC<CardViewProps> = ({ title, description, onViewClick, co
     return (
         <Card sx={{ maxWidth: 345, borderRadius: '12px', boxShadow: 3 }}>
             {title ? 
-                <CardContent>
-                    <Typography variant="h5" component="div" fontWeight="bold">
-                        {title}
-                    </Typography>
-                </CardContent>
+                <CardContent><Typography variant="h5" component="div" fontWeight="bold">{title}</Typography></CardContent>
             : null }
 
             {description ? 
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        {description}
-                    </Typography>
-                </CardContent>
+                <CardContent><Typography variant="body2" color="text.secondary">{description}</Typography></CardContent>
             : null }
 
             {component ? 
-                <CardContent>
-                        {component}
-                </CardContent>
+                <CardContent>{component}</CardContent>
             : null }
 
             <Box sx={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
-                <Button 
-                    variant="contained" 
-                    onClick={onViewClick} 
-                    sx={{ width: '100%' }}
-                >
-                    View
-                </Button>
+                <Button variant="contained" onClick={onViewClick} sx={{ width: '100%' }}>View</Button>
             </Box>
         </Card>
     );
 };
 
 export default CardView;
-
-
-
-{/* <CardView
-imageUrl="https://via.placeholder.com/300"
-title="Card Title"
-description="This is a sample description for the card component."
-onViewClick={handleViewClick}
-/> */}

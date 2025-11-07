@@ -34,7 +34,7 @@ export const API_ENDPOINTS = {
     update: (id: string) => `${API_BASE_URLS.user}/tenants/${id}`,
     delete: (id: string) => `${API_BASE_URLS.user}/tenants/${id}`,
   },
-  //userHealth: `${API_BASE_URLS.user}/health`,
+  userHealth: `${API_BASE_URLS.user}/health`,
 
   // 📁 PROJECT-SERVICE
   project: {
@@ -124,5 +124,5 @@ export const API_ENDPOINTS = {
     update: (id: string) => `${API_BASE_URLS.configuration}/users/${id}`,
     delete: (id: string) => `${API_BASE_URLS.configuration}/users/${id}`,
   },
-  // configurationHealth: `${API_BASE_URLS.configuration}/health`,
+  configurationHealth: `${API_BASE_URLS.configuration}/health`,
 };

@@ -1,77 +1,61 @@
 import React from 'react';
-import { Container, useTheme } from '@mui/material';
+import { Box, CircularProgress, Container, Typography, useTheme } from '@mui/material';
 import { contentContainer } from '../../../style/muiComponentStyles/containerStyles';
 import CardListContainer, { CardItem } from '../../../components/cards/CardListContainer';
 import GenericPieChart from '../../../components/charts/pieChart/GenericPieChart';
 import { chartData } from '../../../components/charts/pieChart/type';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMilestones } from '../../../hooks/useProjects';
+import { Milestone } from '../../../types';
+
+const MilestoneGraph: React.FC<{ metrics?: Milestone["metrics"] }> = ({ metrics }) => {
+  const { passed = 0, failed = 0, blocked = 0, untested = 0 } = metrics || {};
+
+  const chartContents: chartData[] = [
+    { status: "Passed", count: passed, percentage: 0, color: "#4CAF50" },
+    { status: "Failed", count: failed, percentage: 0, color: "#E91E63" },
+    { status: "Blocked", count: blocked, percentage: 0, color: "#FFC107" },
+    { status: "Untested", count: untested, percentage: 0, color: "#757575" },
+  ];
+
+  return <GenericPieChart title="Overview" data={chartContents} />;
+};
 
 const MilestonesDashboard: React.FC = () => {
-    const theme = useTheme();
-    const styles = contentContainer(theme);
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const styles = contentContainer(theme);
+  const { projectId } = useParams<{ projectId: string }>();
+  const { data: milestones, loading, error } = useMilestones(projectId || "");
 
-    const MilestoneGraph: React.FC<any> = ({ passed, failed, blocked, untested }) => {
-
-        const chartContents: chartData[] = [
-            {status: "Passed", count: passed, percentage: 0, color: "#4CAF50", },
-            {status: "Failed", count: failed, percentage: 0, color: "#E91E63", },
-            {status: "Blocked", count: blocked, percentage: 0, color: "#FFC107", },
-            {status: "Untested", count: untested, percentage: 0, color: "#757575", },
-        ]
-
-        return (
-        <GenericPieChart title={"Overview"} data={chartContents}/>
-    )
-    } ;
-    const cardData: CardItem[] = [
-        {
-            id: 1,
-            title: "Milestone 1",
-            description: "Milestone 1 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        },
-        {
-            id: 2,
-            title: "Milestone 2",
-            description: "Milestone 2 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        },
-        {
-            id: 3,
-            title: "Milestone 3",
-            description: "Milestone 3 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        },
-        {
-            id: 4,
-            title: "Milestone 4",
-            description: "Milestone 4 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        },
-        {
-            id: 5,
-            title: "Milestone 5",
-            description: "Milestone 5 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        },
-        {
-            id: 1,
-            title: "Milestone 6",
-            description: "Milestone 6 Description",
-            component: <MilestoneGraph passed={10} failed={2} blocked={1} untested={6} />,
-            onViewClick: () => {}
-        }
-    ]
-
+  if (loading) {
     return (
-        <Container sx={styles.root}>
-            <CardListContainer cards={cardData} />
-        </Container>
+      <Box sx={{ textAlign: "center", mt: 4 }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 1 }}>Loading milestones...</Typography>
+      </Box>
     );
+  }
+
+  if (error) {return (<Typography color="error" sx={{ mt: 2 }}>Failed to load milestones. {String(error)}</Typography>);}
+
+  if (!milestones || milestones.length === 0) {return (<Typography sx={{ mt: 2 }}>No milestones found for this project.</Typography>);}
+
+  const cardData: CardItem[] = milestones.map((m: Milestone) => ({
+    id: m._id,
+    title: m.title,
+    description: m.description || "No description provided.",
+    component: <MilestoneGraph metrics={m.metrics} />,
+    onViewClick: () => {
+        navigate(`/project/${projectId}/milestone/${m._id}`);
+    },
+  }));
+
+  return (
+    <Container sx={styles.root}>
+      <CardListContainer cards={cardData} />
+    </Container>
+  );
 };
 
 export default MilestonesDashboard;

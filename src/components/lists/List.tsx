@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate  } from "react-router-dom";
 import { List, ListItem, ListItemText, ListItemButton, ListItemIcon } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
@@ -16,28 +17,21 @@ interface GenericListProps {
 }
 
 const GenericList: React.FC<GenericListProps> = ({ items }) => {
-    // Handle item click (open link if present)
+  const navigate = useNavigate();
+
     const handleItemClick = (link?: string) => {
         if (link) {
-            window.open(link, '_blank'); // Open link in a new tab
+            navigate(link);
         }
     };
 
     return (
         <List>
             {items.map((item) => (
-                <ListItem 
-                    key={item.id} 
-                    disablePadding 
-                    onClick={() => handleItemClick(item.link)}
-                >
+                <ListItem key={item.id} disablePadding onClick={() => handleItemClick(item.link)}>
                     <ListItemButton component={item.link ? 'a' : 'div'} href={item.link} disabled={!item.link}>
                         {item.icon ? <ListItemIcon>{item.icon}</ListItemIcon> : null}
-                        
-                        {/* Title Section */}
                         <ListItemText primary={item.title} />
-
-                        {/* Arrow Icon for Visual Indication */}
                         {item.link && <ArrowForwardIosIcon />}
                     </ListItemButton>
                 </ListItem>
