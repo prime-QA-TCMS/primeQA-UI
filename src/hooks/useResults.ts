@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TestRun, TestRunResponse, Test, TestResult } from "../types";
+import { TestRun, TestRunResponse, Test, TestResult, TestResultResponse, TestResponse, TestRunFilterResponse, TestFilterResponse, ResultsFilterResponse } from "../types";
 import { ResultsAPI } from "../api";
 import { useApi } from "./useApi";
 
@@ -11,7 +11,33 @@ export function useRuns(projectId: string) {
 }
 
 export function useRunById(id: string) {
-  return useApi<TestRun>(ResultsAPI.runGetById, [id]);
+  return useApi<TestRunResponse>(ResultsAPI.runGetById, [id]);
+}
+
+export function useRunByProjectId(projectId: string) {
+  return useApi<TestRunFilterResponse>(ResultsAPI.runGetByProjectId, [projectId]);
+}
+
+export function useRunSearch() {
+  const [data, setData] = useState<TestRun[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const searchTests = async (filters: Record<string, any>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await ResultsAPI.runSearch(filters);
+      setData(response.data || []);
+    } catch (err: any) {
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, searchTests, loading, error };
 }
 
 export function useCreateRun() {
@@ -81,11 +107,37 @@ export function useDeleteRun() {
 // 🔹 TESTS
 //
 export function useTests(runId: string) {
-  return useApi<Test[]>(() => ResultsAPI.testGetAll(runId), [runId]);
+  return useApi<TestResponse[]>(() => ResultsAPI.testGetAll(runId), [runId]);
 }
 
 export function useTestById(id: string) {
-  return useApi<Test>(ResultsAPI.testGetById, [id]);
+  return useApi<TestResponse>(ResultsAPI.testGetById, [id]);
+}
+
+export function useTestByProjectId(projectId: string) {
+  return useApi<TestFilterResponse>(ResultsAPI.testGetByProjectId, [projectId]);
+}
+
+export function useTestSearch() {
+  const [data, setData] = useState<Test[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const searchTests = async (filters: Record<string, any>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await ResultsAPI.testSearch(filters);
+      setData(response.data || []);
+    } catch (err: any) {
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, searchTests, loading, error };
 }
 
 export function useCreateTest() {
@@ -155,11 +207,37 @@ export function useDeleteTest() {
 // 🔹 RESULTS
 //
 export function useResults(testId: string) {
-  return useApi<TestResult[]>(() => ResultsAPI.resultGetAll(testId), [testId]);
+  return useApi<TestResultResponse[]>(() => ResultsAPI.resultGetAll(testId), [testId]);
 }
 
 export function useResultById(id: string) {
-  return useApi<TestResult>(ResultsAPI.resultGetById, [id]);
+  return useApi<TestResultResponse>(ResultsAPI.resultGetById, [id]);
+}
+
+export function useResultByProjectId(projectId: string) {
+  return useApi<ResultsFilterResponse>(ResultsAPI.resultGetByProjectId, [projectId]);
+}
+
+export function useResultSearch() {
+  const [data, setData] = useState<TestResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const searchTests = async (filters: Record<string, any>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await ResultsAPI.resultSearch(filters);
+      setData(response.data || []);
+    } catch (err: any) {
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, searchTests, loading, error };
 }
 
 export function useCreateResult() {

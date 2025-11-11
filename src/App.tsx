@@ -16,6 +16,7 @@ import CustomizationDashboard from './pages/configuration/customization';
 import UserManagementDashboard from './pages/configuration/users';
 import ConfigurationDashboard from './pages/configuration';
 import ProjectMilestoneView from './pages/projects/milestones/components/ProjectMilestoneView';
+import ProjectRunView from './pages/projects/runs/components/ProjectRunView';
 
 const App: React.FC = () => {
     return (
@@ -34,7 +35,10 @@ const App: React.FC = () => {
                         <Route path="/project/:projectId/milestones" element={<ProtectedRoute children={<MilestonesDashboard />} menuItems={projectMenu} />} />
                         <Route path="/project/:projectId/milestone/:milestoneId" element={<ProtectedRoute children={<ProjectMilestoneView />} menuItems={projectMenu} />} />
 
+
+
                         <Route path="/project/:projectId/runs" element={<ProtectedRoute children={<RunsDashboard />} menuItems={projectMenu} />} />
+                        <Route path="/project/:projectId/runs/:runId" element={<ProtectedRoute children={<ProjectRunView />} menuItems={projectMenu} />} />
                         
                         <Route path="/configuration" element={<ProtectedRoute children={<ConfigurationDashboard />} menuItems={settingsMenu} />} />
                         <Route path="/configuration/user-management" element={<ProtectedRoute children={<UserManagementDashboard />} menuItems={settingsMenu} />} />

@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 import { API_ENDPOINTS } from "../config/apiConfig";
-import { TestRun, Test, TestResult, TestRunResponse } from "../types";
+import { TestRun, Test, TestResult, TestRunResponse, TestResponse, TestResultResponse, TestRunFilterResponse, TestFilterResponse, ResultsFilterResponse, TestRunCreateResponse, TestResultCreateResponse } from "../types";
 
 export const ResultsAPI = {
   //
@@ -14,15 +14,42 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  runGetById: async (id: string): Promise<TestRun> => {
+  runGetById: async (id: string): Promise<TestRunResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.run.getById(id), {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
+  
+  runGetByProjectId: async (projectId: string): Promise<TestRunFilterResponse> => {
+    const token = localStorage.getItem("token");
+    const res = await apiClient.get(API_ENDPOINTS.run.getByProjectId(projectId), {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+  
+  runSearch: async (filters: Record<string, string | number | boolean>): Promise<{
+    success: boolean;
+    data: TestRun[];
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      sortBy: string;
+      order: string;
+    };
+  }> => {
+    const token = localStorage.getItem("token");
+    const queryString = new URLSearchParams(filters as Record<string, string>).toString();
+    const res = await apiClient.get(`${API_ENDPOINTS.test.search}?${queryString}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
 
-  runCreate: async (data: Partial<TestRun>): Promise<TestRun> => {
+  runCreate: async (data: Partial<TestRun>): Promise<TestRunCreateResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.run.create, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -30,7 +57,7 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  runUpdate: async (id: string, data: Partial<TestRun>): Promise<TestRun> => {
+  runUpdate: async (id: string, data: Partial<TestRun>): Promise<TestRunResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.run.update(id), data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -49,7 +76,7 @@ export const ResultsAPI = {
   //
   // 🔹 TEST APIs
   //
-  testGetAll: async (runId: string): Promise<Test[]> => {
+  testGetAll: async (runId: string): Promise<TestResponse[]> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.test.list(runId), {
         headers: { Authorization: `Bearer ${token}` },
@@ -57,7 +84,7 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  testGetById: async (id: string): Promise<Test> => {
+  testGetById: async (id: string): Promise<TestResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.test.getById(id), {
         headers: { Authorization: `Bearer ${token}` },
@@ -65,7 +92,34 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  testCreate: async (data: Partial<Test>): Promise<Test> => {
+  testGetByProjectId: async (projectId: string): Promise<TestFilterResponse> => {
+    const token = localStorage.getItem("token");
+    const res = await apiClient.get(API_ENDPOINTS.test.getByProjectId(projectId), {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+
+  testSearch: async (filters: Record<string, string | number | boolean>): Promise<{
+    success: boolean;
+    data: Test[];
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      sortBy: string;
+      order: string;
+    };
+  }> => {
+    const token = localStorage.getItem("token");
+    const queryString = new URLSearchParams(filters as Record<string, string>).toString();
+    const res = await apiClient.get(`${API_ENDPOINTS.test.search}?${queryString}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+
+  testCreate: async (data: Partial<Test>): Promise<TestResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.test.create, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -73,7 +127,7 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  testUpdate: async (id: string, data: Partial<Test>): Promise<Test> => {
+  testUpdate: async (id: string, data: Partial<Test>): Promise<TestResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.test.update(id), data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +146,7 @@ export const ResultsAPI = {
   //
   // 🔹 RESULT APIs
   //
-  resultGetAll: async (testId: string): Promise<TestResult[]> => {
+  resultGetAll: async (testId: string): Promise<TestResultResponse[]> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.result.list(testId), {
         headers: { Authorization: `Bearer ${token}` },
@@ -100,7 +154,7 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  resultGetById: async (id: string): Promise<TestResult> => {
+  resultGetById: async (id: string): Promise<TestResultResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.result.getById(id), {
         headers: { Authorization: `Bearer ${token}` },
@@ -108,7 +162,34 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  resultCreate: async (data: Partial<TestResult>): Promise<TestResult> => {
+  resultGetByProjectId: async (projectId: string): Promise<ResultsFilterResponse> => {
+    const token = localStorage.getItem("token");
+    const res = await apiClient.get(API_ENDPOINTS.result.getByProjectId(projectId), {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+
+  resultSearch: async (filters: Record<string, string | number | boolean>): Promise<{
+    success: boolean;
+    data: TestResult[];
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      sortBy: string;
+      order: string;
+    };
+  }> => {
+    const token = localStorage.getItem("token");
+    const queryString = new URLSearchParams(filters as Record<string, string>).toString();
+    const res = await apiClient.get(`${API_ENDPOINTS.test.search}?${queryString}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+
+  resultCreate: async (data: Partial<TestResult>): Promise<TestResultCreateResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.result.create, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -116,7 +197,7 @@ export const ResultsAPI = {
     return res.data;
   },
 
-  resultUpdate: async (id: string, data: Partial<TestResult>): Promise<TestResult> => {
+  resultUpdate: async (id: string, data: Partial<TestResult>): Promise<TestResultResponse> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.result.update(id), data, {
         headers: { Authorization: `Bearer ${token}` },

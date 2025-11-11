@@ -43,6 +43,7 @@ export interface NestedTableProps<T> {
   nestedConfig?: NestedConfig<T>;
   isOpen: boolean;
   item: T;
+  emptyMessage?: string;
 }
 
 export interface NoDataTableRowProps<T> {

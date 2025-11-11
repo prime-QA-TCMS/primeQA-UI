@@ -10,7 +10,7 @@ export interface TestRun {
   name: string;
   projectId: string;
   startedBy: string;
-  status: "queued" | "running" | "completed" | "failed";
+  status: "Pending" | "Running" | "Completed" | "Aborted";
   startTime?: string;
   endTime?: string;
   createdAt?: string;
@@ -19,9 +19,23 @@ export interface TestRun {
   metrics?: Metrics;
 }
 
+export interface TestRunCreateResponse {
+  success?: boolean;
+  message?: string;
+  data: TestRun;
+}
 
 export interface TestRunResponse {
+  success?: boolean;
+  message?: string;
   data: TestRun[];
+}
+
+export interface TestRunFilterResponse {
+  data: {
+    total?: number;
+    data: TestRun[];
+  }
 }
 
 export interface Test {
@@ -33,6 +47,16 @@ export interface Test {
   createdAt?: string;
   updatedAt?: string;
 }
+export interface TestResponse {
+  data: Test[];
+}
+
+export interface TestFilterResponse {
+  data: {
+    total: number;
+    tests: TestRun[];
+  }
+}
 
 export interface TestResult {
   _id: string;
@@ -43,4 +67,21 @@ export interface TestResult {
   executedAt: string;
   createdAt?: string;
   updatedAt?: string;
+}
+export interface TestResultResponse {
+  total?: number;
+  data: TestResult[];
+}
+
+export interface TestResultCreateResponse {
+  success?: boolean;
+  message?: string;
+  data: TestResult;
+}
+
+export interface ResultsFilterResponse {
+  data: {
+    total?: number;
+    data: TestRun[];
+  }
 }

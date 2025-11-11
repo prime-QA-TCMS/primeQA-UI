@@ -82,6 +82,8 @@ export const API_ENDPOINTS = {
   run: {
     list: (projectId: string) => `${API_BASE_URLS.results}/runs/${projectId}`,
     getById: (id: string) => `${API_BASE_URLS.results}/runs/${id}`,
+    getByProjectId: (projectId: string) => `${API_BASE_URLS.results}/runs/project/${projectId}`,
+    search: `${API_BASE_URLS.results}/runs/search`,
     create: `${API_BASE_URLS.results}/runs`,
     update: (id: string) => `${API_BASE_URLS.results}/runs/${id}`,
     delete: (id: string) => `${API_BASE_URLS.results}/runs/${id}`,
@@ -89,6 +91,8 @@ export const API_ENDPOINTS = {
   test: {
     list: (runId: string) => `${API_BASE_URLS.results}/tests?runId=${runId}`,
     getById: (id: string) => `${API_BASE_URLS.results}/tests/${id}`,
+    getByProjectId: (projectId: string) => `${API_BASE_URLS.results}/tests/project/${projectId}`,
+    search: `${API_BASE_URLS.results}/tests/search`,
     create: `${API_BASE_URLS.results}/tests`,
     update: (id: string) => `${API_BASE_URLS.results}/tests/${id}`,
     delete: (id: string) => `${API_BASE_URLS.results}/tests/${id}`,
@@ -96,6 +100,8 @@ export const API_ENDPOINTS = {
   result: {
     list: (testId: string) => `${API_BASE_URLS.results}/results?testId=${testId}`,
     getById: (id: string) => `${API_BASE_URLS.results}/results/${id}`,
+    getByProjectId: (projectId: string) => `${API_BASE_URLS.results}/results/project/${projectId}`,
+    search: `${API_BASE_URLS.results}/results/search`,
     create: `${API_BASE_URLS.results}/results`,
     update: (id: string) => `${API_BASE_URLS.results}/results/${id}`,
     delete: (id: string) => `${API_BASE_URLS.results}/results/${id}`,

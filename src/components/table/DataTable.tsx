@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -27,12 +27,32 @@ export function DataTable<T extends { _id?: string | number }>({
   rowComponent,
   rowExtraComponent,
   nestedHeaderComponent,
-}: Readonly<DataTableProps<T>>) {
+  onRowExpand,
+}: Readonly<DataTableProps<T> & { onRowExpand?: (item: T) => void }>) {
   const [openRowId, setOpenRowId] = useState<string | number | null>(null);
+  const triggeredRef = useRef<Set<string | number>>(new Set());
 
   const handleToggle = (id: string | number) => {
-    setOpenRowId(openRowId === id ? null : id);
+    setOpenRowId((prev) => (prev === id ? null : id));
   };
+
+  useEffect(() => {
+    if (!openRowId || !onRowExpand) return;
+    if (triggeredRef.current.has(openRowId)) return; // ✅ already fired
+
+    const expandedItem = data.find((item) => item._id === openRowId);
+    if (expandedItem) {
+      onRowExpand(expandedItem);
+      triggeredRef.current.add(openRowId); // ✅ mark this row as done
+    }
+  }, [openRowId, data, onRowExpand]);
+
+  
+  if (loading) {
+    return <DataLoading columns={columns} />;
+  } else if (data.length === 0) {
+    return <NoDataTableRow columns={columns} message={emptyMessage} />;
+  }
 
   return (
     <TableContainer component={Paper} sx={{ mb: 2 }}>
@@ -49,18 +69,12 @@ export function DataTable<T extends { _id?: string | number }>({
           hasActions={!!rowComponent}
         />
         <TableBody>
-          {loading ? (
-            <DataLoading columns={columns} />
-          ) : data.length === 0 ? (
-            <NoDataTableRow columns={columns} message={emptyMessage} />
-          ) : (
-            data.map((item) => {
+          {data.map((item) => {
               const id = item._id ?? Math.random().toString();
               const isOpen = openRowId === id;
 
               return (
                 <React.Fragment key={id}>
-                  {/* ✅ Main Data Row */}
                   <DataRow
                     item={item}
                     id={id}
@@ -71,7 +85,6 @@ export function DataTable<T extends { _id?: string | number }>({
                     nestedConfig={nestedConfig}
                   />
 
-                  {/* ✅ Optional inline row content (below main row) */}
                   {rowExtraComponent && (
                     <TableRow>
                       <TableCell colSpan={columns.length + (nestedConfig ? 1 : 0)}>
@@ -80,33 +93,29 @@ export function DataTable<T extends { _id?: string | number }>({
                     </TableRow>
                   )}
 
-                  {/* ✅ Nested expandable section */}
                   {nestedConfig && (
                     <TableRow>
                       <TableCell colSpan={columns.length + 1} sx={{ p: 0 }}>
                         <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                          <Box sx={{ p: 2 }}>
-                            {/* Optional nested header component */}
-                            {nestedHeaderComponent && (
-                              <Box
-                                sx={{
-                                  mb: 2,
-                                  backgroundColor: "rgba(0,0,0,0.03)",
-                                  borderRadius: 1,
-                                  p: 2,
-                                }}
-                              >
-                                {nestedHeaderComponent(item)}
-                              </Box>
-                            )}
-                            {/* Nested table content */}
-                            <NestedTable
-                              columns={columns}
-                              nestedConfig={nestedConfig}
-                              isOpen={isOpen}
-                              item={item}
-                            />
-                          </Box>
+                          {nestedHeaderComponent && (
+                            <Box
+                              sx={{
+                                mb: 2,
+                                backgroundColor: "rgba(0,0,0,0.03)",
+                                borderRadius: 1,
+                                p: 2,
+                              }}
+                            >
+                              {nestedHeaderComponent(item)}
+                            </Box>
+                          )}
+                          <NestedTable
+                            columns={columns}
+                            nestedConfig={nestedConfig}
+                            isOpen={isOpen}
+                            item={item}
+                            emptyMessage={emptyMessage}
+                          />
                         </Collapse>
                       </TableCell>
                     </TableRow>
@@ -114,7 +123,7 @@ export function DataTable<T extends { _id?: string | number }>({
                 </React.Fragment>
               );
             })
-          )}
+          }
         </TableBody>
       </Table>
     </TableContainer>

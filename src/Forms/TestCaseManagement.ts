@@ -161,40 +161,7 @@ export const sharedStepFormFields: FormField[] = [
     }
 ];
 
-export const testCaseFormFields = (projectId: string | undefined, suiteId: string | undefined, sectionId: string | undefined): FormField[] => [
-    { 
-        name: "projectId",
-        label: "Project",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/projects",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: projectId || null
-    },
-    { 
-        name: "suiteId",
-        label: "Suite",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/suites",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: suiteId || null
-    },
-    { 
-        name: "sectionId",
-        label: "Section",
-        type: "select",
-        required: true,
-        disabled: !!sectionId,
-        apiEndpoint: "/sections/suite/" + suiteId,
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: suiteId || null
-    },
+export const testCaseFormFields: FormField[] = [
     { 
         name: "title",
         label: "Name",
@@ -220,7 +187,7 @@ export const testCaseFormFields = (projectId: string | undefined, suiteId: strin
         required: false
     },
     { 
-        name: "expectedResults",
+        name: "expectedResult",
         label: "Expected Results",
         type: "textarea",
         required: false
@@ -303,6 +270,57 @@ export const suitesFormFields = (projectId: string | undefined): FormField[] => 
 ];
 
 
+
+
+export const resultFormFields = (projectId: string | undefined, suiteId: string | undefined): FormField[] => [
+    { 
+        name: "projectId",
+        label: "Project",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/projects",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: projectId || null
+    },
+    { 
+        name: "suiteId",
+        label: "Suite",
+        type: "select",
+        required: true,
+        disabled: !!projectId,
+        apiEndpoint: "/suites",
+        optionLabelKey: "name",
+        optionValueKey: "_id",
+        defaultValue: suiteId || null
+    },
+    { 
+        name: "status",
+        label: "Name",
+        type: "select",
+        options: [
+            {label: "Passed", value: "Passed"},
+            {label: "Failed", value: "Failed"},
+            {label: "Blocked", value: "Blocked"},
+            {label: "Skipped", value: "Skipped"},
+            {label: "Retest", value: "Retest"},
+        ],
+        required: true
+    },
+    { 
+        name: "executedBy",
+        label: "Tested By",
+        type: "text",
+        required: false
+    },
+    { 
+        name: "isActive",
+        label: "Active?",
+        type: "switch",
+        required: false
+    }
+];
 
 export const suiteFilterFormFields: FormField[] = [
     { 

@@ -1,92 +1,173 @@
-import React from 'react';
-import { Container, useTheme } from '@mui/material';
+import React, { useCallback, useEffect, useState } from "react";
+import { Container, useTheme } from "@mui/material";
+import { useParams } from "react-router-dom";
 import { CheckCircle, XCircle, RefreshCcw, Ban, ListChecks } from "lucide-react";
-import { MilestoneListView } from '../project/components/MilestoneListView';
-import { RunsListView } from '../project/components/RunsListView';
-import MetricCardGrid from '../../../components/cards/metricCard/MetricCardGrid';
-import { MetricCardData } from '../../../components/cards/metricCard/MetricCardType';
-import { TrendAnalyticsData } from '../../../components/charts/TrendAnalyticsChart/types';
-import TrendAnalyticsChart from '../../../components/charts/TrendAnalyticsChart/TrendAnalyticsChart';
-import { contentContainer, halfScreenContainer } from '../../../style/muiComponentStyles/containerStyles';
+import { MilestoneListView } from "../project/components/MilestoneListView";
+import { RunsListView } from "../project/components/RunsListView";
+import MetricCardGrid from "../../../components/cards/metricCard/MetricCardGrid";
+import { MetricCardData } from "../../../components/cards/metricCard/MetricCardType";
+import TrendAnalyticsChart from "../../../components/charts/TrendAnalyticsChart/TrendAnalyticsChart";
+import { TrendAnalyticsData } from "../../../components/charts/TrendAnalyticsChart/types";
+import { contentContainer, halfScreenContainer } from "../../../style/muiComponentStyles/containerStyles";
+import { ResultsAPI } from "../../../api";
+import { TestResult, TestRun } from "../../../types";
 
 const ProjectDashboard: React.FC = () => {
-    const theme = useTheme();
-    const halfScreenContainerStyle = halfScreenContainer(theme);
-    const styles = contentContainer(theme);
-    
-    const testMetrics: MetricCardData[] = [
+  const theme = useTheme();
+  const halfScreenContainerStyle = halfScreenContainer(theme);
+  const styles = contentContainer(theme);
+  const { projectId } = useParams<{ projectId: string }>();
+
+  const [metrics, setMetrics] = useState<MetricCardData[]>([]);
+  const [trendData, setTrendData] = useState<TrendAnalyticsData | null>(null);
+  const [runsData, setrunsData] = useState<TestRun[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTestMetrics = useCallback(async () => {
+    if (!projectId) return;
+
+    setLoading(true);
+    try {
+      const [runsRes, testsRes, resultsRes] = await Promise.all([
+        ResultsAPI.runGetByProjectId(projectId),
+        ResultsAPI.testGetByProjectId(projectId),
+        ResultsAPI.resultGetByProjectId(projectId),
+      ]);
+
+      const runs = runsRes?.data?.data ? Array.isArray(runsRes?.data?.data) ? runsRes?.data?.data : [] : [];
+
+      setrunsData(runsRes?.data?.data || []);
+      const tests = testsRes?.data ? Array.isArray(testsRes?.data?.tests) ? testsRes.data?.tests : [] : [];
+      const results = Array.isArray(resultsRes?.data?.data)
+        ? resultsRes.data?.data
+        : [];
+
+      // 🧩 Totals
+      const totalRuns = runs.length;
+      const totalTests = tests.length;
+      const totalResults = results.length;
+
+      console.log("totalRuns", totalRuns);
+      console.log("totalTests", totalTests);
+      console.log("totalResults", totalResults);
+
+      // 🧠 Count results by status
+      const statusCounts = results.reduce(
+        (acc: Record<string, number>, r) => {
+          const key = r.status.charAt(0).toUpperCase() + r.status.slice(1); // capitalize
+          acc[key] = (acc[key] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+
+      const getRate = (status: string) => totalResults > 0 ? ((statusCounts[status] || 0) / totalResults) * 100 : 0;
+
+      // 🧮 Build metrics
+      const metricsData: MetricCardData[] = [
         {
-            icon: <ListChecks size={20} />,
-            isPercentage: false,
-            value: 473,
-            color: "blue",
-            title: "Total Tests"
+          icon: <ListChecks size={20} />,
+          isPercentage: false,
+          value: totalTests,
+          color: "blue",
+          title: "Total Tests",
         },
         {
-            icon: <CheckCircle size={20} />,
-            isPercentage: true,
-            value: 61,
-            color: "green",
-            title: "Pass Rate",
-            trend: { original: 57.8, current: 61, desiredOutcome: "incline" }
+          icon: <ListChecks size={20} />,
+          isPercentage: false,
+          value: totalRuns,
+          color: "blue",
+          title: "Total Runs",
         },
         {
-            icon: <XCircle size={20} />,
-            isPercentage: true,
-            value: 30,
-            color: "red",
-            title: "Fail Rate",
-            trend: { original: 31.5, current: 30, desiredOutcome: "decline" }
+          icon: <CheckCircle size={20} />,
+          isPercentage: true,
+          value: parseFloat(getRate("Passed").toFixed(1)),
+          color: "green",
+          title: "Pass Rate",
         },
         {
-            icon: <RefreshCcw size={20} />,
-            isPercentage: true,
-            value: 6,
-            color: "yellow",
-            title: "Retest",
-            trend: { original: 5.2, current: 6, desiredOutcome: "incline" }
+          icon: <XCircle size={20} />,
+          isPercentage: true,
+          value: parseFloat(getRate("Failed").toFixed(1)),
+          color: "red",
+          title: "Fail Rate",
         },
         {
-            icon: <Ban size={20} />,
-            isPercentage: true,
-            value: 3,
-            color: "grey",
-            title: "Blocked",
-            trend: { original: 0.9, current: 3, desiredOutcome: "decline" }
-        }
-    ];
-    const trendExample: TrendAnalyticsData = {
+          icon: <Ban size={20} />,
+          isPercentage: true,
+          value: parseFloat(getRate("Blocked").toFixed(1)),
+          color: "grey",
+          title: "Blocked Rate",
+        },
+      ];
+
+      // 🧾 Build 7-day trend chart
+        const groupedByDay = results.reduce((acc: any, r) => {
+            const createdDate = r.createdAt ? new Date(r.createdAt) : new Date(); // fallback
+            const day = createdDate.toLocaleDateString("en-US", {
+                weekday: "short",
+            });
+            acc[day] = acc[day] || { day, Passed: 0, Failed: 0, Blocked: 0, Retest: 0 };
+            const key = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+            if (acc[day][key] !== undefined) acc[day][key] += 1;
+            return acc;
+        }, {});
+
+      const sortedDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const trendArray = sortedDays
+        .filter((day) => groupedByDay[day])
+        .map((day) => groupedByDay[day]);
+
+      const trendAnalytics: TrendAnalyticsData = {
         title: "7-Day Execution Trend",
         xAxisKey: "day",
-        data: [
-            { day: "Mon", Passed: 150, Failed: 70, Blocked: 60, Retest: 30 },
-            { day: "Tue", Passed: 155, Failed: 72, Blocked: 62, Retest: 35 },
-            { day: "Wed", Passed: 157, Failed: 74, Blocked: 63, Retest: 33 },
-            { day: "Thu", Passed: 158, Failed: 79, Blocked: 65, Retest: 29 },
-            { day: "Fri", Passed: 156, Failed: 73, Blocked: 68, Retest: 31 },
-            { day: "Sat", Passed: 154, Failed: 74, Blocked: 69, Retest: 32 },
-            { day: "Sun", Passed: 155, Failed: 75, Blocked: 70, Retest: 33 }
-        ],
+        data: trendArray,
         series: [
-            { name: "Blocked", color: "#757575", dataKey: "Blocked" },
-            { name: "Failed", color: "#E91E63", dataKey: "Failed" },
-            { name: "Passed", color: "#4CAF50", dataKey: "Passed" },
-            { name: "Retest", color: "#FFC107", dataKey: "Retest" }
+          { name: "Blocked", color: "#757575", dataKey: "Blocked" },
+          { name: "Failed", color: "#E91E63", dataKey: "Failed" },
+          { name: "Passed", color: "#4CAF50", dataKey: "Passed" },
+          { name: "Retest", color: "#FFC107", dataKey: "Retest" },
         ],
         metrics: [
-            { label: "Average Execution Time", value: "2.3 hours" },
-            { label: "Tests per Day", value: "67 tests/day" }
-        ]
-    };
+          { label: "Total Executions", value: `${totalResults}` },
+          { label: "Tests/Day (avg)", value: `${(totalResults / 7).toFixed(1)} tests/day` },
+        ],
+      };
 
-    return (
-        <Container sx={styles.root}>
-            <MetricCardGrid data={testMetrics} />
-            <TrendAnalyticsChart chartData={trendExample} />
-            <Container sx={halfScreenContainerStyle.root}><MilestoneListView /></Container>
-            <Container sx={halfScreenContainerStyle.root}><RunsListView /></Container>
-        </Container>
-    );
+      setMetrics(metricsData);
+      setTrendData(trendAnalytics);
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    fetchTestMetrics();
+  }, [fetchTestMetrics]);
+
+  return (
+    <Container sx={styles.root}>
+      {loading ? (
+        <p>Loading project metrics...</p>
+      ) : (
+        <>
+          <MetricCardGrid data={metrics} />
+          {trendData && <TrendAnalyticsChart chartData={trendData} />}
+          <Container sx={halfScreenContainerStyle.root}>
+            <MilestoneListView />
+          </Container>
+          {runsData ? 
+          <Container sx={halfScreenContainerStyle.root}>
+            <RunsListView runs={runsData}/>
+          </Container>
+          : null }
+        </>
+      )}
+    </Container>
+  );
 };
 
 export default ProjectDashboard;
