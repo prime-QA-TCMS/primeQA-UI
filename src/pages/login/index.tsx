@@ -3,9 +3,8 @@ import { Container, CircularProgress, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-import Popup from "../../components/popup/popup";
-import { CustomButton } from "../../components/forms/types";
-import GenericForm from "../../components/forms/Form";
+import { Popup, Form as GenericForm } from "fog-ui";
+import { CustomButton } from "fog-ui";
 import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword";
 import { loginContainer } from "../../style/muiComponentStyles/containerStyles";
@@ -26,36 +25,36 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // ✅ Handle Login via UserAPI
-const handleLogin = async (formData: { [key: string]: any }) => {
-  setLoading(true);
-  setError(null);
+  const handleLogin = async (formData: { [key: string]: any }) => {
+    setLoading(true);
+    setError(null);
 
-  try {
-    const result = await UserAPI.login({
-      email: formData.email,
-      password: formData.password,
-    });
+    try {
+      const result = await UserAPI.login({
+        email: formData.email,
+        password: formData.password,
+      });
 
-    // ✅ result is already the AuthResponse
-    if (result) {
-      const { user, accessToken, refreshToken } = result;
+      // ✅ result is already the AuthResponse
+      if (result) {
+        const { user, accessToken, refreshToken } = result;
 
-      localStorage.setItem("userId", user.id || user.id);
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("userId", user.id || user.id);
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
 
-      navigate("/dashboard");
-    } else {
-      setError("Invalid credentials. Please try again.");
+        navigate("/dashboard");
+      } else {
+        setError("Invalid credentials. Please try again.");
+      }
+    } catch (err: any) {
+      const message = err.response?.data?.message || err.message || "Login failed.";
+      setError(message);
+      console.error("Error during login:", err);
+    } finally {
+      setLoading(false);
     }
-  } catch (err: any) {
-    const message = err.response?.data?.message || err.message || "Login failed.";
-    setError(message);
-    console.error("Error during login:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   // ✅ Custom action buttons
@@ -102,14 +101,27 @@ const handleLogin = async (formData: { [key: string]: any }) => {
         title="Register an account"
         open={isRegisterPopupOpen}
         onClose={() => setIsRegisterPopupOpen(false)}
-        component={<Register />}
+        component={
+          <Register
+            onSuccess={() => {
+              setIsRegisterPopupOpen(false);
+              navigate("/dashboard");
+            }}
+          />
+        }
       />
 
       <Popup
         title="Forgot Password?"
         open={isForgotPasswordPopupOpen}
         onClose={() => setIsForgotPasswordPopupOpen(false)}
-        component={<ForgotPassword />}
+        component={
+          <ForgotPassword
+            onSuccess={() => {
+              setIsForgotPasswordPopupOpen(false);
+            }}
+          />
+        }
       />
     </Container>
   );

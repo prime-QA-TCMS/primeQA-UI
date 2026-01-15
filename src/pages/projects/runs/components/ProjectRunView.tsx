@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, CircularProgress, Typography, Alert } from "@mui/material";
 import { ResultsAPI } from "../../../../api";
-import { DataTable } from "../../../../components/table/DataTable";
-import { NestedConfig } from "../../../../components/table/types";
+import { DataTable, PopUpForm } from 'fog-ui';
+import type { NestedConfig } from 'fog-ui';
 import { Test, TestResult, TestRun } from "../../../../types";
-import PopUpForm from "../../../../components/forms/PopUpForm";
 import { resultFormFields } from "../../../../Forms/TestCaseManagement";
 
 const ProjectRunView: React.FC = () => {
@@ -160,7 +159,7 @@ const ProjectRunView: React.FC = () => {
 
       {errorTests && <Alert severity="error">{errorTests}</Alert>}
 
-        <DataTable<Test>
+      <DataTable<Test>
         title="Tests for this Run"
         data={tests}
         columns={testColumns}
@@ -169,22 +168,22 @@ const ProjectRunView: React.FC = () => {
         nestedConfig={getNestedConfigFor("any") as unknown as NestedConfig<Test>}
         onRowExpand={(test: Test) => fetchResults(test._id)}
         nestedHeaderComponent={(test: Test) => (
-            <Box>
+          <Box>
             {errorResults[test._id] && (
-                <Alert severity="error" sx={{ mb: 1 }}>
+              <Alert severity="error" sx={{ mb: 1 }}>
                 {errorResults[test._id]}
-                </Alert>
+              </Alert>
             )}
             <CreateResultComponent
-                projectId={projectId!}
-                runId={runId!}
-                testId={test._id}
-                onCreated={() => fetchResults(test._id)}
-                onCreateResult={(r: TestResult) => handleCreateResult(test._id, r)}
+              projectId={projectId!}
+              runId={runId!}
+              testId={test._id}
+              onCreated={() => fetchResults(test._id)}
+              onCreateResult={(r: TestResult) => handleCreateResult(test._id, r)}
             />
-            </Box>
+          </Box>
         )}
-        />
+      />
     </Box>
   );
 };

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Paper, useTheme } from '@mui/material';
 import { contentContainer } from '../../../style/muiComponentStyles/containerStyles';
-import GenericTabs from '../../../components/tabs/Tabs';
-import { TabData } from '../../../components/tabs/types';
+import { Tabs as GenericTabs } from "fog-ui";
+import type { TabData } from "fog-ui";
 import BrandingForm from './branding/Branding';
 
 const CustomizationDashboard: React.FC = () => {
@@ -14,7 +14,7 @@ const CustomizationDashboard: React.FC = () => {
             label: "Branding",
             content: <BrandingForm />
         }
-    ]    
+    ]
 
     return (
         <Container sx={styles.root}>

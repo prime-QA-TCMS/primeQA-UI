@@ -1,9 +1,8 @@
 import React from 'react';
 import { Box, CircularProgress, Container, Typography, useTheme } from '@mui/material';
 import { contentContainer } from '../../../style/muiComponentStyles/containerStyles';
-import CardListContainer, { CardItem } from '../../../components/cards/CardListContainer';
-import GenericPieChart from '../../../components/charts/pieChart/GenericPieChart';
-import { chartData } from '../../../components/charts/pieChart/type';
+import { CardListContainer, GenericPieChart } from "fog-ui";
+import type { chartData, CardItem } from "fog-ui";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMilestones } from '../../../hooks/useProjects';
 import { Milestone } from '../../../types';
@@ -37,9 +36,9 @@ const MilestonesDashboard: React.FC = () => {
     );
   }
 
-  if (error) {return (<Typography color="error" sx={{ mt: 2 }}>Failed to load milestones. {String(error)}</Typography>);}
+  if (error) { return (<Typography color="error" sx={{ mt: 2 }}>Failed to load milestones. {String(error)}</Typography>); }
 
-  if (!milestones || milestones.length === 0) {return (<Typography sx={{ mt: 2 }}>No milestones found for this project.</Typography>);}
+  if (!milestones || milestones.length === 0) { return (<Typography sx={{ mt: 2 }}>No milestones found for this project.</Typography>); }
 
   const cardData: CardItem[] = milestones.map((m: Milestone) => ({
     id: m._id,
@@ -47,7 +46,7 @@ const MilestonesDashboard: React.FC = () => {
     description: m.description || "No description provided.",
     component: <MilestoneGraph metrics={m.metrics} />,
     onViewClick: () => {
-        navigate(`/project/${projectId}/milestone/${m._id}`);
+      navigate(`/project/${projectId}/milestone/${m._id}`);
     },
   }));
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { RocketLaunchOutlined } from "@mui/icons-material";
-import GenericList, { ListItemData } from "../../../../components/lists/List";
+import { GenericList, ListItemData } from "fog-ui";
 import { TestRun } from "../../../../types";
 
 interface RunsListViewProps {

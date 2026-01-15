@@ -1,170 +1,130 @@
-import { FormField } from "../components/forms/types";
+import type { FormField } from "fog-ui";
 
 export const loginFormFields: FormField[] = [
-    { 
-        name: 'email', 
-        label: 'Username', 
-        type: 'email', 
+    {
+        name: 'email',
+        label: 'Username',
+        type: 'email',
         required: true
     },
-    { 
-        name: 'password', 
-        label: 'Password', 
-        type: 'password', 
-        required: true, 
+    {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        required: true,
         minLength: 6
     }
 ];
 
 export const userFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
+    {
+        name: 'firstName',
+        label: 'First Name',
+        type: 'text',
         required: false
     },
-    { 
-        name: 'email', 
-        label: 'email', 
-        type: 'email', 
-        required: true, 
+    {
+        name: 'lastName',
+        label: 'Last Name',
+        type: 'text',
+        required: false
+    },
+    {
+        name: 'email',
+        label: 'Email',
+        type: 'email',
+        required: true
+    },
+    {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        required: false,
         minLength: 6
     },
-    { 
-        name: 'email_notifications', 
-        label: 'Enable Email Notifications', 
-        type: 'radio', 
-        required: true, 
-        minLength: 6
+    {
+        name: 'role',
+        label: 'Role',
+        type: 'select',
+        required: true,
+        options: [] // Will be populated dynamically
     },
-    { 
-        name: 'is_active', 
-        label: 'Is User Active', 
-        type: 'radio', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'role_id', 
-        label: 'User Role', 
-        type: 'select', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'role', 
-        label: 'role', 
-        type: 'text', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'group_ids', 
-        label: 'group_ids', 
-        type: 'multiselect', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'sso_enabled', 
-        label: 'sso_enabled', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
-    },
-    { 
-        name: 'password', 
-        label: 'Password', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
+    {
+        name: 'isActive',
+        label: 'Active Status',
+        type: 'checkbox',
+        required: false
     }
 ];
 
 export const roleFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
+    {
+        name: 'name',
+        label: 'Role Name',
+        type: 'text',
+        required: true
+    },
+    {
+        name: 'description',
+        label: 'Description',
+        type: 'textarea',
         required: false
     },
-    { 
-        name: 'is_active', 
-        label: 'is_active', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
-    },
-    { 
-        name: 'is_default', 
-        label: 'is_default', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
-    },
-    { 
-        name: 'is_admin', 
-        label: 'is_admin', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'permissions', 
-        label: 'permissions', 
-        type: 'multiselect', 
-        required: false, 
-        minLength: 6
-    },
-    { 
-        name: 'is_project_admin', 
-        label: 'is_project_admin', 
-        type: 'radio', 
-        required: false, 
-        minLength: 6
+    {
+        name: 'permissions',
+        label: 'Permissions',
+        type: 'multiselect',
+        required: false,
+        options: [
+            { label: 'View Users', value: 'view_users' },
+            { label: 'Create Users', value: 'create_users' },
+            { label: 'Edit Users', value: 'edit_users' },
+            { label: 'Delete Users', value: 'delete_users' },
+            { label: 'View Projects', value: 'view_projects' },
+            { label: 'Create Projects', value: 'create_projects' },
+            { label: 'Edit Projects', value: 'edit_projects' },
+            { label: 'Delete Projects', value: 'delete_projects' },
+            { label: 'View Test Cases', value: 'view_testcases' },
+            { label: 'Create Test Cases', value: 'create_testcases' },
+            { label: 'Edit Test Cases', value: 'edit_testcases' },
+            { label: 'Delete Test Cases', value: 'delete_testcases' },
+            { label: 'View Test Runs', value: 'view_testruns' },
+            { label: 'Create Test Runs', value: 'create_testruns' },
+            { label: 'Edit Test Runs', value: 'edit_testruns' },
+            { label: 'Delete Test Runs', value: 'delete_testruns' },
+        ]
     }
 ];
 
 export const permissionsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
+    {
+        name: 'name',
+        label: 'Permission Name',
+        type: 'text',
+        required: true
+    },
+    {
+        name: 'description',
+        label: 'Description',
+        type: 'textarea',
         required: false
     },
-    { 
-        name: 'is_active', 
-        label: 'is_active', 
-        type: 'radio', 
-        required: true, 
-        minLength: 6
+    {
+        name: 'resource',
+        label: 'Resource',
+        type: 'text',
+        required: true
     },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: true, 
-        minLength: 6
-    },
-    { 
-        name: 'permissions', 
-        label: 'permissions', 
-        type: 'multiselect', 
-        required: true, 
-        minLength: 6
+    {
+        name: 'action',
+        label: 'Action',
+        type: 'select',
+        required: true,
+        options: [
+            { label: 'View', value: 'view' },
+            { label: 'Create', value: 'create' },
+            { label: 'Edit', value: 'edit' },
+            { label: 'Delete', value: 'delete' },
+        ]
     }
 ];

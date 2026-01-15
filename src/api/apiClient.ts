@@ -12,6 +12,15 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // Debug logging for register endpoint
+  if (config.url?.includes('/register')) {
+    console.log('Axios interceptor - Request config:', {
+      url: config.url,
+      method: config.method,
+      data: config.data,
+      headers: config.headers
+    });
+  }
   return config;
 });
 
@@ -19,7 +28,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && error.response.data?.message === "Invalid or expired token" &&  !originalRequest._retry) {
+    if (error.response?.status === 401 && error.response.data?.message === "Invalid or expired token" && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem("refreshToken");

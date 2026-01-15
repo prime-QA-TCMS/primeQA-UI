@@ -1,4 +1,4 @@
-import { FormField } from "../components/forms/types";
+import type { FormField } from "fog-ui";
 
 export const testCaseAttachmentsFormFields: FormField[] = [
     { 

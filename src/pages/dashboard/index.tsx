@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Container, useTheme } from '@mui/material';
 import { createProject } from '../../Forms/ProjectManagement';
-import GenericForm from '../../components/forms/Form';
-import Popup from '../../components/popup/popup';
+import { Form as GenericForm, Popup } from "fog-ui";
 import { ProjectListView } from '../projects/project/components/ProjectListView';
 import { contentContainer } from '../../style/muiComponentStyles/containerStyles';
 import { ProjectAPI } from '../../api/project.api';
@@ -14,7 +13,7 @@ const Dashboard: React.FC = () => {
     const [isCreateProjectPopupOpen, setIsCreateProjectPopupOpen] = useState(false);
     const handleCreateProjectOpen = () => setIsCreateProjectPopupOpen(true);
     const handleCreateProjectClose = () => setIsCreateProjectPopupOpen(false);
-    
+
     const handleCreateProject = async (formData: { [key: string]: any }) => {
         try {
             const newProject = {
@@ -25,7 +24,7 @@ const Dashboard: React.FC = () => {
                 owner: localStorage.getItem("userId") || "", // assuming user is logged in
                 isActive: true
             };
-            
+
             const response = await ProjectAPI.projectCreate(newProject);
 
             if (response) {
@@ -42,9 +41,9 @@ const Dashboard: React.FC = () => {
         <Container sx={styles.root}>
             <Button onClick={handleCreateProjectOpen}>Create Project</Button>
             <Popup title="Create New Project" open={isCreateProjectPopupOpen} onClose={handleCreateProjectClose} component={
-                <GenericForm fields={createProject} onSubmit={handleCreateProject} submitButtonText={'Create'}/>
+                <GenericForm fields={createProject} onSubmit={handleCreateProject} submitButtonText={'Create'} />
             } />
-            
+
             <ProjectListView />
         </Container>
     );

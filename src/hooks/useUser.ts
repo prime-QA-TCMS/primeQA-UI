@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Role, Tenant } from "../types";
+import { User, Role, Tenant, RegisterRequest } from "../types";
 import { UserAPI } from "../api";
 import { useApi } from "./useApi";
 
@@ -240,7 +240,7 @@ export function useAuth() {
     }
   };
 
-  const register = async (data: Partial<User>) => {
+  const register = async (data: RegisterRequest) => {
     setLoading(true);
     setError(null);
     try {

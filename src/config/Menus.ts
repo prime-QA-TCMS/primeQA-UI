@@ -1,6 +1,4 @@
-import { MenuItem } from "../template/types";
-
-// TO DO: each menu should be an array function that checks permissions then builds the array
+import type { MenuItem } from "fog-ui";
 
 export const dashboardMenu: Record<string, MenuItem[]> = {
   "Project": [
@@ -22,9 +20,9 @@ export const projectMenu: Record<string, MenuItem[]> = {
 };
 
 export const userMenu: MenuItem[] = [
-    { label: "My Projects", path: "/dashboard" },
-    { label: "My Activity", path: "/dashboard" },
-    { label: "Customization", path: "/dashboard" }
+  { label: "My Projects", path: "/dashboard" },
+  { label: "My Activity", path: "/dashboard" },
+  { label: "Customization", path: "/dashboard" }
 ];
 
 export const settingsMenu: Record<string, MenuItem[]> = {

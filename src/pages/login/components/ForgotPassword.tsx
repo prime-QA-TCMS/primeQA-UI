@@ -1,25 +1,29 @@
-import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import GenericForm from '../../../components/forms/Form';
-import { FormField } from '../../../components/forms/types';
+import { Form as GenericForm } from "fog-ui";
+import type { FormField } from "fog-ui";
 
+interface ForgotPasswordProps {
+    onSuccess?: () => void;
+}
 
-const ForgotPassword: React.FC = () => {
-    const navigate = useNavigate();
-
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onSuccess }) => {
     const handleLogin = async (formData: { [key: string]: any }) => {
         try {
-            navigate('/dashboard');
+            // TODO: Implement password reset logic
+            console.log('Password reset requested for:', formData.email);
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (error) {
-            console.error("Error during login:", error);
+            console.error("Error during password reset:", error);
         }
     };
 
     const Fields: FormField[] = [
-        { 
-            name: 'email', 
-            label: 'Email Address', 
-            type: 'email', 
+        {
+            name: 'email',
+            label: 'Email Address',
+            type: 'email',
             required: true
         }
     ];

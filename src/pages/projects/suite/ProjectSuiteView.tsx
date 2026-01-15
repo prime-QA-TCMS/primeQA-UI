@@ -11,9 +11,10 @@ import {
 } from "../../../hooks/useTestCases";
 import { Section, TestCase } from "../../../types";
 import { TestcaseAPI } from "../../../api";
-import { DataTable } from "../../../components/table/DataTable";
-import { Column, NestedConfig } from "../../../components/table/types";
-import PopUpForm from "../../../components/forms/PopUpForm";
+import { DataTable, PopUpForm } from "fog-ui";
+import type { Column, NestedConfig } from 'fog-ui';
+
+
 import {
   sectionsFormFields,
   testCaseFormFields,
@@ -81,13 +82,13 @@ const ProjectSuiteView: React.FC = () => {
       key: "count",
       label: "Test Case Count",
       align: "center",
-      render: (item) => testcasesMap[item._id]?.length || 0,
+      render: (item: { _id: string | number; }) => testcasesMap[item._id]?.length || 0,
     },
   ];
 
   const dynamicNestedConfig = useMemo<NestedConfig<Section>>(
     () => ({
-      getNestedData: (section) => testcasesMap[section._id] || [],
+      getNestedData: (section: { _id: string | number; }) => testcasesMap[section._id] || [],
       nestedColumns: [
         { key: "title", label: "Title" },
         { key: "priority", label: "Priority" },
@@ -95,8 +96,8 @@ const ProjectSuiteView: React.FC = () => {
         { key: "preconditions", label: "Preconditions" },
         { key: "steps", label: "Steps" },
         { key: "expectedResult", label: "Expected Result" },
-        { key: "isActive", label: "is Active"},
-        { key: "status", label: "status"},
+        { key: "isActive", label: "is Active" },
+        { key: "status", label: "status" },
       ],
       loading: Object.values(loadingSections).some(Boolean),
     }),
@@ -148,8 +149,8 @@ const ProjectSuiteView: React.FC = () => {
           loading={sectionsLoading}
           nestedConfig={dynamicNestedConfig}
           emptyMessage="No sections available."
-          onRowExpand={(section) => fetchTestCases(section._id)} // ✅ now stable
-          nestedHeaderComponent={(section) => (
+          onRowExpand={(section: { _id: string; }) => fetchTestCases(section._id)} // ✅ now stable
+          nestedHeaderComponent={(section: { _id: string; }) => (
             <CreateTestCaseComponent
               projectId={projectId!}
               suiteId={suiteId!}

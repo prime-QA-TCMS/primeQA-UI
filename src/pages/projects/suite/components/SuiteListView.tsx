@@ -5,9 +5,7 @@ import { SuiteListItemProps } from "./types";
 import { Suite, Section, TestCase } from "../../../../types";
 import { useSuites, useSections, useTestcases, useCreateSuite } from "../../../../hooks/useTestCases";
 import { RocketLaunchOutlined } from "@mui/icons-material";
-import GenericList, { ListItemData } from "../../../../components/lists/List";
-import { suitesFormFields } from "../../../../Forms/TestCaseManagement";
-import PopUpForm from "../../../../components/forms/PopUpForm";
+import { GenericList, ListItemData } from "fog-ui";
 
 const RecordListItem: React.FC<SuiteListItemProps> = ({ recordObject, projectId }) => {
   const navigate = useNavigate();
@@ -115,10 +113,10 @@ export const SuiteListView: React.FC = () => {
   );
 
   const accordionItems: ListItemData[] = projectSuites.map((suite: Suite) => ({
-      id: suite._id,
-      title: `${suite.name}`,
-      icon: <RocketLaunchOutlined />,
-      link: `/project/${projectId}/suite/${suite._id}`,
+    id: suite._id,
+    title: `${suite.name}`,
+    icon: <RocketLaunchOutlined />,
+    link: `/project/${projectId}/suite/${suite._id}`,
   }));
 
 

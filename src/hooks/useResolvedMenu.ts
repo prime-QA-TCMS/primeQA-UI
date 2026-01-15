@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { MenuItem } from "../components/template/types";
+import type { MenuItem } from "fog-ui";
 
 export function useResolvedMenu(menu: Record<string, MenuItem[]>): Record<string, MenuItem[]> {
   const params = useParams();
@@ -8,7 +8,7 @@ export function useResolvedMenu(menu: Record<string, MenuItem[]>): Record<string
 
   Object.entries(menu).forEach(([group, items]) => {
     resolvedMenu[group] = items.map((item) => {
-      let resolvedPath = item.path;
+      let resolvedPath = item.path ?? "";
       Object.entries(params).forEach(([key, value]) => {
         resolvedPath = resolvedPath.replace(`:${key}`, value || "");
       });

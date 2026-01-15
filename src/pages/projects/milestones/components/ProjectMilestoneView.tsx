@@ -2,8 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useMilestones } from "../../../../hooks/useProjects";
-import GenericPieChart from "../../../../components/charts/pieChart/GenericPieChart";
-import { chartData } from "../../../../components/charts/pieChart/type";
+import { GenericPieChart } from "fog-ui";
+import type { chartData } from "fog-ui";
 import { Milestone } from "../../../../types";
 
 const ProjectMilestoneView: React.FC = () => {
@@ -20,13 +20,13 @@ const ProjectMilestoneView: React.FC = () => {
     );
   }
 
-  if (error) {return (<Typography color="error" sx={{ mt: 2 }}>Failed to load milestones. {String(error)}</Typography>);}
+  if (error) { return (<Typography color="error" sx={{ mt: 2 }}>Failed to load milestones. {String(error)}</Typography>); }
 
   const filteredMilestone: Milestone | undefined = milestones?.find(
     (m: Milestone) => m._id === milestoneId
   );
 
-  if (!filteredMilestone) {return (<Typography sx={{ mt: 2 }}>Milestone not found for this project.</Typography>);}
+  if (!filteredMilestone) { return (<Typography sx={{ mt: 2 }}>Milestone not found for this project.</Typography>); }
 
   const { passed = 0, failed = 0, blocked = 0, untested = 0 } = filteredMilestone.metrics || {};
 
@@ -57,7 +57,7 @@ const ProjectMilestoneView: React.FC = () => {
         {filteredMilestone.endDate
           ? new Date(filteredMilestone.endDate).toLocaleDateString()
           : "N/A"}
-          <strong> Status:</strong> {filteredMilestone.status}
+        <strong> Status:</strong> {filteredMilestone.status}
       </Typography>
 
 

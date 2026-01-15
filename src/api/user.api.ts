@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 import { API_ENDPOINTS } from "../config/apiConfig";
-import { User, Role, Tenant, AuthResponse } from "../types"; // ✅ Add these interfaces in your types folder
+import { User, Role, Tenant, AuthResponse, RegisterRequest } from "../types"; // ✅ Add these interfaces in your types folder
 
 export const UserAPI = {
   login: async (data: { email: string; password: string }): Promise<AuthResponse> => {
@@ -8,8 +8,11 @@ export const UserAPI = {
     return res.data;
   },
 
-  register: async (data: Partial<User>): Promise<AuthResponse> => {
+  register: async (data: RegisterRequest): Promise<AuthResponse> => {
+    console.log('UserAPI.register called with:', data);
+    console.log('Register endpoint:', API_ENDPOINTS.auth.register);
     const res = await apiClient.post(API_ENDPOINTS.auth.register, data);
+    console.log('Register response:', res.data);
     return res.data;
   },
 
@@ -23,11 +26,11 @@ export const UserAPI = {
     return res.data;
   },
 
-  
+
   userGetAll: async (): Promise<User[]> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.user.list, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -35,7 +38,7 @@ export const UserAPI = {
   userGetById: async (id: string): Promise<User> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.user.getById(id), {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -43,7 +46,7 @@ export const UserAPI = {
   userCreate: async (data: Partial<User>): Promise<User> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.user.create, data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -51,24 +54,24 @@ export const UserAPI = {
   userUpdate: async (id: string, data: Partial<User>): Promise<User> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.user.update(id), data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
 
   userDelete: async (id: string): Promise<{ message: string }> => {
     const token = localStorage.getItem("token");
-    const res = await apiClient.delete(API_ENDPOINTS.user.list, {
-        headers: { Authorization: `Bearer ${token}` },
+    const res = await apiClient.delete(API_ENDPOINTS.user.delete(id), {
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
-  
+
 
   roleGetAll: async (): Promise<Role[]> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.role.list, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -76,7 +79,7 @@ export const UserAPI = {
   roleCreate: async (data: Partial<Role>): Promise<Role> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.role.create, data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -84,7 +87,7 @@ export const UserAPI = {
   roleUpdate: async (id: string, data: Partial<Role>): Promise<Role> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.role.update(id), data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -92,7 +95,7 @@ export const UserAPI = {
   roleDelete: async (id: string): Promise<{ message: string }> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.delete(API_ENDPOINTS.role.delete(id), {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -101,7 +104,7 @@ export const UserAPI = {
   tenantGetAll: async (): Promise<Tenant[]> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.get(API_ENDPOINTS.tenant.list, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -109,7 +112,7 @@ export const UserAPI = {
   tenantCreate: async (data: Partial<Tenant>): Promise<Tenant> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post(API_ENDPOINTS.tenant.create, data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -117,7 +120,7 @@ export const UserAPI = {
   tenantUpdate: async (id: string, data: Partial<Tenant>): Promise<Tenant> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.put(API_ENDPOINTS.tenant.update(id), data, {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },
@@ -125,7 +128,7 @@ export const UserAPI = {
   tenantDelete: async (id: string): Promise<{ message: string }> => {
     const token = localStorage.getItem("token");
     const res = await apiClient.delete(API_ENDPOINTS.tenant.delete(id), {
-        headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   },

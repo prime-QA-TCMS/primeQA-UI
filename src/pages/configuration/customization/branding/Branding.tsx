@@ -1,8 +1,7 @@
-import { ThemeContext } from "../../../../context/ThemeContext";
+import { ThemeContext, Form as GenericForm } from "fog-ui";
 import { Box, CssBaseline } from "@mui/material";
 import { useContext, useState } from "react";
-import GenericForm from "../../../../components/forms/Form";
-import { FormField } from "../../../../components/forms/types";
+import { FormField } from "fog-ui";
 
 const BrandingForm: React.FC = () => {
     const { toggleTheme, changePrimaryColor, mode, primaryColor } = useContext(ThemeContext);

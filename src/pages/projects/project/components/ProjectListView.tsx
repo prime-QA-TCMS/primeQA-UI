@@ -3,8 +3,8 @@ import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RocketLaunchOutlined } from "@mui/icons-material";
 
-import AccordionList, { AccordionItem } from "../../../../components/lists/AccordionList";
-import GenericList, { ListItemData } from "../../../../components/lists/List";
+import { AccordionList, GenericList } from "fog-ui";
+import type { AccordionItem, ListItemData } from "fog-ui";
 import { ProjectAPI } from "../../../../api";
 import { Project } from "../../../../types";
 

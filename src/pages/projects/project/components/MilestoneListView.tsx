@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
-import { useNavigate, useParams  } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RocketLaunchOutlined } from "@mui/icons-material";
 
-import GenericPieChart from "../../../../components/charts/pieChart/GenericPieChart";
-import GenericList, { ListItemData } from "../../../../components/lists/List";
-import { chartData } from "../../../../components/charts/pieChart/type";
+import { GenericPieChart, GenericList } from "fog-ui";
+import type { chartData, ListItemData } from "fog-ui";
 
 import { Milestone } from "../../../../types";
 import { useApi } from "../../../../hooks/useApi";

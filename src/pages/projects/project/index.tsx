@@ -4,10 +4,8 @@ import { useParams } from "react-router-dom";
 import { CheckCircle, XCircle, RefreshCcw, Ban, ListChecks } from "lucide-react";
 import { MilestoneListView } from "../project/components/MilestoneListView";
 import { RunsListView } from "../project/components/RunsListView";
-import MetricCardGrid from "../../../components/cards/metricCard/MetricCardGrid";
-import { MetricCardData } from "../../../components/cards/metricCard/MetricCardType";
-import TrendAnalyticsChart from "../../../components/charts/TrendAnalyticsChart/TrendAnalyticsChart";
-import { TrendAnalyticsData } from "../../../components/charts/TrendAnalyticsChart/types";
+import { MetricCardGrid, TrendAnalyticsChart, TrendAnalyticsData } from "fog-ui";
+import type { MetricCardData } from "fog-ui";
 import { contentContainer, halfScreenContainer } from "../../../style/muiComponentStyles/containerStyles";
 import { ResultsAPI } from "../../../api";
 import { TestResult, TestRun } from "../../../types";
@@ -103,16 +101,16 @@ const ProjectDashboard: React.FC = () => {
       ];
 
       // 🧾 Build 7-day trend chart
-        const groupedByDay = results.reduce((acc: any, r) => {
-            const createdDate = r.createdAt ? new Date(r.createdAt) : new Date(); // fallback
-            const day = createdDate.toLocaleDateString("en-US", {
-                weekday: "short",
-            });
-            acc[day] = acc[day] || { day, Passed: 0, Failed: 0, Blocked: 0, Retest: 0 };
-            const key = r.status.charAt(0).toUpperCase() + r.status.slice(1);
-            if (acc[day][key] !== undefined) acc[day][key] += 1;
-            return acc;
-        }, {});
+      const groupedByDay = results.reduce((acc: any, r) => {
+        const createdDate = r.createdAt ? new Date(r.createdAt) : new Date(); // fallback
+        const day = createdDate.toLocaleDateString("en-US", {
+          weekday: "short",
+        });
+        acc[day] = acc[day] || { day, Passed: 0, Failed: 0, Blocked: 0, Retest: 0 };
+        const key = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+        if (acc[day][key] !== undefined) acc[day][key] += 1;
+        return acc;
+      }, {});
 
       const sortedDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
       const trendArray = sortedDays
@@ -159,11 +157,11 @@ const ProjectDashboard: React.FC = () => {
           <Container sx={halfScreenContainerStyle.root}>
             <MilestoneListView />
           </Container>
-          {runsData ? 
-          <Container sx={halfScreenContainerStyle.root}>
-            <RunsListView runs={runsData}/>
-          </Container>
-          : null }
+          {runsData ?
+            <Container sx={halfScreenContainerStyle.root}>
+              <RunsListView runs={runsData} />
+            </Container>
+            : null}
         </>
       )}
     </Container>
