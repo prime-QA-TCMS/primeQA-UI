@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# PrimeQA-UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+PrimeQA-UI is a Test Case Management System (TCMS) front-end that integrates with multiple backend services:
 
-## Available Scripts
+- User Service (auth, users, roles)
+- Project Service (projects, milestones, configurations)
+- Testcase Service (suites, sections, test cases)
+- Results Service (runs, tests, results)
+- Configuration Service (environments, parameters, integrations)
 
-In the project directory, you can run:
+## Environment Setup
 
-### `npm start`
+CRA loads env vars prefixed with `REACT_APP_`. Copy `.env.example` to `.env` and adjust:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+REACT_APP_API_USER_BASE_URL=http://localhost:8081
+REACT_APP_API_PROJECT_BASE_URL=http://localhost:8082
+REACT_APP_API_TESTCASE_BASE_URL=http://localhost:8083
+REACT_APP_API_CONFIGURATION_BASE_URL=http://localhost:8085
+REACT_APP_API_RESULTS_BASE_URL=http://localhost:8084
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Base URLs are read in `src/config/apiConfig.ts` and fall back to local defaults if env vars are missing.
 
-### `npm test`
+## Local Development
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Install deps
+	- `npm install`
+2. Start the app
+	- `npm start`
+3. Run tests
+	- `npm test` (watch mode)
+	- `npm run test:ci` (CI mode)
+4. Lint and format
+	- `npm run lint`
+	- `npm run format`
+5. Build
+	- `npm run build`
 
-### `npm run build`
+## Folder Conventions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `src/pages`: Feature pages (dashboard, projects, suites, runs, milestones)
+- `src/hooks`: Data hooks wrapping service APIs
+- `src/api`: API client wrappers
+- `src/types`: Shared TypeScript types
+- `src/config`: App and API configuration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contribution
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Use feature branches and PRs
+- CI gates: lint + test + build (scripts provided)
+- Keep API calls within hooks; components remain declarative
 
-### `npm run eject`
+## Notes
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Token handling and API injection are centralized via fog-ui and Axios interceptors
+- API instances and fetch functions are memoized to avoid render loops

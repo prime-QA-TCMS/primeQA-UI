@@ -1,33 +1,51 @@
-import { useState } from "react";
-import { TestRun, TestRunResponse, Test, TestResult, TestResultResponse, TestResponse, TestRunFilterResponse, TestFilterResponse, ResultsFilterResponse } from "../types";
-import { ResultsAPI } from "../api";
-import { useApi } from "./useApi";
+import { useState, useMemo } from 'react';
+import {
+  TestRun,
+  TestRunResponse,
+  Test,
+  TestResult,
+  TestResultResponse,
+  TestResponse,
+  TestRunFilterResponse,
+  TestFilterResponse,
+  ResultsFilterResponse,
+} from '../types';
+import { ResultsAPI } from '../api';
+import { useApi, useService } from 'fog-ui';
 
 //
 // 🔹 RUNS
 //
 export function useRuns(projectId: string) {
-  return useApi<TestRunResponse>(ResultsAPI.runGetAll, [projectId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestRunResponse>(() => resultsAPI.runGetAll(projectId), [projectId]);
 }
 
 export function useRunById(id: string) {
-  return useApi<TestRunResponse>(ResultsAPI.runGetById, [id]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestRunResponse>(() => resultsAPI.runGetById(id), [id]);
 }
 
 export function useRunByProjectId(projectId: string) {
-  return useApi<TestRunFilterResponse>(ResultsAPI.runGetByProjectId, [projectId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestRunFilterResponse>(() => resultsAPI.runGetByProjectId(projectId), [projectId]);
 }
 
 export function useRunSearch() {
   const [data, setData] = useState<TestRun[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const searchTests = async (filters: Record<string, any>) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await ResultsAPI.runSearch(filters);
+      const response = await resultsAPI.runSearch(filters);
       setData(response.data || []);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
@@ -43,12 +61,14 @@ export function useRunSearch() {
 export function useCreateRun() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const createRun = async (data: Partial<TestRun>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.runCreate(data);
+      return await resultsAPI.runCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -64,12 +84,14 @@ export function useCreateRun() {
 export function useUpdateRun() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const updateRun = async (id: string, data: Partial<TestRun>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.runUpdate(id, data);
+      return await resultsAPI.runUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -85,12 +107,14 @@ export function useUpdateRun() {
 export function useDeleteRun() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const deleteRun = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.runDelete(id);
+      return await resultsAPI.runDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -107,27 +131,35 @@ export function useDeleteRun() {
 // 🔹 TESTS
 //
 export function useTests(runId: string) {
-  return useApi<TestResponse[]>(() => ResultsAPI.testGetAll(runId), [runId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestResponse[]>(() => resultsAPI.testGetAll(runId), [runId]);
 }
 
 export function useTestById(id: string) {
-  return useApi<TestResponse>(ResultsAPI.testGetById, [id]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestResponse>(() => resultsAPI.testGetById(id), [id]);
 }
 
 export function useTestByProjectId(projectId: string) {
-  return useApi<TestFilterResponse>(ResultsAPI.testGetByProjectId, [projectId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestFilterResponse>(() => resultsAPI.testGetByProjectId(projectId), [projectId]);
 }
 
 export function useTestSearch() {
   const [data, setData] = useState<Test[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const searchTests = async (filters: Record<string, any>) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await ResultsAPI.testSearch(filters);
+      const response = await resultsAPI.testSearch(filters);
       setData(response.data || []);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
@@ -143,12 +175,14 @@ export function useTestSearch() {
 export function useCreateTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const createTest = async (data: Partial<Test>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.testCreate(data);
+      return await resultsAPI.testCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -164,12 +198,14 @@ export function useCreateTest() {
 export function useUpdateTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const updateTest = async (id: string, data: Partial<Test>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.testUpdate(id, data);
+      return await resultsAPI.testUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -185,12 +221,14 @@ export function useUpdateTest() {
 export function useDeleteTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const deleteTest = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.testDelete(id);
+      return await resultsAPI.testDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -207,27 +245,38 @@ export function useDeleteTest() {
 // 🔹 RESULTS
 //
 export function useResults(testId: string) {
-  return useApi<TestResultResponse[]>(() => ResultsAPI.resultGetAll(testId), [testId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestResultResponse[]>(() => resultsAPI.resultGetAll(testId), [testId]);
 }
 
 export function useResultById(id: string) {
-  return useApi<TestResultResponse>(ResultsAPI.resultGetById, [id]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<TestResultResponse>(() => resultsAPI.resultGetById(id), [id]);
 }
 
 export function useResultByProjectId(projectId: string) {
-  return useApi<ResultsFilterResponse>(ResultsAPI.resultGetByProjectId, [projectId]);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<ResultsFilterResponse>(
+    () => resultsAPI.resultGetByProjectId(projectId),
+    [projectId]
+  );
 }
 
 export function useResultSearch() {
   const [data, setData] = useState<TestResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const searchTests = async (filters: Record<string, any>) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await ResultsAPI.resultSearch(filters);
+      const response = await resultsAPI.resultSearch(filters);
       setData(response.data || []);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
@@ -243,12 +292,14 @@ export function useResultSearch() {
 export function useCreateResult() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const createResult = async (data: Partial<TestResult>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.resultCreate(data);
+      return await resultsAPI.resultCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -264,12 +315,14 @@ export function useCreateResult() {
 export function useUpdateResult() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const updateResult = async (id: string, data: Partial<TestResult>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.resultUpdate(id, data);
+      return await resultsAPI.resultUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -285,12 +338,14 @@ export function useUpdateResult() {
 export function useDeleteResult() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
 
   const deleteResult = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ResultsAPI.resultDelete(id);
+      return await resultsAPI.resultDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -307,5 +362,7 @@ export function useDeleteResult() {
 // 🔹 HEALTH CHECK
 //
 export function useResultsHealthCheck() {
-  return useApi<{ status: string }>(ResultsAPI.healthCheck);
+  const resultsService = useService('results');
+  const resultsAPI = useMemo(() => ResultsAPI(resultsService), [resultsService]);
+  return useApi<{ status: string }>(() => resultsAPI.healthCheck());
 }

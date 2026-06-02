@@ -1,339 +1,339 @@
-import type { FormField } from "fog-ui";
+import type { FormField } from 'fog-ui';
 
-export const testCaseAttachmentsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'file', 
-        label: 'file', 
-        type: 'file', 
-        required: false
-    }
-];
+// ========================================
+// 🏃 TEST RUN FORMS
+// ========================================
 
-export const resultsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'assignedto_id', 
-        label: 'assignedto_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'comment', 
-        label: 'comment', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_by', 
-        label: 'created_by', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_on', 
-        label: 'created_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'custom_step_results', 
-        label: 'custom_step_results', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'defects', 
-        label: 'defects', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'elapsed', 
-        label: 'elapsed', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'status_id', 
-        label: 'status_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'test_id', 
-        label: 'test_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'version', 
-        label: 'version', 
-        type: 'select', 
-        required: false
-    }
+export const createRunFormFields = (projectId?: string): FormField[] => [
+  ...(projectId ? [{
+    name: 'projectId',
+    label: 'Project ID',
+    type: 'text' as const,
+    disabled: true,
+    required: false,
+    defaultValue: projectId,
+  }] as FormField[] : []),
+  {
+    name: 'name',
+    label: 'Run Name',
+    type: 'text' as const,
+    required: true,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea' as const,
+    required: false,
+  },
+  {
+    name: 'type',
+    label: 'Type',
+    type: 'select' as const,
+    required: true,
+    options: [
+      { label: 'Manual', value: 'Manual' },
+      { label: 'Automated', value: 'Automated' },
+      { label: 'Scheduled', value: 'Scheduled' },
+    ],
+  },
+  {
+    name: 'environment',
+    label: 'Environment',
+    type: 'text' as const,
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch' as const,
+    required: false,
+  },
 ];
 
-export const runFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'assignedto_id', 
-        label: 'assignedto_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'completed_on', 
-        label: 'completed_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'config', 
-        label: 'config', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_by', 
-        label: 'created_by', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_on', 
-        label: 'created_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'refs', 
-        label: 'refs', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'description', 
-        label: 'description', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'include_all', 
-        label: 'include_all', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'is_completed', 
-        label: 'is_completed', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'milestone_id', 
-        label: 'milestone_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'plan_id', 
-        label: 'plan_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'suite_id', 
-        label: 'suite_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'url', 
-        label: 'url', 
-        type: 'select', 
-        required: false
-    }
-];
-export const runConfigFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    }
+export const updateRunFormFields = (projectId?: string): FormField[] => [
+  ...(projectId ? [{
+    name: 'projectId',
+    label: 'Project ID',
+    type: 'text' as const,
+    disabled: true,
+    required: false,
+    defaultValue: projectId,
+  }] as FormField[] : []),
+  {
+    name: 'name',
+    label: 'Run Name',
+    type: 'text' as const,
+    required: false,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea' as const,
+    required: false,
+  },
+  {
+    name: 'type',
+    label: 'Type',
+    type: 'select' as const,
+    required: false,
+    options: [
+      { label: 'Manual', value: 'Manual' },
+      { label: 'Automated', value: 'Automated' },
+      { label: 'Scheduled', value: 'Scheduled' },
+    ],
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select' as const,
+    required: false,
+    options: [
+      { label: 'Pending', value: 'Pending' },
+      { label: 'Running', value: 'Running' },
+      { label: 'Completed', value: 'Completed' },
+      { label: 'Aborted', value: 'Aborted' },
+    ],
+  },
+  {
+    name: 'environment',
+    label: 'Environment',
+    type: 'text' as const,
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch' as const,
+    required: false,
+  },
 ];
 
-export const planFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'description', 
-        label: 'description', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'milestone_id', 
-        label: 'milestone_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'assignedto_id', 
-        label: 'assignedto_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'is_completed', 
-        label: 'is_completed', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'completed_on', 
-        label: 'completed_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_on', 
-        label: 'created_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'created_by', 
-        label: 'created_by', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'url', 
-        label: 'url', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'start_on', 
-        label: 'start_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'due_date', 
-        label: 'due_date', 
-        type: 'select', 
-        required: false
-    }
-];
-export const planEntriesFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'suite_id', 
-        label: 'suite_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'refs', 
-        label: 'refs', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'description', 
-        label: 'description', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'include_all', 
-        label: 'include_all', 
-        type: 'select', 
-        required: false
-    }
+// Keep old exports for backward compatibility
+export const createTestRunFormFields = createRunFormFields();
+export const updateTestRunFormFields = updateRunFormFields();
+
+// ========================================
+// 🧪 TEST (Instance) FORMS
+// ========================================
+
+export const createTestFormFields: FormField[] = [
+  {
+    name: 'runId',
+    label: 'Test Run',
+    type: 'select',
+    required: true,
+    options: [], // Populated dynamically
+  },
+  {
+    name: 'projectId',
+    label: 'Project',
+    type: 'select',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'testCaseId',
+    label: 'Test Case',
+    type: 'select',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'suiteId',
+    label: 'Suite',
+    type: 'select',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'sectionId',
+    label: 'Section',
+    type: 'select',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    required: true,
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    required: true,
+    options: [
+      { label: 'Not Started', value: 'Not Started' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Completed', value: 'Completed' },
+    ],
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const testFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'assignedto_id', 
-        label: 'assignedto_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'case_id', 
-        label: 'case_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'run_id', 
-        label: 'run_id', 
-        type: 'select', 
-        required: false
-    }
+export const updateTestFormFields: FormField[] = [
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    required: false,
+    options: [
+      { label: 'Not Started', value: 'Not Started' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Completed', value: 'Completed' },
+    ],
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
 
+// ========================================
+// 📊 RESULT FORMS
+// ========================================
+
+export const createResultFormFields: FormField[] = [
+  {
+    name: 'testId',
+    label: 'Test',
+    type: 'select',
+    required: true,
+    options: [], // Populated dynamically
+  },
+  {
+    name: 'projectId',
+    label: 'Project',
+    type: 'select',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'status',
+    label: 'Result Status',
+    type: 'select',
+    required: true,
+    options: [
+      { label: 'Passed', value: 'Passed' },
+      { label: 'Failed', value: 'Failed' },
+      { label: 'Blocked', value: 'Blocked' },
+      { label: 'Skipped', value: 'Skipped' },
+      { label: 'Retest', value: 'Retest' },
+    ],
+  },
+  {
+    name: 'executedBy',
+    label: 'Executed By',
+    type: 'select',
+    required: true,
+    options: [], // Populated from users API
+  },
+  {
+    name: 'startTime',
+    label: 'Start Time',
+    type: 'datetime',
+    required: false,
+  },
+  {
+    name: 'endTime',
+    label: 'End Time',
+    type: 'datetime',
+    required: false,
+  },
+  {
+    name: 'logs',
+    label: 'Logs',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'screenshotUrl',
+    label: 'Screenshot URL',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
+];
+
+export const updateResultFormFields: FormField[] = [
+  {
+    name: 'status',
+    label: 'Result Status',
+    type: 'select',
+    required: false,
+    options: [
+      { label: 'Passed', value: 'Passed' },
+      { label: 'Failed', value: 'Failed' },
+      { label: 'Blocked', value: 'Blocked' },
+      { label: 'Skipped', value: 'Skipped' },
+      { label: 'Retest', value: 'Retest' },
+    ],
+  },
+  {
+    name: 'executedBy',
+    label: 'Executed By',
+    type: 'select',
+    required: false,
+    options: [],
+  },
+  {
+    name: 'startTime',
+    label: 'Start Time',
+    type: 'datetime',
+    required: false,
+  },
+  {
+    name: 'endTime',
+    label: 'End Time',
+    type: 'datetime',
+    required: false,
+  },
+  {
+    name: 'logs',
+    label: 'Logs',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'screenshotUrl',
+    label: 'Screenshot URL',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
+];
+
+// Legacy exports for backward compatibility
+export const runFormFields = createTestRunFormFields;
+export const testFormFields = createTestFormFields;
+export const resultsFormFields = createResultFormFields;
+
+// Deprecated exports
+export const testCaseAttachmentsFormFields: FormField[] = [];
+export const runConfigFormFields: FormField[] = [];
+export const planFormFields: FormField[] = [];
+export const planEntriesFormFields: FormField[] = [];

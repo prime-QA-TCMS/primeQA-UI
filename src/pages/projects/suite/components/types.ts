@@ -1,4 +1,4 @@
-import { Suite } from "../../../../types";
+import { Suite } from '../../../../types';
 
 export interface SuiteListItemProps {
   recordObject: Suite;

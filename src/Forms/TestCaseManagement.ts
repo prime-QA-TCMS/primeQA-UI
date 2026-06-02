@@ -1,338 +1,280 @@
-import type { FormField } from "fog-ui";
+import type { FormField } from 'fog-ui';
 
-export const dataSetsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: false
-    }
-];
+// ========================================
+// 📦 SUITE FORMS
+// ========================================
 
-export const dataSetVariablesFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: false
-    },
-    { 
-        name: 'value', 
-        label: 'value', 
-        type: 'text', 
-        required: false
-    }
-];
-
-export const testCaseAttachmentsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'file', 
-        label: 'file', 
-        type: 'file', 
-        required: false
-    }
-];
-
-export const casesFormFields: FormField[] = [
-    { 
-        name: '_id', 
-        label: 'id', 
-        type: 'text', 
-        disabled: true
-    },
-    { 
-        name: 'title', 
-        label: 'title', 
-        type: 'text', 
-        required: true
-    },
-    { 
-        name: 'preconditions', 
-        label: 'Preconditions', 
-        type: 'textarea', 
-        required: false
-    },
-    { 
-        name: 'steps', 
-        label: 'Steps', 
-        type: 'textarea', 
-        required: false
-    },
-    { 
-        name: 'expectedResult', 
-        label: 'Expected Results', 
-        type: 'textarea', 
-        required: false
-    },
-];
-
-export const sharedStepsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'title', 
-        label: 'title', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'created_by', 
-        label: 'created_by', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'created_on', 
-        label: 'created_on', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'updated_by', 
-        label: 'updated_by', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'updated_on', 
-        label: 'updated_on', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'case_ids', 
-        label: 'case_ids', 
-        type: 'number', 
-        required: false
-    }
-];
-export const sharedStepFormFields: FormField[] = [
-    { 
-        name: 'content', 
-        label: 'content', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'additional_info', 
-        label: 'additional_info', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'expected', 
-        label: 'expected', 
-        type: 'number', 
-        required: false
-    }
-];
-
-export const testCaseFormFields: FormField[] = [
-    { 
-        name: "title",
-        label: "Name",
-        type: "text",
-        required: true
-    },
-    { 
-        name: "description",
-        label: "Description",
-        type: "textarea",
-        required: false
-    },
-    { 
-        name: "preconditions",
-        label: "Preconditions",
-        type: "textarea",
-        required: false
-    },
-    { 
-        name: "steps",
-        label: "Steps",
-        type: "textarea",
-        required: false
-    },
-    { 
-        name: "expectedResult",
-        label: "Expected Results",
-        type: "textarea",
-        required: false
-    }
-];
-
-export const sectionsFormFields = (projectId: string | undefined, suiteId: string | undefined): FormField[] => [
-    { 
-        name: "projectId",
-        label: "Project",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/projects",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: projectId || null
-    },
-    { 
-        name: "suiteId",
-        label: "Suite",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/suites",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: suiteId || null
-    },
-    { 
-        name: "name",
-        label: "Name",
-        type: "text",
-        required: true
-    },
-    { 
-        name: "description",
-        label: "Description",
-        type: "textarea",
-        required: false
-    },
-    { 
-        name: "isActive",
-        label: "Active?",
-        type: "switch",
-        required: false
-    }
-];
-
-export const suitesFormFields = (projectId: string | undefined): FormField[] => [
-  { 
-    name: "projectId",
-    label: "Project",
-    type: "select",
+export const createSuiteFormFields = (projectId?: string): FormField[] => [
+  {
+    name: 'name',
+    label: 'Suite Name',
+    type: 'text',
     required: true,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
+];
+
+export const updateSuiteFormFields = (projectId?: string): FormField[] => [
+  {
+    name: 'projectId',
+    label: 'Project',
+    type: 'select',
+    required: false,
     disabled: !!projectId,
-    apiEndpoint: "/projects",
-    optionLabelKey: "name",
-    optionValueKey: "_id",
-    defaultValue: projectId || null
+    apiEndpoint: '/projects',
+    optionLabelKey: 'name',
+    optionValueKey: '_id',
   },
-  { 
-    name: "name",
-    label: "Name",
-    type: "text",
-    required: true
+  {
+    name: 'name',
+    label: 'Suite Name',
+    type: 'text',
+    required: false,
   },
-  { 
-    name: "description",
-    label: "Description",
-    type: "textarea",
-    required: false
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
   },
-  { 
-    name: "isActive",
-    label: "Active?",
-    type: "switch",
-    required: false
-  }
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
 
+// ========================================
+// 📑 SECTION FORMS
+// ========================================
 
+export const createSectionFormFields = (
+  projectId?: string,
+  suiteId?: string
+): FormField[] => [
+    {
+      name: 'name',
+      label: 'Section Name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'textarea',
+      required: false,
+    },
+    {
+      name: 'order',
+      label: 'Order',
+      type: 'number',
+      required: false,
+    },
+    {
+      name: 'isActive',
+      label: 'Active',
+      type: 'switch',
+      required: false,
+    },
+  ];
 
+export const updateSectionFormFields = (
+  projectId?: string,
+  suiteId?: string
+): FormField[] => [
+    {
+      name: 'name',
+      label: 'Section Name',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'textarea',
+      required: false,
+    },
+    {
+      name: 'order',
+      label: 'Order',
+      type: 'number',
+      required: false,
+    },
+    {
+      name: 'isActive',
+      label: 'Active',
+      type: 'switch',
+      required: false,
+    },
+  ];
 
-export const resultFormFields = (projectId: string | undefined, suiteId: string | undefined): FormField[] => [
-    { 
-        name: "projectId",
-        label: "Project",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/projects",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: projectId || null
-    },
-    { 
-        name: "suiteId",
-        label: "Suite",
-        type: "select",
-        required: true,
-        disabled: !!projectId,
-        apiEndpoint: "/suites",
-        optionLabelKey: "name",
-        optionValueKey: "_id",
-        defaultValue: suiteId || null
-    },
-    { 
-        name: "status",
-        label: "Name",
-        type: "select",
-        options: [
-            {label: "Passed", value: "Passed"},
-            {label: "Failed", value: "Failed"},
-            {label: "Blocked", value: "Blocked"},
-            {label: "Skipped", value: "Skipped"},
-            {label: "Retest", value: "Retest"},
-        ],
-        required: true
-    },
-    { 
-        name: "executedBy",
-        label: "Tested By",
-        type: "text",
-        required: false
-    },
-    { 
-        name: "isActive",
-        label: "Active?",
-        type: "switch",
-        required: false
-    }
+// ========================================
+// 🧪 TEST CASE FORMS
+// ========================================
+
+export const createTestCaseFormFields: FormField[] = [
+  {
+    name: 'title',
+    label: 'Test Case Title',
+    type: 'text',
+    required: true,
+  },
+  {
+    name: 'priority',
+    label: 'Priority',
+    type: 'select',
+    required: true,
+    options: [
+      { label: 'Low', value: 'Low' },
+      { label: 'Medium', value: 'Medium' },
+      { label: 'High', value: 'High' },
+      { label: 'Critical', value: 'Critical' },
+    ],
+  },
+  {
+    name: 'type',
+    label: 'Type',
+    type: 'select',
+    required: true,
+    options: [
+      { label: 'Functional', value: 'Functional' },
+      { label: 'Regression', value: 'Regression' },
+      { label: 'Performance', value: 'Performance' },
+      { label: 'Security', value: 'Security' },
+      { label: 'Other', value: 'Other' },
+    ],
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    required: true,
+    options: [
+      { label: 'Draft', value: 'Draft' },
+      { label: 'Ready', value: 'Ready' },
+      { label: 'Deprecated', value: 'Deprecated' },
+    ],
+  },
+  {
+    name: 'preconditions',
+    label: 'Preconditions',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'steps',
+    label: 'Test Steps (JSON)',
+    type: 'textarea',
+    required: true,
+    placeholder: '[{"action": "...", "expected": "...", "data": {}}]',
+  },
+  {
+    name: 'expectedResult',
+    label: 'Expected Result',
+    type: 'textarea',
+    required: true,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const suiteFilterFormFields: FormField[] = [
-    { 
-        name: 'suite', 
-        label: 'Suite', 
-        type: 'text', 
-        required: false
-    },
-    { 
-        name: 'testCase', 
-        label: 'Test Case', 
-        type: 'text', 
-        required: false
-    }
+export const updateTestCaseFormFields: FormField[] = [
+  {
+    name: 'title',
+    label: 'Test Case Title',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'priority',
+    label: 'Priority',
+    type: 'select',
+    required: false,
+    options: [
+      { label: 'Low', value: 'Low' },
+      { label: 'Medium', value: 'Medium' },
+      { label: 'High', value: 'High' },
+      { label: 'Critical', value: 'Critical' },
+    ],
+  },
+  {
+    name: 'type',
+    label: 'Type',
+    type: 'select',
+    required: false,
+    options: [
+      { label: 'Functional', value: 'Functional' },
+      { label: 'Regression', value: 'Regression' },
+      { label: 'Performance', value: 'Performance' },
+      { label: 'Security', value: 'Security' },
+      { label: 'Other', value: 'Other' },
+    ],
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    required: false,
+    options: [
+      { label: 'Draft', value: 'Draft' },
+      { label: 'Ready', value: 'Ready' },
+      { label: 'Deprecated', value: 'Deprecated' },
+    ],
+  },
+  {
+    name: 'preconditions',
+    label: 'Preconditions',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'steps',
+    label: 'Test Steps',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'expectedResult',
+    label: 'Expected Result',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
+
+// Legacy exports for backward compatibility
+export const suitesFormFields = createSuiteFormFields;
+export const sectionsFormFields = createSectionFormFields;
+export const testCaseFormFields = createTestCaseFormFields;
+export const casesFormFields = createTestCaseFormFields;
+
+// Deprecated exports
+export const dataSetsFormFields: FormField[] = [];
+export const dataSetVariablesFormFields: FormField[] = [];
+export const testCaseAttachmentsFormFields: FormField[] = [];
+export const sharedStepsFormFields: FormField[] = [];
+export const sharedStepFormFields: FormField[] = [];
+export const resultFormFields: FormField[] = [];
+export const suiteFilterFormFields: FormField[] = [];
+

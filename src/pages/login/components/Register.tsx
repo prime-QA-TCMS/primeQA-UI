@@ -1,134 +1,105 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress, Typography, Alert } from '@mui/material';
-import { Form as GenericForm } from "fog-ui";
-import type { FormField } from "fog-ui";
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { Form as GenericForm, useService, useToast } from 'fog-ui';
+import type { FormField } from 'fog-ui';
 import { UserAPI } from '../../../api';
 import type { RegisterRequest } from '../../../types';
 
 interface RegisterProps {
-    onSuccess?: () => void;
+  onSuccess?: () => void;
 }
 
 const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  const toast = useToast();
 
-    const handleRegister = async (formData: { [key: string]: any }) => {
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
+  const [loading, setLoading] = useState(false);
 
-        try {
-            // TODO: This roleId is hardcoded to admin role (69037d7e04c235dfa038bc3a).
-            // In the future, this should be dynamic or default to a regular user role.
-            const registerData: RegisterRequest = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                password: formData.password,
-                role: '69037d7e04c235dfa038bc3a',
-            };
+  const handleRegister = async (formData: { [key: string]: any }) => {
+    setLoading(true);
 
-            console.log('Register data being sent:', registerData);
-            const result = await UserAPI.register(registerData);
+    try {
+      // TODO: Both roleId and tenantId are hardcoded. 
+      // In the future, these should be dynamic or default to appropriate values.
+      const registerData: RegisterRequest = {
+        email: formData.email,
+        password: formData.password,
+        roleId: '69037d7e04c235dfa038bc3a', // Default admin role
+        tenantId: '6977c5e4ea7e71a947e74e78', // Default tenant
+      };
 
-            if (result) {
-                setSuccess(true);
+      console.log('Register data being sent:', registerData);
+      const result = await userAPI.register(registerData);
 
-                // Optionally auto-login the user after registration
-                const { user, accessToken, refreshToken } = result;
-                localStorage.setItem("userId", user.id);
-                localStorage.setItem("token", accessToken);
-                localStorage.setItem("refreshToken", refreshToken);
+      if (result && result.data) {
+        toast.success(`Welcome! Your account has been created.`);
 
-                // Call success callback if provided
-                if (onSuccess) {
-                    setTimeout(() => {
-                        onSuccess();
-                    }, 1500);
-                }
-            }
-        } catch (err: any) {
-            const message = err.response?.data?.message || err.message || "Registration failed. Please try again.";
-            setError(message);
-            console.error("Error during registration:", err);
-        } finally {
-            setLoading(false);
+        // Note: Register response doesn't include tokens, 
+        // user needs to login separately
+        const { data } = result;
+
+        // Call success callback if provided
+        if (onSuccess) {
+          setTimeout(() => {
+            onSuccess();
+          }, 1500);
         }
-    };
-
-    const registerFields: FormField[] = [
-        {
-            name: 'firstName',
-            label: 'First Name',
-            type: 'text',
-            required: true
-        },
-        {
-            name: 'lastName',
-            label: 'Last Name',
-            type: 'text',
-            required: true
-        },
-        {
-            name: 'email',
-            label: 'Email Address',
-            type: 'email',
-            required: true
-        },
-        {
-            name: 'password',
-            label: 'Password',
-            type: 'password',
-            required: true,
-            minLength: 6
-        },
-        {
-            name: 'confirmPassword',
-            label: 'Confirm Password',
-            type: 'password',
-            required: true,
-            minLength: 6,
-            validate: (value: string, formData: { [key: string]: any }) => {
-                if (value !== formData.password) {
-                    return 'Passwords do not match';
-                }
-                return true;
-            }
-        }
-    ];
-
-    if (loading) {
-        return (
-            <Box sx={{ textAlign: 'center', py: 3 }}>
-                <CircularProgress />
-                <Typography variant="body2" sx={{ mt: 2 }}>
-                    Creating your account...
-                </Typography>
-            </Box>
-        );
+      }
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message || err.message || 'Registration failed. Please try again.';
+      toast.error(message);
+      console.error('Error during registration:', err);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const registerFields: FormField[] = [
+    {
+      name: 'email',
+      label: 'Email Address',
+      type: 'email',
+      required: true,
+    },
+    {
+      name: 'password',
+      label: 'Password',
+      type: 'password',
+      required: true,
+      minLength: 6,
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm Password',
+      type: 'password',
+      required: true,
+      minLength: 6,
+    },
+  ];
+
+  if (loading) {
     return (
-        <Box>
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
-            {success && (
-                <Alert severity="success" sx={{ mb: 2 }}>
-                    Registration successful! Redirecting...
-                </Alert>
-            )}
-            <GenericForm
-                fields={registerFields}
-                onSubmit={handleRegister}
-                submitButtonText={'Register'}
-            />
-        </Box>
+      <Box sx={{ textAlign: 'center', py: 3 }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Creating your account...
+        </Typography>
+      </Box>
     );
+  }
+
+  return (
+    <Box>
+      <GenericForm
+        fields={registerFields}
+        onSubmit={handleRegister}
+        submitButtonText={'Register'}
+      />
+    </Box>
+  );
 };
 
 export default Register;

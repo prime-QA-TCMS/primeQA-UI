@@ -1,0 +1,1 @@
+http://localhost:3000/projects - has infinite request loop caused by line 16 and 38, see src\pages\projects\project\components\ProjectListView.tsx for potential resolution

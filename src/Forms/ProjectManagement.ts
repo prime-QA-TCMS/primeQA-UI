@@ -1,14 +1,23 @@
-import type { FormField } from "fog-ui";
+import type { FormField } from 'fog-ui';
 
+// ========================================
+// 📁 PROJECT FORMS
+// ========================================
 
-export const createProject: FormField[] = [
-  // ──────────────── Basic Info ────────────────
+export const createProjectFormFields: FormField[] = [
   {
     name: 'name',
     label: 'Project Name',
     type: 'text',
     required: true,
     placeholder: 'Enter project name',
+  },
+  {
+    name: 'key',
+    label: 'Project Key',
+    type: 'text',
+    required: true,
+    placeholder: 'e.g., PROJ',
   },
   {
     name: 'description',
@@ -18,12 +27,20 @@ export const createProject: FormField[] = [
     placeholder: 'Brief project summary',
   },
   {
+    name: 'owner',
+    label: 'Owner',
+    type: 'select',
+    required: true,
+    options: [], // Populated dynamically from users API
+  },
+  {
     name: 'visibility',
     label: 'Visibility',
     type: 'select',
     options: [
       { label: 'Private', value: 'private' },
       { label: 'Public', value: 'public' },
+      { label: 'Team', value: 'team' },
     ],
     required: true,
   },
@@ -32,173 +49,203 @@ export const createProject: FormField[] = [
     label: 'Active?',
     type: 'switch',
     required: false,
-  }
+  },
 ];
 
-
-export const projectsFormFields: FormField[] = [
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'text', 
-        required: true
-    },
-    { 
-        name: 'description', 
-        label: 'Description', 
-        type: 'textarea', 
-        required: false
-    }
-];
-export const projectUsersFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'global_role_id', 
-        label: 'global_role_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'global_role', 
-        label: 'global_role', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_role_id', 
-        label: 'project_role_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_role', 
-        label: 'project_role', 
-        type: 'select', 
-        required: false
-    }
+export const updateProjectFormFields: FormField[] = [
+  {
+    name: 'name',
+    label: 'Project Name',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'key',
+    label: 'Project Key',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'owner',
+    label: 'Owner',
+    type: 'select',
+    required: false,
+    options: [], // Populated dynamically
+  },
+  {
+    name: 'visibility',
+    label: 'Visibility',
+    type: 'select',
+    options: [
+      { label: 'Private', value: 'private' },
+      { label: 'Public', value: 'public' },
+      { label: 'Team', value: 'team' },
+    ],
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active?',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const configurationsFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'select', 
-        required: false
-    }
+// ========================================
+// 🎯 MILESTONE FORMS
+// ========================================
+
+export const createMilestoneFormFields: FormField[] = [
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    required: true,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'startDate',
+    label: 'Start Date',
+    type: 'date',
+    required: false,
+  },
+  {
+    name: 'dueDate',
+    label: 'Due Date',
+    type: 'date',
+    required: false,
+  },
+  {
+    name: 'isCompleted',
+    label: 'Completed',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const configurationItemFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'group_id', 
-        label: 'group_id', 
-        type: 'select', 
-        required: false
-    }
+export const updateMilestoneFormFields: FormField[] = [
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'startDate',
+    label: 'Start Date',
+    type: 'date',
+    required: false,
+  },
+  {
+    name: 'dueDate',
+    label: 'Due Date',
+    type: 'date',
+    required: false,
+  },
+  {
+    name: 'isCompleted',
+    label: 'Completed',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const milestonesFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'completed_on', 
-        label: 'completed_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'description', 
-        label: 'description', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'due_on', 
-        label: 'due_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'is_completed', 
-        label: 'is_completed', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'name', 
-        label: 'name', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'project_id', 
-        label: 'project_id', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'refs', 
-        label: 'refs', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'url', 
-        label: 'url', 
-        type: 'select', 
-        required: false
-    }
+// ========================================
+// ⚙️ PROJECT CONFIGURATION FORMS
+// ========================================
+
+export const createProjectConfigurationFormFields: FormField[] = [
+  {
+    name: 'name',
+    label: 'Configuration Name',
+    type: 'text',
+    required: true,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'baseUrl',
+    label: 'Base URL',
+    type: 'text',
+    required: true,
+    placeholder: 'https://api.example.com',
+  },
+  {
+    name: 'environmentVariables',
+    label: 'Environment Variables (JSON)',
+    type: 'textarea',
+    required: false,
+    placeholder: '{"API_KEY": "value", "ENV": "production"}',
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
 
-export const todoFilterFormFields: FormField[] = [
-    { 
-        name: 'id', 
-        label: 'id', 
-        type: 'number', 
-        required: false
-    },
-    { 
-        name: 'completed_on', 
-        label: 'completed_on', 
-        type: 'select', 
-        required: false
-    },
-    { 
-        name: 'description', 
-        label: 'description', 
-        type: 'select', 
-        required: false
-    }
+export const updateProjectConfigurationFormFields: FormField[] = [
+  {
+    name: 'name',
+    label: 'Configuration Name',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'baseUrl',
+    label: 'Base URL',
+    type: 'text',
+    required: false,
+  },
+  {
+    name: 'environmentVariables',
+    label: 'Environment Variables (JSON)',
+    type: 'textarea',
+    required: false,
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    type: 'switch',
+    required: false,
+  },
 ];
+
+// Legacy exports for backward compatibility
+export const createProject = createProjectFormFields;
+export const projectsFormFields = createProjectFormFields;
+export const milestonesFormFields = createMilestoneFormFields;
+export const configurationsFormFields = createProjectConfigurationFormFields;
+
+// Deprecated exports - keeping for compatibility
+export const projectUsersFormFields: FormField[] = [];
+export const configurationItemFormFields: FormField[] = [];
+export const todoFilterFormFields: FormField[] = [];

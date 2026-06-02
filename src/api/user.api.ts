@@ -1,135 +1,145 @@
-import apiClient from "./apiClient";
-import { API_ENDPOINTS } from "../config/apiConfig";
-import { User, Role, Tenant, AuthResponse, RegisterRequest } from "../types"; // ✅ Add these interfaces in your types folder
+import { AxiosHelper } from 'fog-ui';
+import { API_ENDPOINTS } from '../config/apiConfig';
+import {
+  User,
+  Role,
+  Tenant,
+  AuthResponse,
+  RegisterRequest,
+  LoginRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  LogoutRequest,
+  RegisterResponse,
+  UserListResponse,
+  UserResponse,
+  RoleListResponse,
+  RoleResponse,
+  TenantListResponse,
+  TenantResponse,
+  CreateUserRequest,
+  UpdateUserRequest,
+  CreateRoleRequest,
+  UpdateRoleRequest,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+  ApiResponse,
+} from '../types';
 
-export const UserAPI = {
-  login: async (data: { email: string; password: string }): Promise<AuthResponse> => {
-    const res = await apiClient.post(API_ENDPOINTS.auth.login, data);
-    return res.data;
+/**
+ * User Service API
+ * Factory function that creates API methods using fog-ui service instances
+ * Usage:
+ *   const authAPI = UserAPI(useService('auth'), useService('user'))
+ *
+ * @param authService - Service for /auth/* endpoints (no auth required)
+ * @param userService - Service for /users, /roles, /tenants endpoints (auth required)
+ */
+export const UserAPI = (authService: AxiosHelper, userService: AxiosHelper) => ({
+  // ========================================
+  // 🔐 AUTHENTICATION
+  // ========================================
+
+  login: async (data: LoginRequest): Promise<AuthResponse> => {
+    return await authService.post<AuthResponse>(API_ENDPOINTS.auth.login, data);
   },
 
-  register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    console.log('UserAPI.register called with:', data);
-    console.log('Register endpoint:', API_ENDPOINTS.auth.register);
-    const res = await apiClient.post(API_ENDPOINTS.auth.register, data);
-    console.log('Register response:', res.data);
-    return res.data;
+  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
+    return await authService.post<RegisterResponse>(API_ENDPOINTS.auth.register, data);
   },
 
-  logout: async (): Promise<{ message: string }> => {
-    const res = await apiClient.post(API_ENDPOINTS.auth.logout);
-    return res.data;
+  refresh: async (data: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+    return await authService.post<RefreshTokenResponse>(API_ENDPOINTS.auth.refresh, data);
   },
 
-  refresh: async (data: { token: string }): Promise<AuthResponse> => {
-    const res = await apiClient.post(API_ENDPOINTS.auth.refresh, data);
-    return res.data;
+  logout: async (data: LogoutRequest): Promise<ApiResponse<void>> => {
+    return await authService.post<ApiResponse<void>>(API_ENDPOINTS.auth.logout, data);
   },
 
+  // ========================================
+  // 👤 USERS
+  // ========================================
 
-  userGetAll: async (): Promise<User[]> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.get(API_ENDPOINTS.user.list, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  userGetAll: async (params?: { page?: number; limit?: number }): Promise<UserListResponse> => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.set('page', params.page.toString());
+    if (params?.limit) queryParams.set('limit', params.limit.toString());
+    const query = queryParams.toString();
+    const url = query ? `${API_ENDPOINTS.user.list}?${query}` : API_ENDPOINTS.user.list;
+    return await userService.get<UserListResponse>(url);
   },
 
-  userGetById: async (id: string): Promise<User> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.get(API_ENDPOINTS.user.getById(id), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  userGetById: async (id: string): Promise<UserResponse> => {
+    return await userService.get<UserResponse>(API_ENDPOINTS.user.getById(id));
   },
 
-  userCreate: async (data: Partial<User>): Promise<User> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.post(API_ENDPOINTS.user.create, data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  userCreate: async (data: CreateUserRequest): Promise<UserResponse> => {
+    return await userService.post<UserResponse>(API_ENDPOINTS.user.create, data);
   },
 
-  userUpdate: async (id: string, data: Partial<User>): Promise<User> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.put(API_ENDPOINTS.user.update(id), data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  userUpdate: async (id: string, data: UpdateUserRequest): Promise<UserResponse> => {
+    return await userService.put<UserResponse>(API_ENDPOINTS.user.update(id), data);
   },
 
-  userDelete: async (id: string): Promise<{ message: string }> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.delete(API_ENDPOINTS.user.delete(id), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  userDelete: async (id: string): Promise<UserResponse> => {
+    return await userService.delete<UserResponse>(API_ENDPOINTS.user.delete(id));
   },
 
+  // ========================================
+  // 🎭 ROLES
+  // ========================================
 
-  roleGetAll: async (): Promise<Role[]> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.get(API_ENDPOINTS.role.list, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  roleGetAll: async (params?: { page?: number; limit?: number }): Promise<RoleListResponse> => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.set('page', params.page.toString());
+    if (params?.limit) queryParams.set('limit', params.limit.toString());
+    const query = queryParams.toString();
+    const url = query ? `${API_ENDPOINTS.role.list}?${query}` : API_ENDPOINTS.role.list;
+    return await userService.get<RoleListResponse>(url);
   },
 
-  roleCreate: async (data: Partial<Role>): Promise<Role> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.post(API_ENDPOINTS.role.create, data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  roleGetById: async (id: string): Promise<RoleResponse> => {
+    return await userService.get<RoleResponse>(API_ENDPOINTS.role.getById(id));
   },
 
-  roleUpdate: async (id: string, data: Partial<Role>): Promise<Role> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.put(API_ENDPOINTS.role.update(id), data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  roleCreate: async (data: CreateRoleRequest): Promise<RoleResponse> => {
+    return await userService.post<RoleResponse>(API_ENDPOINTS.role.create, data);
   },
 
-  roleDelete: async (id: string): Promise<{ message: string }> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.delete(API_ENDPOINTS.role.delete(id), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  roleUpdate: async (id: string, data: UpdateRoleRequest): Promise<RoleResponse> => {
+    return await userService.put<RoleResponse>(API_ENDPOINTS.role.update(id), data);
   },
 
-
-  tenantGetAll: async (): Promise<Tenant[]> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.get(API_ENDPOINTS.tenant.list, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  roleDelete: async (id: string): Promise<ApiResponse<void>> => {
+    return await userService.delete<ApiResponse<void>>(API_ENDPOINTS.role.delete(id));
   },
 
-  tenantCreate: async (data: Partial<Tenant>): Promise<Tenant> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.post(API_ENDPOINTS.tenant.create, data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  // ========================================
+  // 🏢 TENANTS
+  // ========================================
+
+  tenantGetAll: async (params?: { page?: number; limit?: number }): Promise<TenantListResponse> => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.set('page', params.page.toString());
+    if (params?.limit) queryParams.set('limit', params.limit.toString());
+    const query = queryParams.toString();
+    const url = query ? `${API_ENDPOINTS.tenant.list}?${query}` : API_ENDPOINTS.tenant.list;
+    return await userService.get<TenantListResponse>(url);
   },
 
-  tenantUpdate: async (id: string, data: Partial<Tenant>): Promise<Tenant> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.put(API_ENDPOINTS.tenant.update(id), data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  tenantGetById: async (id: string): Promise<TenantResponse> => {
+    return await userService.get<TenantResponse>(API_ENDPOINTS.tenant.getById(id));
   },
 
-  tenantDelete: async (id: string): Promise<{ message: string }> => {
-    const token = localStorage.getItem("token");
-    const res = await apiClient.delete(API_ENDPOINTS.tenant.delete(id), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
+  tenantCreate: async (data: CreateTenantRequest): Promise<TenantResponse> => {
+    return await userService.post<TenantResponse>(API_ENDPOINTS.tenant.create, data);
   },
-};
+
+  tenantUpdate: async (id: string, data: UpdateTenantRequest): Promise<TenantResponse> => {
+    return await userService.put<TenantResponse>(API_ENDPOINTS.tenant.update(id), data);
+  },
+
+  tenantDelete: async (id: string): Promise<ApiResponse<void>> => {
+    return await userService.delete<ApiResponse<void>>(API_ENDPOINTS.tenant.delete(id));
+  },
+});

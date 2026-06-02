@@ -1,15 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Container, Typography, MenuItem, Select, FormControl, InputLabel, CircularProgress, List, ListItemButton, ListItemText, Divider, Box, Button, Checkbox, ListItem } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
-import { ResultsAPI, TestcaseAPI } from "../../../../api";
-import { contentContainer } from "../../../../style/muiComponentStyles/containerStyles";
-import { Suite, Section, TestCase, Test } from "../../../../types";
+import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+  List,
+  ListItemButton,
+  ListItemText,
+  Divider,
+  Box,
+  Button,
+  Checkbox,
+  ListItem,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useParams } from 'react-router-dom';
+import { ResultsAPI, TestcaseAPI } from '../../../../api';
+import { contentContainer, useService, useToast } from 'fog-ui';
+import { Suite, Section, TestCase, Test } from '../../../../types';
 
-const SuiteSelector: React.FC = () => {
+interface SuiteSelectorProps {
+  onComplete?: () => void;
+}
+
+const SuiteSelector: React.FC<SuiteSelectorProps> = ({ onComplete }) => {
   const theme = useTheme();
   const styles = contentContainer(theme);
   const { projectId } = useParams<{ projectId: string }>();
+  const toast = useToast();
+
+  const testcaseService = useService('testcase');
+  const testcaseAPI = TestcaseAPI(testcaseService);
+  const resultsService = useService('results');
+  const resultsAPI = ResultsAPI(resultsService);
 
   // 🧩 State Management
   const [loadingSuites, setLoadingSuites] = useState(false);
@@ -21,13 +47,13 @@ const SuiteSelector: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([]);
   const [testCases, setTestCases] = useState<TestCase[]>([]);
 
-  const [selectedSuite, setSelectedSuite] = useState<string>("");
-  const [selectedSection, setSelectedSection] = useState<string>("");
+  const [selectedSuite, setSelectedSuite] = useState<string>('');
+  const [selectedSection, setSelectedSection] = useState<string>('');
 
   // ✅ Selection tracking: { sectionId: string, testcaseIds: string[] }[]
-  const [selectedMap, setSelectedMap] = useState<
-    { sectionId: string; testcaseIds: string[] }[]
-  >([]);
+  const [selectedMap, setSelectedMap] = useState<{ sectionId: string; testcaseIds: string[] }[]>(
+    []
+  );
 
   // 🟦 Fetch Suites
   useEffect(() => {
@@ -35,10 +61,10 @@ const SuiteSelector: React.FC = () => {
       if (!projectId) return;
       setLoadingSuites(true);
       try {
-        const suites = await TestcaseAPI.suiteGetAll();
+        const suites = await testcaseAPI.suiteGetAll();
         setSuites(Array.isArray(suites) ? suites : []);
       } catch (err) {
-        console.error("❌ Failed to fetch suites:", err);
+        console.error('❌ Failed to fetch suites:', err);
       } finally {
         setLoadingSuites(false);
       }
@@ -53,12 +79,12 @@ const SuiteSelector: React.FC = () => {
       setLoadingSections(true);
       setSections([]);
       setTestCases([]);
-      setSelectedSection("");
+      setSelectedSection('');
       try {
-        const sections = await TestcaseAPI.sectionGetAll(selectedSuite);
+        const sections = await testcaseAPI.sectionGetAll(selectedSuite);
         setSections(Array.isArray(sections) ? sections : []);
       } catch (err) {
-        console.error("❌ Failed to fetch sections:", err);
+        console.error('❌ Failed to fetch sections:', err);
       } finally {
         setLoadingSections(false);
       }
@@ -72,10 +98,10 @@ const SuiteSelector: React.FC = () => {
     setLoadingCases(true);
     setTestCases([]);
     try {
-      const cases = await TestcaseAPI.testcaseGetAll(sectionId);
+      const cases = await testcaseAPI.testcaseGetAll(sectionId);
       setTestCases(Array.isArray(cases) ? cases : []);
     } catch (err) {
-      console.error("❌ Failed to fetch test cases:", err);
+      console.error('❌ Failed to fetch test cases:', err);
     } finally {
       setLoadingCases(false);
     }
@@ -89,9 +115,7 @@ const SuiteSelector: React.FC = () => {
         const updatedIds = checked
           ? Array.from(new Set([...existing.testcaseIds, testCaseId]))
           : existing.testcaseIds.filter((id) => id !== testCaseId);
-        return prev.map((s) =>
-          s.sectionId === sectionId ? { ...s, testcaseIds: updatedIds } : s
-        );
+        return prev.map((s) => (s.sectionId === sectionId ? { ...s, testcaseIds: updatedIds } : s));
       } else {
         return checked ? [...prev, { sectionId, testcaseIds: [testCaseId] }] : prev;
       }
@@ -122,60 +146,63 @@ const SuiteSelector: React.FC = () => {
     selectedMap.find((s) => s.sectionId === sectionId)?.testcaseIds.includes(testCaseId) || false;
 
   const areAllSelected =
-    testCases.length > 0 &&
-    testCases.every((tc) => isTestCaseSelected(selectedSection, tc._id));
+    testCases.length > 0 && testCases.every((tc) => isTestCaseSelected(selectedSection, tc._id));
 
   // 🟢 Save Action → Create Run → Send Tests
-const handleSave = async () => {
-  if (!projectId || !selectedSuite || selectedMap.length === 0) return;
+  const handleSave = async () => {
+    if (!projectId || !selectedSuite || selectedMap.length === 0) return;
 
-  try {
-    setCreatingRun(true);
+    try {
+      setCreatingRun(true);
 
-    // ✅ Step 1: Create Run (allow optional suiteId)
-    const createdRun = await ResultsAPI.runCreate({
-      projectId,
-      name: `Run - ${new Date().toLocaleString()}`,
-      status: "Pending",
-      // @ts-expect-error Allow suiteId to be attached (not part of type)
-      suiteId: selectedSuite,
-    });
-
-    const runId = createdRun?.data?._id || "";
-    if (!runId) throw new Error("Failed to create run.");
-
-    // ✅ Step 2: Build payload (use Partial<Test> for flexibility)
-    const payload: Partial<Test>[] = selectedMap.flatMap((sectionItem) => {
-      const testCasesForSection = testCases.filter((tc) =>
-        sectionItem.testcaseIds.includes(tc._id)
-      );
-      return testCasesForSection.map((tc) => ({
+      // ✅ Step 1: Create Run (allow optional suiteId)
+      const createdRun = await resultsAPI.runCreate({
         projectId,
-        runId,
+        name: `Run - ${new Date().toLocaleString()}`,
+        status: 'Pending',
+        // @ts-expect-error Allow suiteId to be attached (not part of type)
         suiteId: selectedSuite,
-        sectionId: sectionItem.sectionId,
-        testCaseId: tc._id,
-        title: tc.title,
-        isActive: true,
-      }));
-    });
+      });
 
-    console.log("🚀 Sending Payload:", payload);
+      const runId = createdRun?.data?._id || '';
+      if (!runId) throw new Error('Failed to create run.');
 
-    // ✅ Step 3: Send to backend
-    // Adjust ResultsAPI.testCreate type to accept Partial<Test>[]
-    const response = await ResultsAPI.testCreate(payload as any);
-    console.log("✅ Tests Created:", response);
+      // ✅ Step 2: Build payload (use Partial<Test> for flexibility)
+      const payload: Partial<Test>[] = selectedMap.flatMap((sectionItem) => {
+        const testCasesForSection = testCases.filter((tc) =>
+          sectionItem.testcaseIds.includes(tc._id)
+        );
+        return testCasesForSection.map((tc) => ({
+          projectId,
+          runId,
+          suiteId: selectedSuite,
+          sectionId: sectionItem.sectionId,
+          testCaseId: tc._id,
+          title: tc.title,
+          isActive: true,
+        }));
+      });
 
-    alert(`Successfully created ${payload.length} test records!`);
-  } catch (err: any) {
-    console.error("❌ Error creating run or tests:", err);
-    alert("Failed to create run or test records.");
-  } finally {
-    setCreatingRun(false);
-  }
-};
+      console.log('🚀 Sending Payload:', payload);
 
+      // ✅ Step 3: Send to backend
+      // Adjust ResultsAPI.testCreate type to accept Partial<Test>[]
+      const response = await resultsAPI.testCreate(payload as any);
+      console.log('✅ Tests Created:', response);
+
+      toast.success(`Successfully created run with ${payload.length} test cases!`);
+
+      // Call onComplete callback if provided
+      if (onComplete) {
+        onComplete();
+      }
+    } catch (err: any) {
+      console.error('❌ Error creating run or tests:', err);
+      toast.error('Failed to create run or test records.');
+    } finally {
+      setCreatingRun(false);
+    }
+  };
 
   return (
     <Container sx={styles.root}>
@@ -205,7 +232,7 @@ const handleSave = async () => {
         </Select>
       </FormControl>
 
-      <Box sx={{ display: "flex", gap: 4 }}>
+      <Box sx={{ display: 'flex', gap: 4 }}>
         {/* 🟦 LEFT: Sections */}
         <Box sx={{ flex: 1 }}>
           <Typography variant="h6">Sections</Typography>
@@ -222,10 +249,7 @@ const handleSave = async () => {
                       selected={selectedSection === section._id}
                       onClick={() => handleSectionClick(section._id)}
                     >
-                      <ListItemText
-                        primary={section.name}
-                        secondary={section.description}
-                      />
+                      <ListItemText primary={section.name} secondary={section.description} />
                     </ListItemButton>
                     <Divider />
                   </React.Fragment>
@@ -278,7 +302,7 @@ const handleSave = async () => {
             disabled={selectedMap.length === 0 || creatingRun}
             onClick={handleSave}
           >
-            {creatingRun ? "Creating..." : "Save Selection"}
+            {creatingRun ? 'Creating...' : 'Save Selection'}
           </Button>
         </Box>
       </Box>

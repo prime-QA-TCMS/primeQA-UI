@@ -1,16 +1,12 @@
 import React from 'react';
 import { Container, useTheme } from '@mui/material';
-import { contentContainer } from '../../style/muiComponentStyles/containerStyles';
+import { contentContainer } from 'fog-ui';
 
 const ConfigurationDashboard: React.FC = () => {
-    const theme = useTheme();
-    const styles = contentContainer(theme);
+  const theme = useTheme();
+  const styles = contentContainer(theme);
 
-    return (
-        <Container sx={styles.root}>
-            I'm the ConfigurationDashboard PAGE
-        </Container>
-    );
+  return <Container sx={styles.root}>I&apos;m the ConfigurationDashboard PAGE</Container>;
 };
 
 export default ConfigurationDashboard;

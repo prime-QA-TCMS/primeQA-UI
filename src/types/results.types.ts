@@ -7,12 +7,18 @@ export interface Metrics {
 
 export interface TestRun {
   _id: string;
-  name: string;
   projectId: string;
-  startedBy: string;
-  status: "Pending" | "Running" | "Completed" | "Aborted";
+  name: string;
+  description?: string;
+  type: 'Manual' | 'Automated' | 'Scheduled';
+  status: 'Pending' | 'Running' | 'Completed' | 'Aborted';
+  environment?: string;
+  executedBy: string;
+  startedBy?: string;
   startTime?: string;
   endTime?: string;
+  duration?: number;
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;
@@ -35,15 +41,20 @@ export interface TestRunFilterResponse {
   data: {
     total?: number;
     data: TestRun[];
-  }
+  };
 }
 
 export interface Test {
   _id: string;
   runId: string;
+  projectId: string;
   testCaseId: string;
-  status: "passed" | "failed" | "skipped";
+  suiteId: string;
+  sectionId: string;
+  title: string;
+  status: 'Not Started' | 'In Progress' | 'Completed';
   duration?: number;
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -55,16 +66,22 @@ export interface TestFilterResponse {
   data: {
     total: number;
     tests: TestRun[];
-  }
+  };
 }
 
 export interface TestResult {
   _id: string;
   testId: string;
-  status: "passed" | "failed" | "skipped";
+  projectId: string;
+  status: 'Passed' | 'Failed' | 'Blocked' | 'Skipped' | 'Retest';
+  executedBy: string;
+  startTime?: string;
+  endTime?: string;
+  duration?: number;
   logs?: string;
   screenshotUrl?: string;
-  executedAt: string;
+  executedAt?: string;
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -83,5 +100,5 @@ export interface ResultsFilterResponse {
   data: {
     total?: number;
     data: TestRun[];
-  }
+  };
 }

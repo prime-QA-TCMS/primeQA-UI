@@ -1,24 +1,38 @@
-import { useState } from "react";
-import { Environment, Parameter, Integration } from "../types";
-import { ConfigurationAPI } from "../api";
-import { useApi } from "./useApi";
+import { useState } from 'react';
+import {
+  Environment,
+  Parameter,
+  Integration,
+  EnvironmentListResponse,
+  ParameterListResponse,
+  IntegrationListResponse,
+} from '../types';
+import { ConfigurationAPI } from '../api';
+import { useApi, useService } from 'fog-ui';
 
-//
+
 // 🔹 ENVIRONMENTS
-//
-export function useEnvironments() {
-  return useApi<Environment[]>(ConfigurationAPI.environmentGetAll);
+export function useEnvironments(tenantId?: string) {
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
+  const resolvedTenantId = tenantId || localStorage.getItem('tenantId') || undefined;
+  return useApi<Environment[]>(async () => {
+    const result: EnvironmentListResponse = await configurationAPI.environmentGetAll(resolvedTenantId);
+    return result.data?.items || [];
+  }, [resolvedTenantId]);
 }
 
 export function useCreateEnvironment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const createEnvironment = async (data: Partial<Environment>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.environmentCreate(data);
+      return await configurationAPI.environmentCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -34,12 +48,14 @@ export function useCreateEnvironment() {
 export function useUpdateEnvironment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const updateEnvironment = async (id: string, data: Partial<Environment>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.environmentUpdate(id, data);
+      return await configurationAPI.environmentUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -55,12 +71,14 @@ export function useUpdateEnvironment() {
 export function useDeleteEnvironment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const deleteEnvironment = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.environmentDelete(id);
+      return await configurationAPI.environmentDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -73,22 +91,33 @@ export function useDeleteEnvironment() {
   return { deleteEnvironment, loading, error };
 }
 
-//
+
 // 🔹 PARAMETERS
-//
-export function useParameters() {
-  return useApi<Parameter[]>(ConfigurationAPI.parameterGetAll);
+export function useParameters(scope?: string, scopeRefId?: string) {
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
+  const resolvedScope = scope || 'tenant';
+  const resolvedScopeRefId = scopeRefId || localStorage.getItem('tenantId') || undefined;
+  return useApi<Parameter[]>(async () => {
+    const result: ParameterListResponse = await configurationAPI.parameterGetAll(
+      resolvedScopeRefId ? resolvedScope : undefined,
+      resolvedScopeRefId
+    );
+    return result.data?.items || [];
+  }, [resolvedScope, resolvedScopeRefId]);
 }
 
 export function useCreateParameter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const createParameter = async (data: Partial<Parameter>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.parameterCreate(data);
+      return await configurationAPI.parameterCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -104,12 +133,14 @@ export function useCreateParameter() {
 export function useUpdateParameter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const updateParameter = async (id: string, data: Partial<Parameter>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.parameterUpdate(id, data);
+      return await configurationAPI.parameterUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -125,12 +156,14 @@ export function useUpdateParameter() {
 export function useDeleteParameter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const deleteParameter = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.parameterDelete(id);
+      return await configurationAPI.parameterDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -143,22 +176,29 @@ export function useDeleteParameter() {
   return { deleteParameter, loading, error };
 }
 
-//
+
 // 🔹 INTEGRATIONS
-//
-export function useIntegrations() {
-  return useApi<Integration[]>(ConfigurationAPI.integrationGetAll);
+export function useIntegrations(tenantId?: string) {
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
+  const resolvedTenantId = tenantId || localStorage.getItem('tenantId') || undefined;
+  return useApi<Integration[]>(async () => {
+    const result: IntegrationListResponse = await configurationAPI.integrationGetAll(resolvedTenantId);
+    return result.data?.items || [];
+  }, [resolvedTenantId]);
 }
 
 export function useCreateIntegration() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const createIntegration = async (data: Partial<Integration>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.integrationCreate(data);
+      return await configurationAPI.integrationCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -174,12 +214,14 @@ export function useCreateIntegration() {
 export function useUpdateIntegration() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const updateIntegration = async (id: string, data: Partial<Integration>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.integrationUpdate(id, data);
+      return await configurationAPI.integrationUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -195,12 +237,14 @@ export function useUpdateIntegration() {
 export function useDeleteIntegration() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const configurationService = useService('configuration');
+  const configurationAPI = ConfigurationAPI(configurationService);
 
   const deleteIntegration = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ConfigurationAPI.integrationDelete(id);
+      return await configurationAPI.integrationDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);

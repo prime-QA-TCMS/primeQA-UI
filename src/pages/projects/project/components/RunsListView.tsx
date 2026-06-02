@@ -1,9 +1,9 @@
-import React from "react";
-import { Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { RocketLaunchOutlined } from "@mui/icons-material";
-import { GenericList, ListItemData } from "fog-ui";
-import { TestRun } from "../../../../types";
+import React from 'react';
+import { Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { RocketLaunchOutlined } from '@mui/icons-material';
+import { GenericList, ListItemData } from 'fog-ui';
+import { TestRun } from '../../../../types';
 
 interface RunsListViewProps {
   runs: TestRun[] | any; // to handle API object temporarily
@@ -16,7 +16,7 @@ export const RunsListView: React.FC<RunsListViewProps> = ({ runs }) => {
     return <Typography>No test runs found for this project.</Typography>;
   }
   const projectRuns = projectId ? runsArray.filter((r) => r.projectId === projectId) : runsArray;
-  const activeRuns = projectRuns.filter((r) => r.status !== "Completed");
+  const activeRuns = projectRuns.filter((r) => r.status !== 'Completed');
 
   const activeListItems: ListItemData[] = activeRuns.map((run: TestRun) => {
     const total =
@@ -25,8 +25,7 @@ export const RunsListView: React.FC<RunsListViewProps> = ({ runs }) => {
       (run.metrics?.blocked ?? 0) +
       (run.metrics?.untested ?? 0);
 
-    const percentage =
-      total > 0 ? Math.round(((run.metrics?.passed ?? 0) / total) * 100) : 0;
+    const percentage = total > 0 ? Math.round(((run.metrics?.passed ?? 0) / total) * 100) : 0;
 
     return {
       id: run._id,

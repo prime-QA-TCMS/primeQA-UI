@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { RocketLaunchOutlined } from "@mui/icons-material";
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Button, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { RocketLaunchOutlined } from '@mui/icons-material';
 
-import { AccordionList, GenericList } from "fog-ui";
-import type { AccordionItem, ListItemData } from "fog-ui";
-import { ProjectAPI } from "../../../../api";
-import { Project } from "../../../../types";
+import { AccordionList, GenericList, useService } from 'fog-ui';
+import type { ListItemData } from 'fog-ui';
+import { ProjectAPI } from '../../../../api';
+import { Project } from '../../../../types';
+
+// Local type definition for AccordionItem (not exported from fog-ui 0.1.12)
+interface AccordionItem {
+  id: any;
+  title: string;
+  percentage: number | null;
+  component: React.ReactNode;
+}
 
 // ---------- Project List Item ----------
 interface ProjectListItemProps {
@@ -19,12 +27,16 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ projectObject }) => {
   const handleNavigation = () => {
     if (!projectObject._id) return;
 
-    localStorage.setItem("pageTitle", projectObject.name);
-    localStorage.setItem("projectId", projectObject._id);
+    localStorage.setItem('pageTitle', projectObject.name);
+    localStorage.setItem('projectId', projectObject._id);
 
     // Sync state across tabs
-    globalThis.dispatchEvent(new StorageEvent("storage", { key: "pageTitle", newValue: projectObject.name }));
-    globalThis.dispatchEvent(new StorageEvent("storage", { key: "projectId", newValue: projectObject._id }));
+    globalThis.dispatchEvent(
+      new StorageEvent('storage', { key: 'pageTitle', newValue: projectObject.name })
+    );
+    globalThis.dispatchEvent(
+      new StorageEvent('storage', { key: 'projectId', newValue: projectObject._id })
+    );
 
     navigate(`/project/${projectObject._id}`);
   };
@@ -32,13 +44,13 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ projectObject }) => {
   return (
     <Box sx={{ padding: 1 }}>
       <Typography variant="body2">
-        <b>Description:</b> {projectObject.description || "No description"}
+        <b>Description:</b> {projectObject.description || 'No description'}
       </Typography>
       <Typography variant="body2">
-        <b>Visibility:</b> {projectObject.visibility || "N/A"}
+        <b>Visibility:</b> {projectObject.visibility || 'N/A'}
       </Typography>
       <Typography variant="body2">
-        <b>Status:</b> {projectObject.isActive ? "Active" : "Archived"}
+        <b>Status:</b> {projectObject.isActive ? 'Active' : 'Archived'}
       </Typography>
 
       <Button
@@ -56,6 +68,9 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ projectObject }) => {
 
 // ---------- Project List View ----------
 export const ProjectListView: React.FC = () => {
+  const projectService = useService('project');
+  const projectAPI = ProjectAPI(projectService);
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,16 +78,16 @@ export const ProjectListView: React.FC = () => {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const response = await ProjectAPI.projectGetAll()
+        const response = await projectAPI.projectGetAll();
         if (Array.isArray(response)) {
           setProjects(response);
         } else {
-          console.warn("Unexpected API response:", response);
+          console.warn('Unexpected API response:', response);
           setProjects([]);
         }
       } catch (err: any) {
-        console.error("❌ Error loading projects:", err);
-        setError("Failed to fetch projects from API");
+        console.error('❌ Error loading projects:', err);
+        setError('Failed to fetch projects from API');
       } finally {
         setLoading(false);
       }
@@ -83,7 +98,7 @@ export const ProjectListView: React.FC = () => {
 
   if (loading)
     return (
-      <Box sx={{ textAlign: "center", mt: 4 }}>
+      <Box sx={{ textAlign: 'center', mt: 4 }}>
         <CircularProgress size={28} />
         <Typography variant="body2" sx={{ mt: 1 }}>
           Loading projects...
@@ -94,7 +109,7 @@ export const ProjectListView: React.FC = () => {
   if (error)
     return (
       <Typography color="error" sx={{ mt: 2 }}>
-        {error}
+        {error?.toString()}
       </Typography>
     );
 

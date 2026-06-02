@@ -1,113 +1,128 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@mui/material';
-import { DataTable, Popup, Form as GenericForm, DataLoading } from "fog-ui";
-import type { Column } from "fog-ui";
+import { Button, Stack } from '@mui/material';
+import { DataTable, Popup, Form as GenericForm, DataLoading, useService, useToast } from 'fog-ui';
 import { UserAPI } from '../../../../api';
 import { Role } from '../../../../types';
 import { roleFormFields } from '../../../../Forms/UserManagement';
+import { roleColumns } from '../../../../tables';
 
 const RolesTab: React.FC = () => {
-	const [roles, setRoles] = useState<Role[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [isPopupOpen, setIsPopupOpen] = useState(false);
-	const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const userService = useService('user');
+  const authService = useService('auth');
+  const userAPI = UserAPI(authService, userService);
+  const toast = useToast();
 
-	const fetchRoles = async () => {
-		setLoading(true);
-		try {
-			const data = await UserAPI.roleGetAll();
-			setRoles(data || []);
-		} catch (error) {
-			console.error('Error fetching roles:', error);
-			setRoles([]);
-		} finally {
-			setLoading(false);
-		}
-	};
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
-	useEffect(() => {
-		fetchRoles();
-	}, []);
+  const fetchRoles = async () => {
+    setLoading(true);
+    try {
+      const response = await userAPI.roleGetAll();
+      const roles = response?.data?.items || [];
+      setRoles(roles);
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+      toast.error('Failed to load roles');
+      setRoles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-	const roleColumns: Column<Role>[] = [
-		{ field: '_id', headerName: 'ID', width: 100 },
-		{ field: 'name', headerName: 'Name', width: 200 },
-		{ field: 'description', headerName: 'Description', width: 300 },
-		{
-			field: 'permissions',
-			headerName: 'Permissions',
-			width: 250,
-			valueGetter: (row: Role) => row.permissions?.length || 0
-		},
-	];
+  useEffect(() => {
+    fetchRoles();
+  }, []);
 
-	const handleCreate = () => {
-		setSelectedRole(null);
-		setIsPopupOpen(true);
-	};
+  const handleCreate = () => {
+    setSelectedRole(null);
+    setIsPopupOpen(true);
+  };
 
-	const handleEdit = (role: Role) => {
-		setSelectedRole(role);
-		setIsPopupOpen(true);
-	};
+  const handleEdit = (role: Role) => {
+    setSelectedRole(role);
+    setIsPopupOpen(true);
+  };
 
-	const handleDelete = async (role: Role) => {
-		if (window.confirm(`Are you sure you want to delete role ${role.name}?`)) {
-			try {
-				await UserAPI.roleDelete(role._id);
-				fetchRoles();
-			} catch (error) {
-				console.error('Error deleting role:', error);
-			}
-		}
-	};
+  const handleDelete = async (role: Role) => {
+    if (window.confirm(`Are you sure you want to delete role ${role.name}?`)) {
+      try {
+        await userAPI.roleDelete(role._id);
+        toast.success(`Role ${role.name} deleted successfully`);
+        fetchRoles();
+      } catch (error) {
+        console.error('Error deleting role:', error);
+        toast.error('Failed to delete role');
+      }
+    }
+  };
 
-	const handleSubmit = async (formData: any) => {
-		try {
-			if (selectedRole) {
-				await UserAPI.roleUpdate(selectedRole._id, formData);
-			} else {
-				await UserAPI.roleCreate(formData);
-			}
-			setIsPopupOpen(false);
-			fetchRoles();
-		} catch (error) {
-			console.error('Error saving role:', error);
-		}
-	};
+  const handleSubmit = async (formData: any) => {
+    try {
+      if (selectedRole) {
+        await userAPI.roleUpdate(selectedRole._id, formData);
+        toast.success('Role updated successfully');
+      } else {
+        await userAPI.roleCreate(formData);
+        toast.success('Role created successfully');
+      }
+      setIsPopupOpen(false);
+      fetchRoles();
+    } catch (error) {
+      console.error('Error saving role:', error);
+      toast.error(`Failed to ${selectedRole ? 'update' : 'create'} role`);
+    }
+  };
 
-	return (
-		<>
-			<Button variant="contained" onClick={handleCreate} style={{ marginBottom: '16px' }}>
-				Add Role
-			</Button>
-			{loading ? (
-				<DataLoading />
-			) : (
-				<DataTable
-					rows={roles}
-					columns={roleColumns}
-					onEdit={handleEdit}
-					onDelete={handleDelete}
-					getRowId={(row: Role) => row._id}
-				/>
-			)}
-			<Popup
-				open={isPopupOpen}
-				onClose={() => setIsPopupOpen(false)}
-				title={selectedRole ? 'Edit Role' : 'Create Role'}
-				component={
-					<GenericForm
-						fields={roleFormFields}
-						initialValues={selectedRole ? { ...selectedRole, permissions: selectedRole.permissions || [] } : { permissions: [] }}
-						onSubmit={handleSubmit}
-						onCancel={() => setIsPopupOpen(false)}
-					/>
-				}
-			>
-			</Popup>
-		</>
-	);
+  return (
+    <>
+      <Button variant="contained" onClick={handleCreate} style={{ marginBottom: '16px' }}>
+        Add Role
+      </Button>
+      {loading ? (
+        <DataLoading columns={roleColumns} />
+      ) : (
+        <DataTable
+          data={roles}
+          columns={roleColumns}
+          rowComponent={(role: Role) => (
+            <Stack direction="row" spacing={1}>
+              <Button size="small" variant="outlined" onClick={() => handleEdit(role)}>
+                Edit
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                onClick={() => handleDelete(role)}
+              >
+                Delete
+              </Button>
+            </Stack>
+          )}
+        />
+      )}
+      <Popup
+        open={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        title={selectedRole ? 'Edit Role' : 'Create Role'}
+        component={
+          <GenericForm
+            fields={roleFormFields}
+            initialValues={
+              selectedRole
+                ? { ...selectedRole, permissions: selectedRole.permissions || [] }
+                : { permissions: [] }
+            }
+            onSubmit={handleSubmit}
+            onCancel={() => setIsPopupOpen(false)}
+          />
+        }
+      ></Popup>
+    </>
+  );
 };
 
 export default RolesTab;

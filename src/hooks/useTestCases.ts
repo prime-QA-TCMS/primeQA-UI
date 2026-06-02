@@ -1,28 +1,36 @@
-import { useState } from "react";
-import { Suite, Section, TestCase } from "../types";
-import { TestcaseAPI } from "../api";
-import { useApi } from "./useApi";
+import { useState, useMemo, useCallback } from 'react';
+import { Suite, Section, TestCase } from '../types';
+import { TestcaseAPI } from '../api';
+import { useApi, useService } from 'fog-ui';
 
 //
 // 🔹 SUITES
 //
 export function useSuites() {
-  return useApi<Suite[]>(TestcaseAPI.suiteGetAll);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(() => testcaseAPI.suiteGetAll(), [testcaseAPI]);
+  return useApi<Suite[]>(fetchFn, []);
 }
 
 export function useSuiteById(id: string) {
-  return useApi<Suite>(TestcaseAPI.suiteGetById, [id]);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(() => testcaseAPI.suiteGetById(id), [id, testcaseAPI]);
+  return useApi<Suite>(fetchFn, [id]);
 }
 
 export function useCreateSuite() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const createSuite = async (data: Partial<Suite>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.suiteCreate(data);
+      return await testcaseAPI.suiteCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -38,12 +46,14 @@ export function useCreateSuite() {
 export function useUpdateSuite() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const updateSuite = async (id: string, data: Partial<Suite>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.suiteUpdate(id, data);
+      return await testcaseAPI.suiteUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -59,12 +69,14 @@ export function useUpdateSuite() {
 export function useDeleteSuite() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const deleteSuite = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.suiteDelete(id);
+      return await testcaseAPI.suiteDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -81,22 +93,30 @@ export function useDeleteSuite() {
 // 🔹 SECTIONS
 //
 export function useSections(suiteId: string) {
-  return useApi<Section[]>(() => TestcaseAPI.sectionGetAll(suiteId), [suiteId]);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(() => testcaseAPI.sectionGetAll(suiteId), [suiteId, testcaseAPI]);
+  return useApi<Section[]>(fetchFn, [suiteId]);
 }
 
 export function useSectionById(id: string) {
-  return useApi<Section>(TestcaseAPI.sectionGetById, [id]);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(() => testcaseAPI.sectionGetById(id), [id, testcaseAPI]);
+  return useApi<Section>(fetchFn, [id]);
 }
 
 export function useCreateSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const createSection = async (data: Partial<Section>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.sectionCreate(data);
+      return await testcaseAPI.sectionCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -112,12 +132,14 @@ export function useCreateSection() {
 export function useUpdateSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const updateSection = async (id: string, data: Partial<Section>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.sectionUpdate(id, data);
+      return await testcaseAPI.sectionUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -133,12 +155,14 @@ export function useUpdateSection() {
 export function useDeleteSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const deleteSection = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.sectionDelete(id);
+      return await testcaseAPI.sectionDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -155,22 +179,33 @@ export function useDeleteSection() {
 // 🔹 TEST CASES
 //
 export function useTestcases(sectionId: string) {
-  return useApi<TestCase[]>(() => TestcaseAPI.testcaseGetAll(sectionId), [sectionId]);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(
+    () => testcaseAPI.testcaseGetAll(sectionId),
+    [sectionId, testcaseAPI]
+  );
+  return useApi<TestCase[]>(fetchFn, [sectionId]);
 }
 
 export function useTestcaseById(id: string) {
-  return useApi<TestCase>(TestcaseAPI.testcaseGetById, [id]);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  const fetchFn = useCallback(() => testcaseAPI.testcaseGetById(id), [id, testcaseAPI]);
+  return useApi<TestCase>(fetchFn, [id]);
 }
 
 export function useCreateTestcase() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const createTestcase = async (data: Partial<TestCase>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.testcaseCreate(data);
+      return await testcaseAPI.testcaseCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -186,12 +221,14 @@ export function useCreateTestcase() {
 export function useUpdateTestcase() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const updateTestcase = async (id: string, data: Partial<TestCase>) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.testcaseUpdate(id, data);
+      return await testcaseAPI.testcaseUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -207,12 +244,14 @@ export function useUpdateTestcase() {
 export function useDeleteTestcase() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
 
   const deleteTestcase = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await TestcaseAPI.testcaseDelete(id);
+      return await testcaseAPI.testcaseDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -229,5 +268,7 @@ export function useDeleteTestcase() {
 // 🔹 HEALTH CHECK
 //
 export function useTestcaseHealthCheck() {
-  return useApi<{ status: string }>(TestcaseAPI.healthCheck);
+  const testcaseService = useService('testcase');
+  const testcaseAPI = useMemo(() => TestcaseAPI(testcaseService), [testcaseService]);
+  return useApi<{ status: string }>(() => testcaseAPI.healthCheck());
 }

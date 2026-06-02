@@ -1,28 +1,52 @@
-import { useState } from "react";
-import { User, Role, Tenant, RegisterRequest } from "../types";
-import { UserAPI } from "../api";
-import { useApi } from "./useApi";
+import { useState } from 'react';
+import {
+  User,
+  Role,
+  Tenant,
+  RegisterRequest,
+  LoginRequest,
+  CreateUserRequest,
+  UpdateUserRequest,
+  CreateRoleRequest,
+  UpdateRoleRequest,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+  RefreshTokenRequest,
+  LogoutRequest,
+} from '../types';
+import { UserAPI } from '../api';
+import { useApi, useService } from 'fog-ui';
 
 //
 // 🔹 USERS
 //
-export function useUsers() {
-  return useApi<User[]>(UserAPI.userGetAll);
+export function useUsers(params?: { page?: number; limit?: number }) {
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi(() => userAPI.userGetAll(params).then(res => res.data.items), [params]);
 }
 
 export function useUserById(id: string) {
-  return useApi<User>(UserAPI.userGetById, [id]);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi<User>(() => userAPI.userGetById(id).then(res => res.data), [id]);
 }
 
 export function useCreateUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const createUser = async (data: Partial<User>) => {
+  const createUser = async (data: CreateUserRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.userCreate(data);
+      const response = await userAPI.userCreate(data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -38,12 +62,16 @@ export function useCreateUser() {
 export function useUpdateUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const updateUser = async (id: string, data: Partial<User>) => {
+  const updateUser = async (id: string, data: UpdateUserRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.userUpdate(id, data);
+      const response = await userAPI.userUpdate(id, data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -59,12 +87,16 @@ export function useUpdateUser() {
 export function useDeleteUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
   const deleteUser = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.userDelete(id);
+      const response = await userAPI.userDelete(id);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -80,19 +112,33 @@ export function useDeleteUser() {
 //
 // 🔹 ROLES
 //
-export function useRoles() {
-  return useApi<Role[]>(UserAPI.roleGetAll);
+export function useRoles(params?: { page?: number; limit?: number }) {
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi(() => userAPI.roleGetAll(params).then(res => res.data.items), [params]);
+}
+
+export function useRoleById(id: string) {
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi<Role>(() => userAPI.roleGetById(id).then(res => res.data), [id]);
 }
 
 export function useCreateRole() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const createRole = async (data: Partial<Role>) => {
+  const createRole = async (data: CreateRoleRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.roleCreate(data);
+      const response = await userAPI.roleCreate(data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -108,12 +154,16 @@ export function useCreateRole() {
 export function useUpdateRole() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const updateRole = async (id: string, data: Partial<Role>) => {
+  const updateRole = async (id: string, data: UpdateRoleRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.roleUpdate(id, data);
+      const response = await userAPI.roleUpdate(id, data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -129,12 +179,15 @@ export function useUpdateRole() {
 export function useDeleteRole() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
   const deleteRole = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.roleDelete(id);
+      await userAPI.roleDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -150,19 +203,33 @@ export function useDeleteRole() {
 //
 // 🔹 TENANTS
 //
-export function useTenants() {
-  return useApi<Tenant[]>(UserAPI.tenantGetAll);
+export function useTenants(params?: { page?: number; limit?: number }) {
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi(() => userAPI.tenantGetAll(params).then(res => res.data.items), [params]);
+}
+
+export function useTenantById(id: string) {
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
+  return useApi<Tenant>(() => userAPI.tenantGetById(id).then(res => res.data), [id]);
 }
 
 export function useCreateTenant() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const createTenant = async (data: Partial<Tenant>) => {
+  const createTenant = async (data: CreateTenantRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.tenantCreate(data);
+      const response = await userAPI.tenantCreate(data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -178,12 +245,16 @@ export function useCreateTenant() {
 export function useUpdateTenant() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const updateTenant = async (id: string, data: Partial<Tenant>) => {
+  const updateTenant = async (id: string, data: UpdateTenantRequest) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.tenantUpdate(id, data);
+      const response = await userAPI.tenantUpdate(id, data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -199,12 +270,15 @@ export function useUpdateTenant() {
 export function useDeleteTenant() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
   const deleteTenant = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.tenantDelete(id);
+      await userAPI.tenantDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -218,18 +292,25 @@ export function useDeleteTenant() {
 }
 
 //
-// 🔹 AUTHENTICATION (Optional but recommended)
+// 🔹 AUTHENTICATION
 //
 export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authService = useService('auth');
+  const userService = useService('user');
+  const userAPI = UserAPI(authService, userService);
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (credentials: LoginRequest) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await UserAPI.login(credentials);
-      localStorage.setItem("accessToken", response.accessToken);
+      const response = await userAPI.login(credentials);
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+      if (response.data.user?.tenantId) {
+        localStorage.setItem('tenantId', response.data.user.tenantId);
+      }
       return response;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
@@ -244,7 +325,8 @@ export function useAuth() {
     setLoading(true);
     setError(null);
     try {
-      return await UserAPI.register(data);
+      const response = await userAPI.register(data);
+      return response.data;
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -256,23 +338,28 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      await UserAPI.logout();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await userAPI.logout({ refreshToken } as LogoutRequest);
+      }
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('tenantId');
     } catch (err: any) {
-      console.error("Error logging out:", err);
+      console.error('Error logging out:', err);
     }
   };
 
   const refresh = async () => {
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (!refreshToken) throw new Error("Missing refresh token");
-      const res = await UserAPI.refresh({ token: refreshToken });
-      localStorage.setItem("accessToken", res.accessToken);
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) throw new Error('Missing refresh token');
+      const res = await userAPI.refresh({ refreshToken } as RefreshTokenRequest);
+      localStorage.setItem('accessToken', res.data.accessToken);
+      localStorage.setItem('refreshToken', res.data.refreshToken);
       return res;
     } catch (err: any) {
-      console.error("Token refresh failed:", err);
+      console.error('Token refresh failed:', err);
       throw err;
     }
   };

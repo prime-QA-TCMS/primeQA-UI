@@ -1,28 +1,34 @@
-import { useState } from "react";
-import { Project, Milestone, ProjectConfiguration } from "../types";
-import { ProjectAPI } from "../api";
-import { useApi } from "./useApi";
+import { useState, useMemo, useCallback } from 'react';
+import { Project, Milestone, ProjectConfiguration } from '../types';
+import { ProjectAPI } from '../api';
+import { useApi, useService } from 'fog-ui';
 
 //
 // 🔹 PROJECTS
 //
 export function useProjects() {
-  return useApi<Project[]>(ProjectAPI.projectGetAll);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
+  return useApi<Project[]>(() => projectAPI.projectGetAll());
 }
 
 export function useProjectById(id: string) {
-  return useApi<Project>(ProjectAPI.projectGetById, [id]);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
+  return useApi<Project>(() => projectAPI.projectGetById(id), [id]);
 }
 
 export function useCreateProject() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
 
   const createProject = async (data: Partial<Project>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ProjectAPI.projectCreate(data);
+      return await projectAPI.projectCreate(data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -38,12 +44,14 @@ export function useCreateProject() {
 export function useUpdateProject() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
 
   const updateProject = async (id: string, data: Partial<Project>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ProjectAPI.projectUpdate(id, data);
+      return await projectAPI.projectUpdate(id, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -59,12 +67,14 @@ export function useUpdateProject() {
 export function useDeleteProject() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
 
   const deleteProject = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      return await ProjectAPI.projectDelete(id);
+      return await projectAPI.projectDelete(id);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -81,18 +91,23 @@ export function useDeleteProject() {
 // 🔹 MILESTONES
 //
 export function useMilestones(projectId: string) {
-  return useApi<Milestone[]>(ProjectAPI.milestoneGetAll, [projectId]);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
+  const fetchFn = useCallback(() => projectAPI.milestoneGetAll(projectId), [projectId, projectAPI]);
+  return useApi<Milestone[]>(fetchFn, [projectId]);
 }
 
 export function useCreateMilestone(projectId: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
 
   const createMilestone = async (data: Partial<Milestone>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ProjectAPI.milestoneCreate(projectId, data);
+      return await projectAPI.milestoneCreate(projectId, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -109,8 +124,10 @@ export function useCreateMilestone(projectId: string) {
 // 🔹 PROJECT CONFIGURATIONS
 //
 export function useProjectConfigurations(projectId: string) {
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
   return useApi<ProjectConfiguration[]>(
-    ProjectAPI.configurationGetAll,
+    () => projectAPI.configurationGetAll(projectId),
     [projectId]
   );
 }
@@ -118,12 +135,14 @@ export function useProjectConfigurations(projectId: string) {
 export function useCreateProjectConfiguration(projectId: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
 
   const createConfiguration = async (data: Partial<ProjectConfiguration>) => {
     setLoading(true);
     setError(null);
     try {
-      return await ProjectAPI.configurationCreate(projectId, data);
+      return await projectAPI.configurationCreate(projectId, data);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message;
       setError(message);
@@ -140,5 +159,7 @@ export function useCreateProjectConfiguration(projectId: string) {
 // 🔹 HEALTH CHECK
 //
 export function useProjectHealthCheck() {
-  return useApi<{ status: string }>(ProjectAPI.healthCheck);
+  const projectService = useService('project');
+  const projectAPI = useMemo(() => ProjectAPI(projectService), [projectService]);
+  return useApi<{ status: string }>(() => projectAPI.healthCheck());
 }
